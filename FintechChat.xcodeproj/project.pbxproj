@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AABA1981220F043100321179 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABA1980220F043100321179 /* Debug.swift */; };
 		AAF22770220BD16000AF5DFA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF2276F220BD16000AF5DFA /* AppDelegate.swift */; };
 		AAF22772220BD16000AF5DFA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF22771220BD16000AF5DFA /* ViewController.swift */; };
 		AAF22775220BD16000AF5DFA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF22773220BD16000AF5DFA /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AABA1980220F043100321179 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		AAF2276C220BD16000AF5DFA /* FintechChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FintechChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF2276F220BD16000AF5DFA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AAF22771220BD16000AF5DFA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -37,6 +39,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AABA197F220F041F00321179 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				AABA1980220F043100321179 /* Debug.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		AAF22763220BD16000AF5DFA = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +66,7 @@
 		AAF2276E220BD16000AF5DFA /* FintechChat */ = {
 			isa = PBXGroup;
 			children = (
+				AABA197F220F041F00321179 /* Helpers */,
 				AAF2276F220BD16000AF5DFA /* AppDelegate.swift */,
 				AAF22771220BD16000AF5DFA /* ViewController.swift */,
 				AAF22773220BD16000AF5DFA /* Main.storyboard */,
@@ -139,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAF22778220BD16000AF5DFA /* FintechChat.xcdatamodeld in Sources */,
+				AABA1981220F043100321179 /* Debug.swift in Sources */,
 				AAF22772220BD16000AF5DFA /* ViewController.swift in Sources */,
 				AAF22770220BD16000AF5DFA /* AppDelegate.swift in Sources */,
 			);

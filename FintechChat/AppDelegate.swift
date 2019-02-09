@@ -9,9 +9,6 @@
 import UIKit
 import CoreData
 
-let shouldPrintStates: Bool = true
-
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -23,9 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func printState(currState: String, methodName: String) {
         currentState = currState
-        if (shouldPrintStates) {
-            print("Application moved from \(previousState) to \(currentState): \(methodName)")
-        }
+        debugOutput("Application moved from \(previousState) to \(currentState): \(methodName)")
         previousState = currentState
     }
     

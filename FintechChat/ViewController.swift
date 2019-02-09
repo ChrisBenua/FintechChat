@@ -9,47 +9,41 @@
 import UIKit
 
 class ViewController: UIViewController {
-
-    func printState(methodName: String) {
-        if (shouldPrintStates) {
-            print(methodName)
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        printState(methodName: #function)
+        debugOutput(#function)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        printState(methodName: #function)
+        debugOutput(#function)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        printState(methodName: #function)
+        debugOutput(#function)
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        printState(methodName: #function)
+        debugOutput(#function)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        printState(methodName: #function)
+        debugOutput(#function)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        printState(methodName: #function)
+        debugOutput(#function)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        printState(methodName: #function)
+        debugOutput(#function)
     }
 }
 
