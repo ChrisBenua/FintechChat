@@ -53,7 +53,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        Logger.debugOutput(editProfileButton.frame.debugDescription)
+        Logger.log(editProfileButton.frame.debugDescription)
         SetupUI()
     }
     
@@ -65,7 +65,7 @@ class ViewController: UIViewController {
     }
     
     @objc func handleTapOnLogo(_ sender: UITapGestureRecognizer) {
-        Logger.debugOutput("Выбери изображение профиля")
+        Logger.log("Выбери изображение профиля")
         
         let pickImageAlertController = UIAlertController(title: "Выберите фото", message: nil, preferredStyle: .actionSheet)
         
@@ -104,17 +104,17 @@ class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        Logger.debugOutput(detailInfoLabel.frame.debugDescription)
+        Logger.log(detailInfoLabel.frame.debugDescription)
         //make label's text to start at the top of label
         //detailInfoLabel.frame = CGRect(origin: detailInfoLabel.frame.origin, size: CGSize(width: detailInfoLabel.frame.width, height: detailInfoLabel.sizeThatFits(detailInfoLabel.bounds.size).height))
         
-        Logger.debugOutput(detailInfoLabel.frame.debugDescription)
+        Logger.log(detailInfoLabel.frame.debugDescription)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         //Скорее всего, в viewDidLoad у нас подгружается расположение для девайса, который указан в сториборде
-        Logger.debugOutput(editProfileButton.frame.debugDescription)
+        Logger.log(editProfileButton.frame.debugDescription)
     }
 }
 

@@ -19,14 +19,38 @@ class State {
     }
 }
 
+protocol Loggable {
+    func debugOutput(_ message: String)
+}
+
+class DebugLogger: Loggable {
+    func debugOutput(_ message: String) {
+        print(message)
+    }
+}
+
+class ReleaseLogger: Loggable {
+    func debugOutput(_ message: String) {}
+}
+
 class Logger {
 
-    static let shouldPrintDebug: Bool = true
-
-    static func debugOutput(_ message: String = #function) {
-        if (shouldPrintDebug) {
-            print(message)
-        }
+    private static let shared = Logger()
+    
+    private lazy var logger: Loggable = {
+        #if DEBUG
+        return DebugLogger()
+        #else
+        return ReleaseLogger()
+        #endif
+    }()
+    
+    func log(_ message: String) {
+        logger.debugOutput(message)
+    }
+    
+    public static func log(_ message: String) {
+        shared.log(message)
     }
 }
 
@@ -41,8 +65,7 @@ class StateLogger {
     }
     
     func printState(methodName: String) {
-        Logger.debugOutput("\(callerName) moved from \(state.previousState) to \(state.currentState) in \(methodName)")
-
+        Logger.log("\(callerName) moved from \(state.previousState) to \(state.currentState) in \(methodName)")
     }
     
     func moveToNewState(newState: String = #function, methodName: String = #function) {
