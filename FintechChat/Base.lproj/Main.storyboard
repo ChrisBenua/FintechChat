@@ -30,14 +30,14 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Люблю програмировать под iOS" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-lb-0S6" customClass="TopAlignedLabel" customModule="FintechChat" customModuleProvider="target">
-                                <rect key="frame" x="16" y="385" width="288" height="117"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Люблю програмировать под iOS" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-lb-0S6">
+                                <rect key="frame" x="16" y="385" width="288" height="21.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.45484960079193115" green="0.45493203401565552" blue="0.45484435558319092" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X78-63-B6n">
-                                <rect key="frame" x="16" y="518" width="288" height="34"/>
+                                <rect key="frame" x="16" y="522" width="288" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal" title="Редактировать">
@@ -65,7 +65,7 @@
                             <constraint firstItem="X78-63-B6n" firstAttribute="height" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.06" id="1xj-JO-kg1"/>
                             <constraint firstItem="Gmp-Wp-Bwu" firstAttribute="width" secondItem="zWB-TR-TFh" secondAttribute="width" multiplier="0.3" id="5Eo-Ap-oxo"/>
                             <constraint firstItem="oLs-3a-dny" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="9ch-9J-v4C"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="X78-63-B6n" secondAttribute="bottom" constant="16" id="Aef-59-9ye"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="X78-63-B6n" secondAttribute="bottom" constant="12" id="Aef-59-9ye"/>
                             <constraint firstItem="zWB-TR-TFh" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="IJg-wm-Iap"/>
                             <constraint firstItem="oLs-3a-dny" firstAttribute="top" secondItem="zWB-TR-TFh" secondAttribute="bottom" constant="16" id="OdY-FK-xnu"/>
                             <constraint firstItem="zWB-TR-TFh" firstAttribute="trailing" secondItem="Gmp-Wp-Bwu" secondAttribute="trailing" id="PKX-vk-0j5"/>
@@ -75,7 +75,7 @@
                             <constraint firstItem="Bpj-lb-0S6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="jYI-MC-az3"/>
                             <constraint firstItem="zWB-TR-TFh" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="mgD-Rb-5ln"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="X78-63-B6n" secondAttribute="trailing" constant="16" id="q5E-zq-vgt"/>
-                            <constraint firstItem="X78-63-B6n" firstAttribute="top" secondItem="Bpj-lb-0S6" secondAttribute="bottom" constant="16" id="s7G-pe-bWZ"/>
+                            <constraint firstItem="X78-63-B6n" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Bpj-lb-0S6" secondAttribute="bottom" constant="16" id="s7G-pe-bWZ"/>
                             <constraint firstItem="zWB-TR-TFh" firstAttribute="bottom" secondItem="Gmp-Wp-Bwu" secondAttribute="bottom" id="v0R-tS-Lkq"/>
                             <constraint firstItem="Bpj-lb-0S6" firstAttribute="top" secondItem="oLs-3a-dny" secondAttribute="bottom" constant="16" id="vUX-OK-1jR"/>
                         </constraints>

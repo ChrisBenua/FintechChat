@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet weak var profilePhotoImageView: UIImageView!
-    @IBOutlet weak var detailInfoLabel: TopAlignedLabel!
+    @IBOutlet weak var detailInfoLabel: UILabel!
     @IBOutlet weak var editProfileButton: UIButton!
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -33,7 +33,6 @@ class ViewController: UIViewController {
         
         imageContainerView.layer.cornerRadius = cornerRadius
         profilePhotoImageView.layer.cornerRadius = cornerRadius
-
     }
     
     fileprivate func SetupUI() {
@@ -104,16 +103,12 @@ class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        Logger.log(detailInfoLabel.frame.debugDescription)
-        //make label's text to start at the top of label
-        //detailInfoLabel.frame = CGRect(origin: detailInfoLabel.frame.origin, size: CGSize(width: detailInfoLabel.frame.width, height: detailInfoLabel.sizeThatFits(detailInfoLabel.bounds.size).height))
-        
-        Logger.log(detailInfoLabel.frame.debugDescription)
+        //Logger.log(detailInfoLabel.frame.debugDescription)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //Скорее всего, в viewDidLoad у нас подгружается расположение для девайса, который указан в сториборде
+        //Скорее всего, в viewDidLoad у нас подгружается расположение элементов UI для девайса, который указан в сториборде(то есть их позиции и тд), так как там ViewController еще не добавлен в иерархию view. А уже в viewDidAppear - сработал AutoLayout и расположил их заново и правильно
         Logger.log(editProfileButton.frame.debugDescription)
     }
 }
