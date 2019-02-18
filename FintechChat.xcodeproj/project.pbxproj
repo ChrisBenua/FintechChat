@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAB221B0A11001BC709 /* Actions.swift */; };
+		AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */; };
 		AABA1981220F043100321179 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABA1980220F043100321179 /* Debug.swift */; };
 		AAF22770220BD16000AF5DFA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF2276F220BD16000AF5DFA /* AppDelegate.swift */; };
-		AAF22772220BD16000AF5DFA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF22771220BD16000AF5DFA /* ViewController.swift */; };
+		AAF22772220BD16000AF5DFA /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF22771220BD16000AF5DFA /* ProfileViewController.swift */; };
 		AAF22775220BD16000AF5DFA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF22773220BD16000AF5DFA /* Main.storyboard */; };
 		AAF22778220BD16000AF5DFA /* FintechChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AAF22776220BD16000AF5DFA /* FintechChat.xcdatamodeld */; };
 		AAF2277A220BD16100AF5DFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAF22779220BD16100AF5DFA /* Assets.xcassets */; };
@@ -17,10 +19,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AAA23AAB221B0A11001BC709 /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
+		AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileVC+UIImagePickerDelegate.swift"; sourceTree = "<group>"; };
 		AABA1980220F043100321179 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		AAF2276C220BD16000AF5DFA /* FintechChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FintechChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF2276F220BD16000AF5DFA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		AAF22771220BD16000AF5DFA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		AAF22771220BD16000AF5DFA /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		AAF22774220BD16000AF5DFA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AAF22777220BD16000AF5DFA /* FintechChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FintechChat.xcdatamodel; sourceTree = "<group>"; };
 		AAF22779220BD16100AF5DFA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -39,10 +43,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AAA23AAD221B0A9E001BC709 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				AAA23AAE221B0AB7001BC709 /* ProfileViewController */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		AAA23AAE221B0AB7001BC709 /* ProfileViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AAF22771220BD16000AF5DFA /* ProfileViewController.swift */,
+				AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */,
+			);
+			path = ProfileViewController;
+			sourceTree = "<group>";
+		};
 		AABA197F220F041F00321179 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				AABA1980220F043100321179 /* Debug.swift */,
+				AAA23AAB221B0A11001BC709 /* Actions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -66,9 +88,9 @@
 		AAF2276E220BD16000AF5DFA /* FintechChat */ = {
 			isa = PBXGroup;
 			children = (
+				AAA23AAD221B0A9E001BC709 /* Controllers */,
 				AABA197F220F041F00321179 /* Helpers */,
 				AAF2276F220BD16000AF5DFA /* AppDelegate.swift */,
-				AAF22771220BD16000AF5DFA /* ViewController.swift */,
 				AAF22773220BD16000AF5DFA /* Main.storyboard */,
 				AAF22779220BD16100AF5DFA /* Assets.xcassets */,
 				AAF2277B220BD16100AF5DFA /* LaunchScreen.storyboard */,
@@ -149,9 +171,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */,
+				AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */,
 				AAF22778220BD16000AF5DFA /* FintechChat.xcdatamodeld in Sources */,
 				AABA1981220F043100321179 /* Debug.swift in Sources */,
-				AAF22772220BD16000AF5DFA /* ViewController.swift in Sources */,
+				AAF22772220BD16000AF5DFA /* ProfileViewController.swift in Sources */,
 				AAF22770220BD16000AF5DFA /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

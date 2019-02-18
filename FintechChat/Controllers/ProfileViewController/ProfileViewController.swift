@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import AVFoundation
 
-class ViewController: UIViewController {
+class ProfileViewController: UIViewController {
     
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var imageContainerView: UIView!
@@ -63,6 +64,24 @@ class ViewController: UIViewController {
         return imagePicker
     }
     
+    fileprivate func checkAccessToCamera() -> Bool {
+        if (!UIImagePickerController.isSourceTypeAvailable(.camera)) {
+            let noCameraAlert = UIAlertController(title: "Ошибка", message: "Камера не найдена", preferredStyle: .alert)
+            
+            noCameraAlert.addAction(.okAction)
+            
+            self.present(noCameraAlert, animated: true)
+            return false
+        } else if (AVCaptureDevice.authorizationStatus(for: .video) != .authorized) {
+            let noAccessAlert = UIAlertController(title: "Беда", message: "Нет доступа к камере, дайте разрешение в настройках", preferredStyle: .alert)
+            noAccessAlert.addAction(.okAction)
+            self.present(noAccessAlert, animated: true)
+            return false
+        }
+        return true
+    }
+    
+    
     @objc func handleTapOnLogo(_ sender: UITapGestureRecognizer) {
         Logger.log("Выбери изображение профиля")
         
@@ -77,10 +96,14 @@ class ViewController: UIViewController {
         }
         
         let takePhotoAction = UIAlertAction(title: "Сделать фото", style: .default) { [weak self] (_) in
-            let picker = self?.getDefaultImagePicker()
-            picker?.sourceType = UIImagePickerController.SourceType.camera
-            if let picker = picker {
-                self?.present(picker, animated: true, completion: nil)
+            
+            if (self?.checkAccessToCamera() ?? false) {
+            
+                let picker = self?.getDefaultImagePicker()
+                picker?.sourceType = UIImagePickerController.SourceType.camera
+                if let picker = picker {
+                    self?.present(picker, animated: true, completion: nil)
+                }
             }
         }
         
@@ -113,25 +136,7 @@ class ViewController: UIViewController {
     }
 }
 
-//MARK: UIImagePickerControllerDelegate
-extension ViewController : UIImagePickerControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let chosenImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
-        
-        self.profilePhotoImageView.image = chosenImage
-        
-        //to be sure that ImagePickerController will be dismissed
-        defer {
-            dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
-}
-
 //MARK:UINavigationControllerDelegate
-extension ViewController : UINavigationControllerDelegate {
+extension ProfileViewController : UINavigationControllerDelegate {
     
 }
