@@ -16,6 +16,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var profilePhotoImageView: UIImageView!
     @IBOutlet weak var detailInfoLabel: UILabel!
     @IBOutlet weak var editProfileButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -37,6 +38,8 @@ class ProfileViewController: UIViewController {
     }
     
     fileprivate func SetupUI() {
+        backButton.addTarget(self, action: #selector(backButtonOnClick), for: .touchUpInside)
+        
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapOnLogo))
         tapGestureRecognizer.numberOfTapsRequired = 1
         imageContainerView.addGestureRecognizer(tapGestureRecognizer)
@@ -48,6 +51,10 @@ class ProfileViewController: UIViewController {
         
         detailInfoLabel.text = "Люблю программировать под iOS\nИзучать новые технологии\nЛюблю математику"
         
+    }
+    
+    @objc func backButtonOnClick(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func viewDidLoad() {

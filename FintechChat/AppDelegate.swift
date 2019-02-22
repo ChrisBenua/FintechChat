@@ -24,6 +24,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //printState(currState: "Inactive", methodName: #function)
         stateLogger.moveToNewState(newState: "Inactive")
         
+        
+        UINavigationBar.appearance().prefersLargeTitles = true
+        UINavigationBar.appearance().isTranslucent = false
+
+        
+        window = UIWindow()
+        window?.makeKeyAndVisible()
+        let navController = UINavigationController(rootViewController: ConversationListViewController())
+        window?.rootViewController = navController
+        
         return true
     }
 

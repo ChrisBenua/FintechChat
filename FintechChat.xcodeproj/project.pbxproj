@@ -10,6 +10,13 @@
 		AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAB221B0A11001BC709 /* Actions.swift */; };
 		AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */; };
 		AABA1981220F043100321179 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABA1980220F043100321179 /* Debug.swift */; };
+		AAD73B67221EF6870085512B /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD73B66221EF6870085512B /* ConversationListViewController.swift */; };
+		AAD73B6C221EF8680085512B /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD73B6B221EF8680085512B /* ConversationTableViewCell.swift */; };
+		AAD73B6E221F032E0085512B /* Anchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD73B6D221F032E0085512B /* Anchor.swift */; };
+		AAD73B70221F072B0085512B /* ConversationCellModelHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD73B6F221F072B0085512B /* ConversationCellModelHelper.swift */; };
+		AAD73B77221F14E10085512B /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD73B76221F14E10085512B /* ConversationViewController.swift */; };
+		AAD73B7B221F2E180085512B /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD73B7A221F2E180085512B /* MessageTableViewCell.swift */; };
+		AAD73B7D221F3B880085512B /* ConversationMessageModelHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD73B7C221F3B880085512B /* ConversationMessageModelHelper.swift */; };
 		AAF22770220BD16000AF5DFA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF2276F220BD16000AF5DFA /* AppDelegate.swift */; };
 		AAF22772220BD16000AF5DFA /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF22771220BD16000AF5DFA /* ProfileViewController.swift */; };
 		AAF22775220BD16000AF5DFA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAF22773220BD16000AF5DFA /* Main.storyboard */; };
@@ -22,6 +29,13 @@
 		AAA23AAB221B0A11001BC709 /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
 		AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileVC+UIImagePickerDelegate.swift"; sourceTree = "<group>"; };
 		AABA1980220F043100321179 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
+		AAD73B66221EF6870085512B /* ConversationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListViewController.swift; sourceTree = "<group>"; };
+		AAD73B6B221EF8680085512B /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
+		AAD73B6D221F032E0085512B /* Anchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Anchor.swift; sourceTree = "<group>"; };
+		AAD73B6F221F072B0085512B /* ConversationCellModelHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCellModelHelper.swift; sourceTree = "<group>"; };
+		AAD73B76221F14E10085512B /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
+		AAD73B7A221F2E180085512B /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
+		AAD73B7C221F3B880085512B /* ConversationMessageModelHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationMessageModelHelper.swift; sourceTree = "<group>"; };
 		AAF2276C220BD16000AF5DFA /* FintechChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FintechChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF2276F220BD16000AF5DFA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AAF22771220BD16000AF5DFA /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -46,6 +60,8 @@
 		AAA23AAD221B0A9E001BC709 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				AAD73B75221F14C60085512B /* ConversationViewController */,
+				AAD73B65221EF6760085512B /* ConversationListCV */,
 				AAA23AAE221B0AB7001BC709 /* ProfileViewController */,
 			);
 			path = Controllers;
@@ -65,8 +81,36 @@
 			children = (
 				AABA1980220F043100321179 /* Debug.swift */,
 				AAA23AAB221B0A11001BC709 /* Actions.swift */,
+				AAD73B6D221F032E0085512B /* Anchor.swift */,
+				AAD73B6F221F072B0085512B /* ConversationCellModelHelper.swift */,
+				AAD73B7C221F3B880085512B /* ConversationMessageModelHelper.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		AAD73B65221EF6760085512B /* ConversationListCV */ = {
+			isa = PBXGroup;
+			children = (
+				AAD73B66221EF6870085512B /* ConversationListViewController.swift */,
+			);
+			path = ConversationListCV;
+			sourceTree = "<group>";
+		};
+		AAD73B68221EF6E60085512B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AAD73B6B221EF8680085512B /* ConversationTableViewCell.swift */,
+				AAD73B7A221F2E180085512B /* MessageTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AAD73B75221F14C60085512B /* ConversationViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AAD73B76221F14E10085512B /* ConversationViewController.swift */,
+			);
+			path = ConversationViewController;
 			sourceTree = "<group>";
 		};
 		AAF22763220BD16000AF5DFA = {
@@ -88,6 +132,7 @@
 		AAF2276E220BD16000AF5DFA /* FintechChat */ = {
 			isa = PBXGroup;
 			children = (
+				AAD73B68221EF6E60085512B /* Views */,
 				AAA23AAD221B0A9E001BC709 /* Controllers */,
 				AABA197F220F041F00321179 /* Helpers */,
 				AAF2276F220BD16000AF5DFA /* AppDelegate.swift */,
@@ -171,11 +216,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAD73B6C221EF8680085512B /* ConversationTableViewCell.swift in Sources */,
+				AAD73B70221F072B0085512B /* ConversationCellModelHelper.swift in Sources */,
 				AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */,
+				AAD73B7D221F3B880085512B /* ConversationMessageModelHelper.swift in Sources */,
 				AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */,
 				AAF22778220BD16000AF5DFA /* FintechChat.xcdatamodeld in Sources */,
+				AAD73B7B221F2E180085512B /* MessageTableViewCell.swift in Sources */,
+				AAD73B67221EF6870085512B /* ConversationListViewController.swift in Sources */,
 				AABA1981220F043100321179 /* Debug.swift in Sources */,
 				AAF22772220BD16000AF5DFA /* ProfileViewController.swift in Sources */,
+				AAD73B6E221F032E0085512B /* Anchor.swift in Sources */,
+				AAD73B77221F14E10085512B /* ConversationViewController.swift in Sources */,
 				AAF22770220BD16000AF5DFA /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
