@@ -95,15 +95,15 @@ class MessageTableViewCell: UITableViewCell, MessageCellExtendedConfiguration {
         self.contentView.addSubview(bubbleImageView)
         self.contentView.addSubview(bubbleBackgroundView)
 
-        bubbleImageView.anchor(top: self.bubbleBackgroundView.topAnchor, left: self.bubbleBackgroundView.leftAnchor, bottom: self.bubbleBackgroundView.bottomAnchor, right: self.bubbleBackgroundView.rightAnchor, paddingTop: -4, paddingLeft: -8, paddingBottom: -4, paddingRight: -4, width: 0, height: 0)
+        bubbleImageView.anchor(top: self.bubbleBackgroundView.topAnchor, left: self.bubbleBackgroundView.leftAnchor, bottom: self.bubbleBackgroundView.bottomAnchor, right: self.bubbleBackgroundView.rightAnchor, paddingTop: -4, paddingLeft: -8, paddingBottom: -4, paddingRight: -8, width: 0, height: 0)
         //common autolayout
         
         bubbleBackgroundView.addSubview(messageLabel)
         
         currentConstraints.append(contentsOf: [
             
-            bubbleBackgroundView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
-            bubbleBackgroundView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
+            bubbleBackgroundView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
+            bubbleBackgroundView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
             bubbleBackgroundView.widthAnchor.constraint(lessThanOrEqualTo: self.contentView.widthAnchor, multiplier: 0.75)
             
             ])
