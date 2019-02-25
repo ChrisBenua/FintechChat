@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA3D28E822243BA60001D79F /* ControllerList+SearchBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D28E722243BA60001D79F /* ControllerList+SearchBarDelegate.swift */; };
+		AA3D28EA22243C0E0001D79F /* ConversationList+TableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D28E922243C0E0001D79F /* ConversationList+TableViewDelegate.swift */; };
+		AA3D28EC22243C340001D79F /* ConversationList+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D28EB22243C340001D79F /* ConversationList+DataSource.swift */; };
 		AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAB221B0A11001BC709 /* Actions.swift */; };
 		AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */; };
 		AABA1981220F043100321179 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABA1980220F043100321179 /* Debug.swift */; };
@@ -26,6 +29,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA3D28E722243BA60001D79F /* ControllerList+SearchBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControllerList+SearchBarDelegate.swift"; sourceTree = "<group>"; };
+		AA3D28E922243C0E0001D79F /* ConversationList+TableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationList+TableViewDelegate.swift"; sourceTree = "<group>"; };
+		AA3D28EB22243C340001D79F /* ConversationList+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationList+DataSource.swift"; sourceTree = "<group>"; };
 		AAA23AAB221B0A11001BC709 /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
 		AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileVC+UIImagePickerDelegate.swift"; sourceTree = "<group>"; };
 		AABA1980220F043100321179 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
@@ -92,6 +98,9 @@
 			isa = PBXGroup;
 			children = (
 				AAD73B66221EF6870085512B /* ConversationListViewController.swift */,
+				AA3D28E722243BA60001D79F /* ControllerList+SearchBarDelegate.swift */,
+				AA3D28E922243C0E0001D79F /* ConversationList+TableViewDelegate.swift */,
+				AA3D28EB22243C340001D79F /* ConversationList+DataSource.swift */,
 			);
 			path = ConversationListCV;
 			sourceTree = "<group>";
@@ -216,6 +225,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA3D28E822243BA60001D79F /* ControllerList+SearchBarDelegate.swift in Sources */,
 				AAD73B6C221EF8680085512B /* ConversationTableViewCell.swift in Sources */,
 				AAD73B70221F072B0085512B /* ConversationCellModelHelper.swift in Sources */,
 				AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */,
@@ -224,7 +234,9 @@
 				AAF22778220BD16000AF5DFA /* FintechChat.xcdatamodeld in Sources */,
 				AAD73B7B221F2E180085512B /* MessageTableViewCell.swift in Sources */,
 				AAD73B67221EF6870085512B /* ConversationListViewController.swift in Sources */,
+				AA3D28EA22243C0E0001D79F /* ConversationList+TableViewDelegate.swift in Sources */,
 				AABA1981220F043100321179 /* Debug.swift in Sources */,
+				AA3D28EC22243C340001D79F /* ConversationList+DataSource.swift in Sources */,
 				AAF22772220BD16000AF5DFA /* ProfileViewController.swift in Sources */,
 				AAD73B6E221F032E0085512B /* Anchor.swift in Sources */,
 				AAD73B77221F14E10085512B /* ConversationViewController.swift in Sources */,

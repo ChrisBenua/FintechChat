@@ -10,17 +10,17 @@ import Foundation
 import UIKit
 
 class ConversationListViewController : UIViewController {
-    private let rowHeight: CGFloat = 80
+    let rowHeight: CGFloat = 80
     
-    private var sectionNames: [String] = ["Online", "History"]
+    var sectionNames: [String] = ["Online", "History"]
     
     let searchController = UISearchController(searchResultsController: nil)
     
     var searchSplittedConversation = [[ConversationCellConfiguration]]()
     
-    private var allConversations: [ConversationCellConfiguration] = [ConversationCellConfiguration]()
+    var allConversations: [ConversationCellConfiguration] = [ConversationCellConfiguration]()
     
-    private var allSplittedConversations: [[ConversationCellConfiguration]] = [[ConversationCellConfiguration]]()
+    var allSplittedConversations: [[ConversationCellConfiguration]] = [[ConversationCellConfiguration]]()
     
     private func fillSplittedConversations() {
         let activeConversations = allConversations.filter({ $0.online })
@@ -43,7 +43,7 @@ class ConversationListViewController : UIViewController {
         fillSplittedConversations()
     }
     
-    private lazy var tableView: UITableView = {
+    lazy var tableView: UITableView = {
         let tv = UITableView()
         tv.delegate = self
         tv.dataSource = self
@@ -73,71 +73,4 @@ class ConversationListViewController : UIViewController {
     
 }
 
-//MARK:- UITableViewDelegate
-extension ConversationListViewController : UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return rowHeight
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionNames[section]
-    }
-}
 
-//MARK:- UITableViewDataSource
-extension ConversationListViewController : UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionNames.count
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchSplittedConversation[section].count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.cellId, for: indexPath) as! ConversationTableViewCell
-        let cellData = searchSplittedConversation[indexPath.section][indexPath.row]
-        cell.setup(name: cellData.name, message: cellData.message, date: cellData.date, online: cellData.online, hasUnreadMessages: cellData.hasUnreadMessages)
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dialogName = allSplittedConversations[indexPath.section][indexPath.row].name
-        let vc = ConversationViewController()
-        vc.dialogTitle = dialogName
-        self.searchController.isActive = false
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-}
-
-extension ConversationListViewController: UISearchBarDelegate {
-    func SetUpSearchBar() {
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.delegate = self
-        
-        searchController.searchBar.delegate!.searchBar?(searchController.searchBar, textDidChange: "")
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if (!searchText.isEmpty) {
-            searchSplittedConversation.removeAll()
-            
-            for i in 0..<allSplittedConversations.count {
-            searchSplittedConversation.append(allSplittedConversations[i].filter( { $0.name!.lowercased().contains(searchText.lowercased()) } ))
-            }
-        } else {
-            searchSplittedConversation.removeAll()
-            
-            for i in 0..<allSplittedConversations.count {
-                searchSplittedConversation.append(allSplittedConversations[i])
-            }
-            
-        }
-        tableView.reloadData()
-    }
-    
-}

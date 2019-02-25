@@ -18,7 +18,6 @@ class ConversationViewController: UIViewController {
             let model = ConversationMessageModelHelper(messageText: String(repeating: "w", count: 5 + 15 * i), isIncoming: i % 2 == 0)
             messages.append(model)
         }
-        
         tableView.reloadData()
     }
     
@@ -44,13 +43,21 @@ class ConversationViewController: UIViewController {
         self.view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         fillData()
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if (!messages.isEmpty && shouldScrollToLast) {
+        if (tableView.contentSize.height < self.view.frame.height) {
+            Logger.log(tableView.contentSize.height.description)
+            Logger.log("\(tableView.contentSize.height - self.view.frame.height)")
+            UIView.animate(withDuration: 0.2) {
+                self.tableView.contentInset = UIEdgeInsets(top: self.view.frame.height - self.tableView.contentSize.height, left: 0, bottom: 0, right: 0)
+            }
+            
+        }
+        
+        if (!messages.isEmpty && shouldScrollToLast && tableView.contentSize.height >= self.view.frame.height) {
             shouldScrollToLast = false
             tableView.setContentOffset(CGPoint(x: 0, y: max(tableView.contentSize.height - tableView.frame.height, 0)), animated: true)
         }
@@ -69,7 +76,6 @@ extension ConversationViewController: UITableViewDataSource {
         cell.setup(messageText: messages[indexPath.row].messageText, isIncoming: messages[indexPath.row].isIncoming)
         return cell
     }
-    
     
 }
 
