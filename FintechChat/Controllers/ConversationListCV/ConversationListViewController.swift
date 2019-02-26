@@ -54,6 +54,7 @@ class ConversationListViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.view.backgroundColor = .white
         self.navigationItem.title = "Tinkoff Chat"
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "user").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(profileButtonOnClick))
