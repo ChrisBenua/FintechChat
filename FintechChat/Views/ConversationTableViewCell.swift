@@ -58,7 +58,7 @@ class ConversationTableViewCell: UITableViewCell, ConversationCellConfiguration 
             self.lastMessageLabel.font = UIFont.systemFont(ofSize: 14)
             self.lastMessageLabel.text = msg
         } else {
-            self.lastMessageLabel.font = UIFont.boldSystemFont(ofSize: 18)
+            self.lastMessageLabel.font = UIFont.boldSystemFont(ofSize: 14)
             self.lastMessageLabel.text = "No Messages Yet"
         }
         
@@ -87,7 +87,7 @@ class ConversationTableViewCell: UITableViewCell, ConversationCellConfiguration 
             self.backgroundColor = .white
         }
         
-        if self.hasUnreadMessages {
+        if self.hasUnreadMessages && message != nil {
             self.lastMessageLabel.font = UIFont.boldSystemFont(ofSize: 14)
         }
         

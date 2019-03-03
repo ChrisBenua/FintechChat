@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow()
         window?.makeKeyAndVisible()
-        let navController = UINavigationController(rootViewController: ConversationListViewController())
+        let navController = CustomNavigationController(rootViewController: ConversationListViewController())
         window?.rootViewController = navController
         
         return true

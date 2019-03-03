@@ -114,8 +114,8 @@ class ProfileViewController: UIViewController {
             }
         }
         
-        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel) { (_) in
-            pickImageAlertController.dismiss(animated: true, completion: nil)
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel) { [weak pickImageAlertController] (_) in
+            pickImageAlertController?.dismiss(animated: true, completion: nil)
         }
         
         pickImageAlertController.addAction(selectFromGalleryAction)

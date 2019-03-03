@@ -28,10 +28,15 @@ extension ConversationListViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dialogName = allSplittedConversations[indexPath.section][indexPath.row].name
+        let dialogName = searchSplittedConversation[indexPath.section][indexPath.row].name
         let vc = ConversationViewController()
         vc.dialogTitle = dialogName
-        self.searchController.isActive = false
-        self.navigationController?.pushViewController(vc, animated: true)
+        if (searchController.isActive) {
+            self.searchController.dismiss(animated: true) { [weak self] in
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }
+        } else {
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

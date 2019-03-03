@@ -54,10 +54,13 @@ class ConversationListViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.changeAppearance()
         self.navigationController?.view.backgroundColor = .white
         self.navigationItem.title = "Tinkoff Chat"
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "user").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(profileButtonOnClick))
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Theme", style: .plain, target: self, action: #selector(themesButtonOnClick))
         
         self.view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
@@ -65,6 +68,18 @@ class ConversationListViewController : UIViewController {
         self.fillWithData()
         SetUpSearchBar()
         self.tableView.reloadData()
+    }
+    
+    @objc func themesButtonOnClick(_ sender: Any) {
+        //uncomment it for using obj-c version
+        //let themesVC = ThemesViewController()
+        //themesVC.setDelegate(self)
+        let themesVC = ThemesViewController { (color) in
+            self.logThemeChanging(selectedTheme: color)
+        }
+        
+        
+        self.present(themesVC, animated: true, completion: nil)
     }
     
     @objc func profileButtonOnClick(_ sender: Any) {
