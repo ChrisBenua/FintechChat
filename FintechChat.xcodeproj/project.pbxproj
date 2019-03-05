@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		AA1AB901222BDF530088E3D8 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1AB900222BDF530088E3D8 /* UserDefaults.swift */; };
 		AA1AB903222BE8170088E3D8 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1AB902222BE8170088E3D8 /* CustomNavigationController.swift */; };
-		AA1AB907222C05530088E3D8 /* ThemesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1AB904222BF6490088E3D8 /* ThemesViewController.swift */; };
 		AA3D28E822243BA60001D79F /* ControllerList+SearchBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D28E722243BA60001D79F /* ControllerList+SearchBarDelegate.swift */; };
 		AA3D28EA22243C0E0001D79F /* ConversationList+TableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D28E922243C0E0001D79F /* ConversationList+TableViewDelegate.swift */; };
 		AA3D28EC22243C340001D79F /* ConversationList+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D28EB22243C340001D79F /* ConversationList+DataSource.swift */; };
+		AA64B90F222D4C63006DF239 /* ThemesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1AB904222BF6490088E3D8 /* ThemesViewController.swift */; };
 		AA69B8B5222AEFB5001B9694 /* Themes.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69B8B2222AEC24001B9694 /* Themes.m */; };
 		AA69B8B7222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA69B8B6222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift */; };
 		AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAB221B0A11001BC709 /* Actions.swift */; };
@@ -275,7 +275,7 @@
 				AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */,
 				AA1AB903222BE8170088E3D8 /* CustomNavigationController.swift in Sources */,
 				AAF22778220BD16000AF5DFA /* FintechChat.xcdatamodeld in Sources */,
-				AA1AB907222C05530088E3D8 /* ThemesViewController.swift in Sources */,
+				AA64B90F222D4C63006DF239 /* ThemesViewController.swift in Sources */,
 				AAD73B7B221F2E180085512B /* MessageTableViewCell.swift in Sources */,
 				AAD73B67221EF6870085512B /* ConversationListViewController.swift in Sources */,
 				AA3D28EA22243C0E0001D79F /* ConversationList+TableViewDelegate.swift in Sources */,
@@ -446,7 +446,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Chris.FintechChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Christian/Documents/Fintech/FintechChat/FintechChat/FintechChat/Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "FintechChat/Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -469,7 +469,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Chris.FintechChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Christian/Documents/Fintech/FintechChat/FintechChat/FintechChat/Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "FintechChat/Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

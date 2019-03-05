@@ -72,8 +72,8 @@ class ConversationListViewController : UIViewController {
     
     @objc func themesButtonOnClick(_ sender: Any) {
         //uncomment it for using obj-c version
-        //let themesVC = ThemesViewController()
-        //themesVC.setDelegate(self)
+        /*let themesVC = ThemesViewController()
+        themesVC.setDelegate(self)*/
         let themesVC = ThemesViewController { (color) in
             self.logThemeChanging(selectedTheme: color)
         }
