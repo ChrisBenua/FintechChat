@@ -37,6 +37,8 @@ extension ConversationListViewController {
             (self.navigationController as! CustomNavigationController).isLightTheme = false
             UserDefaults.saveIsLightTheme(isLightTheme: false)
             
+            //self.navigationItem.rightBarButtonItem?.tintColor = .blue
+            
             UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
             
             self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
@@ -52,7 +54,9 @@ extension ConversationListViewController {
         else {
             (self.navigationController as! CustomNavigationController).isLightTheme = true
             UserDefaults.saveIsLightTheme(isLightTheme: true)
-
+            
+            //self.navigationItem.rightBarButtonItem?.tintColor = .black
+            
             UINavigationBar.appearance().tintColor = .blue
             
             self.navigationController?.navigationBar.tintColor = .blue

@@ -15,6 +15,7 @@
 		AA64B90F222D4C63006DF239 /* ThemesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1AB904222BF6490088E3D8 /* ThemesViewController.swift */; };
 		AA69B8B5222AEFB5001B9694 /* Themes.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69B8B2222AEC24001B9694 /* Themes.m */; };
 		AA69B8B7222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA69B8B6222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift */; };
+		AA912040222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA91203F222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift */; };
 		AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAB221B0A11001BC709 /* Actions.swift */; };
 		AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */; };
 		AABA1981220F043100321179 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABA1980220F043100321179 /* Debug.swift */; };
@@ -47,6 +48,7 @@
 		AA69B8B2222AEC24001B9694 /* Themes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Themes.m; sourceTree = "<group>"; };
 		AA69B8B4222AEF35001B9694 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		AA69B8B6222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationList+ThemesViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		AA91203F222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationListCV+CustomNavigationControllerDelegate.swift"; sourceTree = "<group>"; };
 		AAA23AAB221B0A11001BC709 /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
 		AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileVC+UIImagePickerDelegate.swift"; sourceTree = "<group>"; };
 		AABA1980220F043100321179 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				AA3D28E922243C0E0001D79F /* ConversationList+TableViewDelegate.swift */,
 				AA3D28EB22243C340001D79F /* ConversationList+DataSource.swift */,
 				AA69B8B6222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift */,
+				AA91203F222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift */,
 			);
 			path = ConversationListCV;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				AA1AB903222BE8170088E3D8 /* CustomNavigationController.swift in Sources */,
 				AAF22778220BD16000AF5DFA /* FintechChat.xcdatamodeld in Sources */,
 				AA64B90F222D4C63006DF239 /* ThemesViewController.swift in Sources */,
+				AA912040222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift in Sources */,
 				AAD73B7B221F2E180085512B /* MessageTableViewCell.swift in Sources */,
 				AAD73B67221EF6870085512B /* ConversationListViewController.swift in Sources */,
 				AA3D28EA22243C0E0001D79F /* ConversationList+TableViewDelegate.swift in Sources */,

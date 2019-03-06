@@ -54,11 +54,16 @@ class ConversationListViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.changeAppearance()
+        
         self.navigationController?.view.backgroundColor = .white
         self.navigationItem.title = "Tinkoff Chat"
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "user").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(profileButtonOnClick))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "user"), style: .plain, target: self, action: #selector(profileButtonOnClick))
+        //self.navigationItem.rightBarButtonItem?.tintColor = .blue
+        
+        (self.navigationController as? CustomNavigationController)?.themeDelegate = self
+        
+        self.changeAppearance()
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Theme", style: .plain, target: self, action: #selector(themesButtonOnClick))
         

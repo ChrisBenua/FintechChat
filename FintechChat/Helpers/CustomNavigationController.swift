@@ -9,9 +9,19 @@
 import Foundation
 import UIKit
 
+protocol CustomNavigationControllerDelegate : class {
+    func isLightThemeChanged(isLightTheme: Bool)
+}
 
 class CustomNavigationController : UINavigationController {
-    var isLightTheme: Bool = true
+    
+    var isLightTheme: Bool = true {
+        didSet {
+            themeDelegate?.isLightThemeChanged(isLightTheme: isLightTheme)
+        }
+    }
+    
+    weak var themeDelegate: CustomNavigationControllerDelegate?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if (isLightTheme) {
