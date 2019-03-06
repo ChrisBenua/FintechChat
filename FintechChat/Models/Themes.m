@@ -52,6 +52,7 @@
 - (id)initWithColors:(UIColor *)theme1Color c1:(UIColor *)theme2Color c2:(UIColor *)theme3Color
 {
     self = [self init];
+
     [self setTheme1:theme1Color];
     [self setTheme2:theme2Color];
     [self setTheme3:theme3Color];
@@ -59,4 +60,11 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [theme1 release];
+    [theme2 release];
+    [theme3 release];
+    [super dealloc];
+}
 @end

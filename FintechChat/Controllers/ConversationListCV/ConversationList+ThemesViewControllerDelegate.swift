@@ -9,11 +9,11 @@
 import Foundation
 import UIKit
 //uncomment it for using  obj-c version
-/*extension ConversationListViewController: ThemesViewControllerDelegate {
+extension ConversationListViewController: ThemesViewControllerDelegate {
     func themesViewController(_ controller: ThemesViewController, didSelectTheme selectedTheme: UIColor) {
         logThemeChanging(selectedTheme: selectedTheme)
     }
-}*/
+}
 
 extension ConversationListViewController {
     

@@ -33,6 +33,7 @@
 
 - (void)setModel:(Themes *)newModel
 {
+    [self->model release];
     self->model = newModel;
 }
 
@@ -50,7 +51,7 @@
 {
     [super viewDidLoad];
     
-    [self setModel:[[Themes alloc] initWithColors:[[UIColor alloc] initWithRed:32.0/255 green:32.0/255 blue:32.0/255 alpha:1] c1:[[UIColor alloc] initWithRed:247.0 / 255.0 green:231.0 / 255.0 blue:206.0 / 255.0 alpha:1.0] c2:[UIColor whiteColor]]];
+    [self setModel:[[Themes alloc] initWithColors:[[[UIColor alloc] initWithRed:32.0/255 green:32.0/255 blue:32.0/255 alpha:1] autorelease] c1:[[[UIColor alloc] initWithRed:247.0 / 255.0 green:231.0 / 255.0 blue:206.0 / 255.0 alpha:1.0] autorelease] c2:[[UIColor whiteColor] autorelease]]];
     
     navBarView = [[UIView alloc] init];
     [navBarView setBackgroundColor:[[[UIColor alloc] initWithRed:0.8 green:0.8 blue:0.8 alpha:0.6] autorelease]];
@@ -134,11 +135,20 @@
 {
     [[self view] setBackgroundColor:[model theme3]];
     [[self delegate] themesViewController:self didSelectTheme:[model theme3]];
+
 }
 
 - (void)dealloc
 {
-    [[self model] release];
+    [self->navBarView release];
+    [self->theme3Button release];
+    [self->theme2Button release];
+    [self->theme1Button release];
+    [self->containerStackView release];
+    
+    [self->closeButton release];
+
+    [self->model release];
     [super dealloc];
 }
 
