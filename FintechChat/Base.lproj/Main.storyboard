@@ -24,18 +24,20 @@
                                     <constraint firstAttribute="width" secondItem="zWB-TR-TFh" secondAttribute="height" id="NcR-tv-Ebh"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Кристиан Бенуа" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oLs-3a-dny">
-                                <rect key="frame" x="65" y="364" width="190.5" height="29"/>
+                            <textField opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Кристиан Бенуа" textAlignment="center" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oLs-3a-dny">
+                                <rect key="frame" x="16" y="364" width="288" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="29" id="3oF-R4-ydc"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Люблю програмировать под iOs" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-lb-0S6">
-                                <rect key="frame" x="16" y="409" width="288" height="21.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textView opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" editable="NO" text="Люблю програмировать под iOS" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-lb-0S6">
+                                <rect key="frame" x="16" y="409" width="288" height="97"/>
                                 <color key="textColor" red="0.45484960079193115" green="0.45493203401565552" blue="0.45484435558319092" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X78-63-B6n">
                                 <rect key="frame" x="16" y="522" width="288" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -72,7 +74,7 @@
                             <constraint firstItem="oLs-3a-dny" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="9ch-9J-v4C"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="X78-63-B6n" secondAttribute="bottom" constant="12" id="Aef-59-9ye"/>
                             <constraint firstItem="zWB-TR-TFh" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="IJg-wm-Iap"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="oLs-3a-dny" secondAttribute="trailing" constant="16" id="MFp-LS-Uh7"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="oLs-3a-dny" secondAttribute="trailing" constant="16" id="MFp-LS-Uh7"/>
                             <constraint firstItem="oLs-3a-dny" firstAttribute="top" secondItem="zWB-TR-TFh" secondAttribute="bottom" constant="16" id="OdY-FK-xnu"/>
                             <constraint firstItem="88R-gm-rfm" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="P6g-Z8-tfU"/>
                             <constraint firstItem="zWB-TR-TFh" firstAttribute="trailing" secondItem="Gmp-Wp-Bwu" secondAttribute="trailing" id="PKX-vk-0j5"/>
@@ -82,8 +84,9 @@
                             <constraint firstItem="X78-63-B6n" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="gBb-hW-8Fr"/>
                             <constraint firstItem="Bpj-lb-0S6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="jYI-MC-az3"/>
                             <constraint firstItem="zWB-TR-TFh" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="mgD-Rb-5ln"/>
+                            <constraint firstItem="oLs-3a-dny" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="nUY-fo-N2q"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="X78-63-B6n" secondAttribute="trailing" constant="16" id="q5E-zq-vgt"/>
-                            <constraint firstItem="X78-63-B6n" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Bpj-lb-0S6" secondAttribute="bottom" constant="16" id="s7G-pe-bWZ"/>
+                            <constraint firstItem="X78-63-B6n" firstAttribute="top" secondItem="Bpj-lb-0S6" secondAttribute="bottom" constant="16" id="s7G-pe-bWZ"/>
                             <constraint firstItem="zWB-TR-TFh" firstAttribute="bottom" secondItem="Gmp-Wp-Bwu" secondAttribute="bottom" id="v0R-tS-Lkq"/>
                             <constraint firstItem="Bpj-lb-0S6" firstAttribute="top" secondItem="oLs-3a-dny" secondAttribute="bottom" constant="16" id="vUX-OK-1jR"/>
                             <constraint firstItem="oLs-3a-dny" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="yWh-yU-aug"/>
@@ -92,10 +95,11 @@
                     </view>
                     <connections>
                         <outlet property="backButton" destination="88R-gm-rfm" id="RRU-tI-XTE"/>
-                        <outlet property="detailInfoLabel" destination="Bpj-lb-0S6" id="K7Q-x5-KT0"/>
+                        <outlet property="detailInfoTextField" destination="Bpj-lb-0S6" id="ZEZ-Xb-xAg"/>
                         <outlet property="editProfileButton" destination="X78-63-B6n" id="bsF-46-cQZ"/>
                         <outlet property="imageContainerView" destination="Gmp-Wp-Bwu" id="Iss-gF-bwD"/>
                         <outlet property="logoImageView" destination="KjS-mx-fDg" id="Knb-Tl-iAm"/>
+                        <outlet property="nameTextField" destination="oLs-3a-dny" id="A3V-nL-DOZ"/>
                         <outlet property="profilePhotoImageView" destination="zWB-TR-TFh" id="HQf-iZ-jMW"/>
                     </connections>
                 </viewController>
