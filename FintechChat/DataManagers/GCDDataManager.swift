@@ -18,26 +18,31 @@ class DataManagersFilePaths {
     static var userDetailInfoFile = "UserDetailInfoKey.txt"
 }
 
-class GCDDataManager {
+protocol UserProfileDataDriver: class {
+    static var shared: UserProfileDataDriver { get set }
+    
+    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> (),
+                             onError: @escaping () -> ())
+    
+    func getUserProfileInfo(onComplete: @escaping (UserProfileState) -> ())
+}
+
+class GCDDataManager: UserProfileDataDriver {
+    
     private var savingQueue = DispatchQueue(label: "savingUserProfileToFiles.queue", qos: .background, attributes: .concurrent)
     
     private var loadingQueue = DispatchQueue(label: "loadingUserProfileToFiles.queue", qos: .background, attributes: .concurrent)
     
-    public static let shared: GCDDataManager = GCDDataManager()
+    public static var shared: UserProfileDataDriver = GCDDataManager()
     
-    func saveUserProfileInfo(profileImage: UIImage?, username: String?, userDetailInfo: String?, onComplete: @escaping () -> (), onError: @escaping () -> ()) {
+    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> (), onError: @escaping () -> ()) {
         
         let group = DispatchGroup()
-        guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            onError()
-            return
-        }
-        if (userDetailInfo != nil) {
+        if (state.detailInfo != nil) {
             group.enter()
             savingQueue.async {
                 do {
-                    let fileURL = dir.appendingPathComponent(DataManagersFilePaths.userDetailInfoFile)
-                    try self.saveStringToFile(text: userDetailInfo!, filePath: fileURL)
+                    try FetchSaveManager.saveStringToFile(text: state.detailInfo!, DataManagersFilePaths.userDetailInfoFile)
                     group.leave()
                 } catch let err {
                     Logger.log(err.localizedDescription)
@@ -48,12 +53,11 @@ class GCDDataManager {
             }
         }
         
-        if (username != nil) {
+        if (state.username != nil) {
             group.enter()
             savingQueue.async {
                 do {
-                    let fileURL = dir.appendingPathComponent(DataManagersFilePaths.userNameFile)
-                    try self.saveStringToFile(text: username!, filePath: fileURL)
+                    try FetchSaveManager.saveStringToFile(text: state.username!, DataManagersFilePaths.userNameFile)
                     group.leave()
                 } catch let err {
                     Logger.log(err.localizedDescription)
@@ -64,12 +68,11 @@ class GCDDataManager {
             }
         }
         
-        if (profileImage != nil) {
+        if (state.profileImage != nil) {
             group.enter()
             savingQueue.async {
                 do {
-                    let fileURL = dir.appendingPathComponent(DataManagersFilePaths.userProfileImageFile)
-                    try self.saveProfileImageToFile(profileImage: profileImage!, filePath: fileURL)
+                    try FetchSaveManager.saveProfileImageToFile(profileImage: state.profileImage!, DataManagersFilePaths.userProfileImageFile)
                     group.leave()
                 } catch let err {
                     Logger.log(err.localizedDescription)
@@ -86,11 +89,8 @@ class GCDDataManager {
     
     }
     
-    func getUserProfileInfo(onComplete: @escaping (String?, String?, UIImage?) -> ()) {
+    func getUserProfileInfo(onComplete: @escaping (UserProfileState) -> ()) {
         let group = DispatchGroup()
-        guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return
-        }
         var image: UIImage?
         var username: String?
         var detailInfo: String?
@@ -98,7 +98,7 @@ class GCDDataManager {
         group.enter()
         loadingQueue.async {
             do {
-                image = try self.getSavedProfileImage()
+                image = try FetchSaveManager.getSavedProfileImage()
                 group.leave()
             } catch let err {
                 Logger.log(err.localizedDescription)
@@ -109,7 +109,7 @@ class GCDDataManager {
         group.enter()
         loadingQueue.async {
             do {
-                username = try self.getSavedStringFromFile(filePath: dir.appendingPathComponent(DataManagersFilePaths.userNameFile))
+                username = try FetchSaveManager.getSavedStringFromFile(DataManagersFilePaths.userNameFile)
                 group.leave()
             } catch let err {
                 Logger.log(err.localizedDescription)
@@ -120,7 +120,7 @@ class GCDDataManager {
         group.enter()
         loadingQueue.async {
             do {
-                detailInfo = try self.getSavedStringFromFile(filePath: dir.appendingPathComponent(DataManagersFilePaths.userDetailInfoFile))
+                detailInfo = try FetchSaveManager.getSavedStringFromFile(DataManagersFilePaths.userDetailInfoFile)
                 group.leave()
             } catch let err {
                 Logger.log(err.localizedDescription)
@@ -129,29 +129,11 @@ class GCDDataManager {
         }
         
         group.notify(queue: loadingQueue) {
-            onComplete(detailInfo, username, image)
+            onComplete(UserProfileState(username: username, profileImage: image, detailInfo: detailInfo))
+            
         }
         
     }
     
-    func saveStringToFile(text: String, filePath: URL) throws {
-        try text.write(to: filePath, atomically: false, encoding: .utf8)
-    }
     
-    func saveProfileImageToFile(profileImage: UIImage, filePath: URL) throws {
-        try profileImage.jpegData(compressionQuality: 1.0)?.write(to: filePath)
-    }
-    
-    func getSavedStringFromFile(filePath: URL) throws -> String {
-        return try String(contentsOf: filePath, encoding: .utf8)
-    }
-    
-    func getSavedProfileImage() throws -> UIImage? {
-        guard let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            throw SavingErrors.directoryNotFound
-        }
-        let data = try Data(contentsOf: dir.appendingPathComponent(DataManagersFilePaths.userProfileImageFile))
-        
-        return UIImage(data: data)
-    }
 }

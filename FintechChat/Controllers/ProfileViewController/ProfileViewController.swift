@@ -20,7 +20,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet var nameTextField: UITextField!
     lazy var helperView = UIView()
     var stackViewConstraints: [NSLayoutConstraint] = []
-    
+    var tapGestureRecognizer: UITapGestureRecognizer!
     private func styleButton(button: UIButton, cornerRadius: CGFloat = 10 , borderColor: CGColor = UIColor.black.cgColor, borderWidth: CGFloat = 0.8) {
         
         button.layer.cornerRadius = cornerRadius
@@ -92,8 +92,9 @@ class ProfileViewController: UIViewController {
     
     fileprivate func SetupUI() {
         backButton.addTarget(self, action: #selector(backButtonOnClick), for: .touchUpInside)
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapOnLogo))
+        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapOnLogo))
+        tapGestureRecognizer.isEnabled = false
+
         tapGestureRecognizer.numberOfTapsRequired = 1
         imageContainerView.addGestureRecognizer(tapGestureRecognizer)
         
@@ -114,7 +115,7 @@ class ProfileViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         Logger.log(editProfileButton.frame.debugDescription)
         SetupUI()
-        self.UpdateUI()
+        self.FetchProfileInfo(shared: GCDDataManager.shared)
     }
     
     fileprivate func getDefaultImagePicker() -> UIImagePickerController {
@@ -183,6 +184,7 @@ class ProfileViewController: UIViewController {
         self.nameTextField.isUserInteractionEnabled = true
         self.detailInfoTextField.isUserInteractionEnabled = true
         self.detailInfoTextField.isEditable = true
+        self.tapGestureRecognizer.isEnabled = true
         
         UIView.animate(withDuration: 0.5, animations: {
             self.editProfileButton.alpha = 0
@@ -196,19 +198,17 @@ class ProfileViewController: UIViewController {
     }
     
     @objc func saveGCDButtonOnClick(_ sender : Any?) {
-        self.saveGCDButton.isEnabled = false
-        self.saveOperationButton.isEnabled = false
+        self.toggleEditing(false)
         
-        GCDDataManager.shared.saveUserProfileInfo(profileImage: profilePhotoImageView.image, username: nameTextField.text, userDetailInfo: detailInfoTextField.text, onComplete: { [weak self] in
+        GCDDataManager.shared.saveUserProfileInfo(state: constructUserProfileInfo(), onComplete: { [weak self] in
             if (self != nil) {
-                self!.UpdateUI(showAlert: true)
+                self!.FetchProfileInfo(showAlert: true, shared: GCDDataManager.shared)
             }
         }) { [weak self] in
             if (self != nil) {
                 DispatchQueue.main.async {
                     self!.present((self!.generateAlertController(retryFunc: (self!.saveGCDButtonOnClick(_:)))), animated: true, completion: nil)
-                    self!.saveGCDButton.isEnabled = true
-                    self!.saveOperationButton.isEnabled = true
+                    self?.toggleEditing(true)
                 }
                 
             }
@@ -216,27 +216,40 @@ class ProfileViewController: UIViewController {
     }
     
     @objc func saveOperationButtonOnClick(_ sender : Any?) {
+        self.toggleEditing(false)
         
+        OperationDataManager.shared.saveUserProfileInfo(state: constructUserProfileInfo(), onComplete: { [weak self] in
+            if (self != nil) {
+                self!.FetchProfileInfo(showAlert: true, shared: OperationDataManager.shared)
+            }
+        }) { [weak self] in
+            if (self != nil) {
+                DispatchQueue.main.async {
+                    self!.present(self!.generateAlertController(retryFunc: self!.saveOperationButtonOnClick(_:)), animated: true, completion: nil)
+                    
+                    self?.toggleEditing(true)
+                }
+            }
+        }
     }
     
-    private func UpdateUI(showAlert: Bool = false) {
-        GCDDataManager.shared.getUserProfileInfo(onComplete: { [weak self] (detailInfo, username, profileImage) in
-            self?.UpdateUIAfterFetch(detailInfo: detailInfo, username: username, profileImage: profileImage, showAlert: showAlert)
+    private func FetchProfileInfo(showAlert: Bool = false, shared: UserProfileDataDriver) {
+        shared.getUserProfileInfo(onComplete: { [weak self] (state) in
+            self?.UpdateUIAfterFetch(state: state, showAlert: showAlert)
         })
     }
     
-    private func UpdateUIAfterFetch(detailInfo: String?, username: String?, profileImage: UIImage?, showAlert: Bool = false) {
+    private func UpdateUIAfterFetch(state: UserProfileState, showAlert: Bool = false) {
         DispatchQueue.main.async { [weak self] in
-            self?.detailInfoTextField.text = detailInfo
-            self?.nameTextField.text = username
-            self?.profilePhotoImageView.image = profileImage ?? self?.profilePhotoImageView.image
+            self?.detailInfoTextField.text = state.detailInfo ?? self?.detailInfoTextField.text
+            self?.nameTextField.text = state.username ?? self?.nameTextField.text
+            self?.profilePhotoImageView.image = state.profileImage ?? self?.profilePhotoImageView.image
             
             if (showAlert) {
                 self?.present(UIAlertController.okAlertController(title: "Saved Succesfully"), animated: true, completion: nil)
+                self?.toggleEditing(true)
             }
             
-            self?.saveGCDButton.isEnabled = true
-            self?.saveOperationButton.isEnabled = true
         }
     }
     
@@ -251,6 +264,16 @@ class ProfileViewController: UIViewController {
         alertController.addAction(retryAction)
         
         return alertController
+    }
+    
+    private func constructUserProfileInfo() -> UserProfileState {
+        return UserProfileState(username: nameTextField.text, profileImage: profilePhotoImageView.image, detailInfo: detailInfoTextField.text)
+    }
+    
+    private func toggleEditing(_ enable: Bool) {
+        self.tapGestureRecognizer.isEnabled = enable
+        self.saveGCDButton.isEnabled = enable
+        self.saveOperationButton.isEnabled = enable
     }
     
     override func viewWillLayoutSubviews() {
