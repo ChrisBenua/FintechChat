@@ -13,6 +13,8 @@ import UIKit
 extension UserDefaults {
     static let navigationBarColorKey = "bavigationBarColorKey"
     static let isLightThemeKey = "isLightThemeKey"
+    private static let savingThemeQueue = DispatchQueue(label: "ThemeSavingQueue", qos: .background, attributes: .concurrent)
+    
     
     static func saveIsLightTheme(isLightTheme: Bool) {
         let data = NSKeyedArchiver.archivedData(withRootObject: isLightTheme)
@@ -26,13 +28,17 @@ extension UserDefaults {
     }
 
     static func saveNavigationBarColor(navBarColor: UIColor) {
-        let data = NSKeyedArchiver.archivedData(withRootObject: navBarColor)
-        UserDefaults.standard.set(data, forKey: UserDefaults.navigationBarColorKey)
+        savingThemeQueue.async(flags: .barrier) {
+            let data = NSKeyedArchiver.archivedData(withRootObject: navBarColor)
+            UserDefaults.standard.set(data, forKey: UserDefaults.navigationBarColorKey)
+        }
     }
     
     static func getNavigationBarColor() -> UIColor {
-        guard let data = UserDefaults.standard.data(forKey: UserDefaults.navigationBarColorKey) else { return UIColor.white }
-        guard let navBarColor = NSKeyedUnarchiver.unarchiveObject(with: data) as? UIColor else { return UIColor.white }
-        return navBarColor
+        return savingThemeQueue.sync {
+            guard let data = UserDefaults.standard.data(forKey: UserDefaults.navigationBarColorKey) else { return UIColor.white }
+            guard let navBarColor = NSKeyedUnarchiver.unarchiveObject(with: data) as? UIColor else { return UIColor.white }
+            return navBarColor
+        }
     }
 }
