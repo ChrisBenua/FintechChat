@@ -21,6 +21,15 @@ class ProfileViewController: UIViewController {
     lazy var helperView = UIView()
     var stackViewConstraints: [NSLayoutConstraint] = []
     var tapGestureRecognizer: UITapGestureRecognizer!
+    var lastState: UserProfileState!
+    let savingLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Saving..."
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private func styleButton(button: UIButton, cornerRadius: CGFloat = 10 , borderColor: CGColor = UIColor.black.cgColor, borderWidth: CGFloat = 0.8) {
         
         button.layer.cornerRadius = cornerRadius
@@ -35,7 +44,9 @@ class ProfileViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("GCD", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
-        
+        button.setTitleColor(UIColor.lightGray, for: .disabled)
+        button.isEnabled = false
+
         return button
     }()
     
@@ -46,8 +57,36 @@ class ProfileViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Operation", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
+        button.setTitleColor(UIColor.lightGray, for: .disabled)
+
+        button.isEnabled = false
         
         return button
+    }()
+    
+    lazy var activityIndicator = UIActivityIndicatorView(style: .gray)
+    
+    lazy var savingProcessView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.lightGray
+        view.alpha = 0.7
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 10
+        view.addSubview(activityIndicator)
+        view.addSubview(savingLabel)
+
+        
+        savingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        savingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 4).isActive = true
+        
+        //label.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        return view
     }()
     
     lazy var saveButtonsStackView: UIStackView = {
@@ -106,6 +145,20 @@ class ProfileViewController: UIViewController {
         nameTextField.isUserInteractionEnabled = false
     }
     
+    fileprivate func placeEditingButtons() {
+        self.view.addSubview(self.saveButtonsStackView)
+        self.saveButtonsStackView.isHidden = true
+        
+        self.saveButtonsStackView.anchor(top: nil, left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 16, paddingRight: 16, width: 0, height: 0)
+        self.stackViewConstraints.append(self.saveButtonsStackView.heightAnchor.constraint(greaterThanOrEqualTo: self.view.heightAnchor, multiplier: 0.06))
+        NSLayoutConstraint.activate(self.stackViewConstraints)
+    }
+    
+    fileprivate func SetupTextChangedHandlers() {
+        detailInfoTextField.delegate = self
+        nameTextField.addTarget(self, action: #selector(textDidChanged(_:)), for: .editingChanged)
+    }
+    
     @objc func backButtonOnClick(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -114,8 +167,10 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         Logger.log(editProfileButton.frame.debugDescription)
-        SetupUI()
+        self.SetupUI()
         self.FetchProfileInfo(shared: GCDDataManager.shared)
+        self.SetupTextChangedHandlers()
+        self.placeEditingButtons()
     }
     
     fileprivate func getDefaultImagePicker() -> UIImagePickerController {
@@ -181,26 +236,31 @@ class ProfileViewController: UIViewController {
     }
     
     @objc func editButtonOnClick(_ sender : Any) {
-        self.nameTextField.isUserInteractionEnabled = true
-        self.detailInfoTextField.isUserInteractionEnabled = true
-        self.detailInfoTextField.isEditable = true
-        self.tapGestureRecognizer.isEnabled = true
         
-        UIView.animate(withDuration: 0.5, animations: {
-            self.editProfileButton.alpha = 0
+        /*UIView.animate(withDuration: 0.5, animations: { [weak self] in
+            self?.editProfileButton.alpha = 0
         }) { (_) in
             self.editProfileButton.isUserInteractionEnabled = false
-            self.view.addSubview(self.saveButtonsStackView)
-            self.saveButtonsStackView.anchor(top: nil, left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 16, paddingRight: 16, width: 0, height: 0)
-            self.stackViewConstraints.append(self.saveButtonsStackView.heightAnchor.constraint(greaterThanOrEqualTo: self.view.heightAnchor, multiplier: 0.06))
-            NSLayoutConstraint.activate(self.stackViewConstraints)
-        }
+//            self.view.addSubview(self.saveButtonsStackView)
+//            self.saveButtonsStackView.alpha = 0
+//            self.saveButtonsStackView.anchor(top: nil, left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 16, paddingRight: 16, width: 0, height: 0)
+//            self.stackViewConstraints.append(self.saveButtonsStackView.heightAnchor.constraint(greaterThanOrEqualTo: self.view.heightAnchor, multiplier: 0.06))
+//            NSLayoutConstraint.activate(self.stackViewConstraints)
+            
+            UIView.animate(withDuration: 0.5, animations: { [weak self] in
+                self?.saveButtonsStackView.alpha = 1
+            })
+        }*/
+        
+        self.changeEditingMode(true)
+        
     }
     
     @objc func saveGCDButtonOnClick(_ sender : Any?) {
-        self.toggleEditing(false)
+        showSavingProccessView()
+        self.toggleEditingButtons(false)
         
-        GCDDataManager.shared.saveUserProfileInfo(state: constructUserProfileInfo(), onComplete: { [weak self] in
+        GCDDataManager.shared.saveUserProfileInfo(state: profileStateWithoutSameFieldsInProfile(), onComplete: { [weak self] in
             if (self != nil) {
                 self!.FetchProfileInfo(showAlert: true, shared: GCDDataManager.shared)
             }
@@ -208,7 +268,7 @@ class ProfileViewController: UIViewController {
             if (self != nil) {
                 DispatchQueue.main.async {
                     self!.present((self!.generateAlertController(retryFunc: (self!.saveGCDButtonOnClick(_:)))), animated: true, completion: nil)
-                    self?.toggleEditing(true)
+                    self?.toggleEditingButtons(true)
                 }
                 
             }
@@ -216,9 +276,10 @@ class ProfileViewController: UIViewController {
     }
     
     @objc func saveOperationButtonOnClick(_ sender : Any?) {
-        self.toggleEditing(false)
+        showSavingProccessView()
+        self.toggleEditingButtons(false)
         
-        OperationDataManager.shared.saveUserProfileInfo(state: constructUserProfileInfo(), onComplete: { [weak self] in
+        OperationDataManager.shared.saveUserProfileInfo(state: profileStateWithoutSameFieldsInProfile(), onComplete: { [weak self] in
             if (self != nil) {
                 self!.FetchProfileInfo(showAlert: true, shared: OperationDataManager.shared)
             }
@@ -227,10 +288,28 @@ class ProfileViewController: UIViewController {
                 DispatchQueue.main.async {
                     self!.present(self!.generateAlertController(retryFunc: self!.saveOperationButtonOnClick(_:)), animated: true, completion: nil)
                     
-                    self?.toggleEditing(true)
+                    self?.toggleEditingButtons(true)
                 }
             }
         }
+    }
+    
+    private func profileStateWithoutSameFieldsInProfile() -> UserProfileState {
+        var currentUserProfileInfo = constructUserProfileInfo()
+        
+        if (currentUserProfileInfo.detailInfo == lastState.detailInfo) {
+            currentUserProfileInfo.detailInfo = nil
+        }
+        
+        if (currentUserProfileInfo.username == lastState.username) {
+            currentUserProfileInfo.username = nil
+        }
+        
+        if (currentUserProfileInfo.profileImage == lastState.profileImage) {
+            currentUserProfileInfo.profileImage = nil
+        }
+        
+        return currentUserProfileInfo
     }
     
     private func FetchProfileInfo(showAlert: Bool = false, shared: UserProfileDataDriver) {
@@ -241,13 +320,19 @@ class ProfileViewController: UIViewController {
     
     private func UpdateUIAfterFetch(state: UserProfileState, showAlert: Bool = false) {
         DispatchQueue.main.async { [weak self] in
+            self?.dismissSavingProcessView()
             self?.detailInfoTextField.text = state.detailInfo ?? self?.detailInfoTextField.text
             self?.nameTextField.text = state.username ?? self?.nameTextField.text
             self?.profilePhotoImageView.image = state.profileImage ?? self?.profilePhotoImageView.image
             
             if (showAlert) {
                 self?.present(UIAlertController.okAlertController(title: "Saved Succesfully"), animated: true, completion: nil)
-                self?.toggleEditing(true)
+                //self?.toggleEditing(true)
+                self?.tapGestureRecognizer.isEnabled = true
+                self?.changeEditingMode(false)
+            } else {
+                //можно, так как UserProfileState - структура
+                self?.lastState = state
             }
             
         }
@@ -270,10 +355,16 @@ class ProfileViewController: UIViewController {
         return UserProfileState(username: nameTextField.text, profileImage: profilePhotoImageView.image, detailInfo: detailInfoTextField.text)
     }
     
-    private func toggleEditing(_ enable: Bool) {
+    func toggleEditingButtons(_ enable: Bool) {
         self.tapGestureRecognizer.isEnabled = enable
         self.saveGCDButton.isEnabled = enable
         self.saveOperationButton.isEnabled = enable
+    }
+    
+    private func toggleEditingInputFields(_ enable: Bool) {
+        self.nameTextField.isUserInteractionEnabled = enable
+        self.detailInfoTextField.isUserInteractionEnabled = enable
+        self.detailInfoTextField.isEditable = enable
     }
     
     override func viewWillLayoutSubviews() {
@@ -290,6 +381,69 @@ class ProfileViewController: UIViewController {
         super.viewDidAppear(animated)
         //Скорее всего, в viewDidLoad у нас подгружается расположение элементов UI для девайса, который указан в сториборде(то есть их позиции и тд), так как там ViewController еще не добавлен в иерархию view. А уже в viewDidAppear - сработал AutoLayout и расположил их заново и правильно
         Logger.log(editProfileButton.frame.debugDescription)
+    }
+}
+
+//MARK: ActivityIndicator
+extension ProfileViewController {
+    func showSavingProccessView() {
+        self.view.addSubview(self.savingProcessView)
+        self.activityIndicator.startAnimating()
+        savingProcessView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        savingProcessView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        savingProcessView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.13).isActive = true
+        savingProcessView.widthAnchor.constraint(equalTo: self.savingProcessView.heightAnchor, multiplier: 1).isActive = true
+
+    }
+    
+    func dismissSavingProcessView() {
+        self.activityIndicator.stopAnimating()
+        self.savingProcessView.removeFromSuperview()
+    }
+}
+
+//MARK: EditingButtons
+extension ProfileViewController {
+    func changeEditingMode(_ isEditing: Bool) {
+        if isEditing {
+            UIView.animate(withDuration: 0.5, animations: { [weak self] in
+                self?.editProfileButton.alpha = 0
+            }) { [weak self] (_) in
+                self?.saveButtonsStackView.isHidden = false
+                self?.editProfileButton.isHidden = true
+                self?.toggleEditingInputFields(true)
+                self?.tapGestureRecognizer.isEnabled = true
+
+                
+                UIView.animate(withDuration: 0.5, animations: { [weak self] in
+                    self?.saveButtonsStackView.alpha = 1
+                    }, completion: nil)
+            }
+            
+            
+            
+        } else {
+            UIView.animate(withDuration: 0.5, animations: { [weak self] in
+                self?.saveButtonsStackView.alpha = 0
+            }) { [weak self] (_) in
+                self?.saveButtonsStackView.isHidden = true
+                self?.editProfileButton.isHidden = false
+                self?.tapGestureRecognizer.isEnabled = false
+                
+                UIView.animate(withDuration: 0.5) { [weak self] in
+                    self?.editProfileButton.alpha = 1
+                }
+                self?.toggleEditingInputFields(false)
+            }
+            
+        }
+    }
+}
+
+//MARK: TextFieldTextChanged
+extension ProfileViewController {
+    @objc func textDidChanged(_ textField: UITextField) {
+        self.toggleEditingButtons(true)
     }
 }
 

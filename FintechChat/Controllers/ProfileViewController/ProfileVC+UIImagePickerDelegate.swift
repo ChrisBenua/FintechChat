@@ -15,7 +15,7 @@ extension ProfileViewController : UIImagePickerControllerDelegate {
         guard let chosenImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
         
         self.profilePhotoImageView.image = chosenImage
-        
+        self.toggleEditingButtons(true)
         //to be sure that ImagePickerController will be dismissed
         defer {
             dismiss(animated: true, completion: nil)

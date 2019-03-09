@@ -22,6 +22,7 @@
 		AA912040222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA91203F222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift */; };
 		AA9ED4E22233A0A8001DC94B /* OperationDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9ED4E12233A0A8001DC94B /* OperationDataManager.swift */; };
 		AA9ED4E42233A1E1001DC94B /* NotifyOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9ED4E32233A1E1001DC94B /* NotifyOperation.swift */; };
+		AA9ED4E82233E7AB001DC94B /* ProfileVC+TextViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9ED4E72233E7AB001DC94B /* ProfileVC+TextViewDelegate.swift */; };
 		AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAB221B0A11001BC709 /* Actions.swift */; };
 		AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */; };
 		AABA1981220F043100321179 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABA1980220F043100321179 /* Debug.swift */; };
@@ -63,6 +64,7 @@
 		AA91203F222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationListCV+CustomNavigationControllerDelegate.swift"; sourceTree = "<group>"; };
 		AA9ED4E12233A0A8001DC94B /* OperationDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDataManager.swift; sourceTree = "<group>"; };
 		AA9ED4E32233A1E1001DC94B /* NotifyOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyOperation.swift; sourceTree = "<group>"; };
+		AA9ED4E72233E7AB001DC94B /* ProfileVC+TextViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileVC+TextViewDelegate.swift"; sourceTree = "<group>"; };
 		AAA23AAB221B0A11001BC709 /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
 		AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileVC+UIImagePickerDelegate.swift"; sourceTree = "<group>"; };
 		AABA1980220F043100321179 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 			children = (
 				AAF22771220BD16000AF5DFA /* ProfileViewController.swift */,
 				AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */,
+				AA9ED4E72233E7AB001DC94B /* ProfileVC+TextViewDelegate.swift */,
 			);
 			path = ProfileViewController;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 				AABA1981220F043100321179 /* Debug.swift in Sources */,
 				AA3D28EC22243C340001D79F /* ConversationList+DataSource.swift in Sources */,
 				AAF22772220BD16000AF5DFA /* ProfileViewController.swift in Sources */,
+				AA9ED4E82233E7AB001DC94B /* ProfileVC+TextViewDelegate.swift in Sources */,
 				AA69B8B7222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift in Sources */,
 				AAD462392232B109008BE8C0 /* GCDDataManager.swift in Sources */,
 				AAD73B6E221F032E0085512B /* Anchor.swift in Sources */,

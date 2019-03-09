@@ -10,10 +10,16 @@ import Foundation
 import UIKit
 
 
-struct UserProfileState {
+struct UserProfileState: Equatable {
     var username: String?
     
     var profileImage: UIImage?
     
     var detailInfo: String?
+    
+    static func == (lhs: UserProfileState, rhs: UserProfileState) -> Bool {
+        return lhs.username == rhs.username &&
+               lhs.profileImage == rhs.profileImage &&
+               lhs.detailInfo == rhs.detailInfo
+    }
 }
