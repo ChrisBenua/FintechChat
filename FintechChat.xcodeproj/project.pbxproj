@@ -15,6 +15,7 @@
 		AA3D28EC22243C340001D79F /* ConversationList+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D28EB22243C340001D79F /* ConversationList+DataSource.swift */; };
 		AA69B8B5222AEFB5001B9694 /* Themes.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69B8B2222AEC24001B9694 /* Themes.m */; };
 		AA69B8B7222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA69B8B6222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift */; };
+		AA7E680D22395A900004ED94 /* TextViewWithDoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7E680C22395A900004ED94 /* TextViewWithDoneButton.swift */; };
 		AA8E111222338648007BF480 /* FetchSaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8E111122338648007BF480 /* FetchSaveManager.swift */; };
 		AA8E1114223386CA007BF480 /* SaveOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8E1113223386CA007BF480 /* SaveOperations.swift */; };
 		AA8E111822338AC4007BF480 /* FetchOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8E111722338AC4007BF480 /* FetchOperations.swift */; };
@@ -57,6 +58,7 @@
 		AA69B8B2222AEC24001B9694 /* Themes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Themes.m; sourceTree = "<group>"; };
 		AA69B8B4222AEF35001B9694 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		AA69B8B6222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationList+ThemesViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		AA7E680C22395A900004ED94 /* TextViewWithDoneButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewWithDoneButton.swift; sourceTree = "<group>"; };
 		AA8E111122338648007BF480 /* FetchSaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchSaveManager.swift; sourceTree = "<group>"; };
 		AA8E1113223386CA007BF480 /* SaveOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveOperations.swift; sourceTree = "<group>"; };
 		AA8E111722338AC4007BF480 /* FetchOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchOperations.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				AA1AB902222BE8170088E3D8 /* CustomNavigationController.swift */,
 				AAD462362232A7DD008BE8C0 /* UserDefaultsProfile.swift */,
 				AA8E111122338648007BF480 /* FetchSaveManager.swift */,
+				AA7E680C22395A900004ED94 /* TextViewWithDoneButton.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -346,6 +349,7 @@
 				AAF22772220BD16000AF5DFA /* ProfileViewController.swift in Sources */,
 				AA9ED4E82233E7AB001DC94B /* ProfileVC+TextViewDelegate.swift in Sources */,
 				AA69B8B7222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift in Sources */,
+				AA7E680D22395A900004ED94 /* TextViewWithDoneButton.swift in Sources */,
 				AAD462392232B109008BE8C0 /* GCDDataManager.swift in Sources */,
 				AAD73B6E221F032E0085512B /* Anchor.swift in Sources */,
 				AA1AB901222BDF530088E3D8 /* UserDefaultsTheme.swift in Sources */,

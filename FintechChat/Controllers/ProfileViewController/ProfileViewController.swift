@@ -14,7 +14,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet weak var profilePhotoImageView: UIImageView!
-    @IBOutlet weak var detailInfoTextField: UITextView!
+    @IBOutlet weak var detailInfoTextField: TextViewWithDoneButton!
     @IBOutlet weak var editProfileButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet var nameTextField: UITextField!
@@ -23,6 +23,7 @@ class ProfileViewController: UIViewController {
     var tapGestureRecognizer: UITapGestureRecognizer!
     var lastState: UserProfileState!
     var lastFirstResponderFrame: CGRect?
+    public static let maxNameLen = 33
     
     
     let savingLabel: UILabel = {
@@ -470,17 +471,19 @@ extension ProfileViewController {
     @objc func onShowKeyboard(notification: NSNotification) {
         if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.height {
             if self.view.frame.origin.y == 0 {
-                UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
-                    if let lastFrame = self.lastFirstResponderFrame {
-                        Logger.log("lastFrame")
-                        Logger.log((lastFrame.origin.y + lastFrame.height).description)
-                        Logger.log("view.height - keyboardHeight")
-                        Logger.log((self.view.frame.height - keyboardHeight).description)
-                        if (lastFrame.origin.y + lastFrame.height > self.view.frame.origin.y + self.view.frame.height - keyboardHeight) {
-                            self.view.frame.origin.y = -(lastFrame.origin.y + lastFrame.height - (self.view.frame.origin.y + self.view.frame.height - keyboardHeight))
+                if let lastFrame = lastFirstResponderFrame {
+                    let lastFrameBottomY = lastFrame.origin.y + lastFrame.height
+                    let currentTopKeyboardY = self.view.frame.height - keyboardHeight
+                    UIView.animate(withDuration: 0.5, delay: 0.0, animations: {
+                        
+                        Logger.log((lastFrameBottomY - currentTopKeyboardY).description)
+                        
+                        if (lastFrameBottomY > currentTopKeyboardY) {
+                            self.view.frame.origin.y -= (lastFrameBottomY - currentTopKeyboardY)
                         }
-                    }
-                }, completion: nil)
+                        
+                    }, completion: nil)
+                }
             }
         }
     }
@@ -498,6 +501,9 @@ extension ProfileViewController {
 //MARK:- TextFieldTextChanged
 extension ProfileViewController {
     @objc func textDidChanged(_ textField: UITextField) {
+        if (textField.text!.count > ProfileViewController.maxNameLen) {
+            textField.text = String(textField.text!.prefix(ProfileViewController.maxNameLen))
+        }
         self.toggleEditingButtons(true)
     }
 }
