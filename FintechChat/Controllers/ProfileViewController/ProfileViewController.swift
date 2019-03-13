@@ -147,6 +147,7 @@ class ProfileViewController: UIViewController {
         
         //detailInfoTextField.text = "Люблю программировать под iOS\nИзучать новые технологии\nЛюблю математику"
         nameTextField.isUserInteractionEnabled = false
+        
     }
     
     fileprivate func placeEditingButtons() {
