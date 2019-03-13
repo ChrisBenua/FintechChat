@@ -27,19 +27,19 @@
                             <textField opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Кристиан Бенуа" textAlignment="center" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oLs-3a-dny">
                                 <rect key="frame" x="16" y="364" width="288" height="29"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="29" id="3oF-R4-ydc"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="50" id="3oF-R4-ydc"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textView opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" editable="NO" text="Люблю програмировать под iOS" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-lb-0S6">
-                                <rect key="frame" x="16" y="409" width="288" height="97"/>
+                            <textView opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" editable="NO" text="Люблю программировать под iOS" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-lb-0S6">
+                                <rect key="frame" x="16" y="409" width="288" height="98"/>
                                 <color key="textColor" red="0.45484960079193115" green="0.45493203401565552" blue="0.45484435558319092" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X78-63-B6n">
-                                <rect key="frame" x="16" y="522" width="288" height="34"/>
+                                <rect key="frame" x="16" y="523" width="288" height="33"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal" title="Редактировать">
@@ -68,8 +68,8 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="88R-gm-rfm" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="24" id="1xi-wZ-Ig8"/>
-                            <constraint firstItem="X78-63-B6n" firstAttribute="height" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.06" id="1xj-JO-kg1"/>
+                            <constraint firstItem="88R-gm-rfm" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="24" id="1xi-wZ-Ig8"/>
+                            <constraint firstItem="X78-63-B6n" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.06" id="1xj-JO-kg1"/>
                             <constraint firstItem="Gmp-Wp-Bwu" firstAttribute="width" secondItem="zWB-TR-TFh" secondAttribute="width" multiplier="0.3" id="5Eo-Ap-oxo"/>
                             <constraint firstItem="oLs-3a-dny" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="9ch-9J-v4C"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="X78-63-B6n" secondAttribute="bottom" constant="12" id="Aef-59-9ye"/>

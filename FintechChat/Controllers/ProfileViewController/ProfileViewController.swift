@@ -22,6 +22,9 @@ class ProfileViewController: UIViewController {
     var stackViewConstraints: [NSLayoutConstraint] = []
     var tapGestureRecognizer: UITapGestureRecognizer!
     var lastState: UserProfileState!
+    var lastFirstResponderFrame: CGRect?
+    
+    
     let savingLabel: UILabel = {
         let label = UILabel()
         label.text = "Saving..."
@@ -29,6 +32,7 @@ class ProfileViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
     
     private func styleButton(button: UIButton, cornerRadius: CGFloat = 10 , borderColor: CGColor = UIColor.black.cgColor, borderWidth: CGFloat = 0.8) {
         
@@ -156,6 +160,7 @@ class ProfileViewController: UIViewController {
     
     fileprivate func SetupTextChangedHandlers() {
         detailInfoTextField.delegate = self
+        nameTextField.delegate = self
         nameTextField.addTarget(self, action: #selector(textDidChanged(_:)), for: .editingChanged)
     }
     
@@ -171,6 +176,13 @@ class ProfileViewController: UIViewController {
         self.FetchProfileInfo(shared: GCDDataManager.shared)
         self.SetupTextChangedHandlers()
         self.placeEditingButtons()
+        self.addObservers()
+        
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(mainViewOnTap)))
+    }
+    
+    @objc func mainViewOnTap(_ sender: Any) {
+        self.view.endEditing(true)
     }
     
     fileprivate func getDefaultImagePicker() -> UIImagePickerController {
@@ -440,14 +452,56 @@ extension ProfileViewController {
     }
 }
 
-//MARK: TextFieldTextChanged
+//MARK:- Moving Keyboards
+
+extension ProfileViewController {
+    
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(onShowKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onHideKeyboards), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func onShowKeyboard(notification: NSNotification) {
+        if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.height {
+            if self.view.frame.origin.y == 0 {
+                UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseInOut, animations: {
+                    if let lastFrame = self.lastFirstResponderFrame {
+                        Logger.log("lastFrame")
+                        Logger.log((lastFrame.origin.y + lastFrame.height).description)
+                        Logger.log("view.height - keyboardHeight")
+                        Logger.log((self.view.frame.height - keyboardHeight).description)
+                        if (lastFrame.origin.y + lastFrame.height > self.view.frame.origin.y + self.view.frame.height - keyboardHeight) {
+                            self.view.frame.origin.y = -(lastFrame.origin.y + lastFrame.height - (self.view.frame.origin.y + self.view.frame.height - keyboardHeight))
+                        }
+                    }
+                }, completion: nil)
+            }
+        }
+    }
+    
+    @objc func onHideKeyboards(notification: NSNotification) {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.view.frame.origin.y = 0
+        }, completion: { (_) in
+            Logger.log("After set to default origin:" + self.view.frame.origin.y.description)
+            Logger.log(self.view.frame.debugDescription)
+        })
+    }
+}
+
+//MARK:- TextFieldTextChanged
 extension ProfileViewController {
     @objc func textDidChanged(_ textField: UITextField) {
         self.toggleEditingButtons(true)
     }
 }
 
-//MARK:UINavigationControllerDelegate
+//MARK:- UINavigationControllerDelegate
 extension ProfileViewController : UINavigationControllerDelegate {
     
 }
