@@ -17,18 +17,19 @@ extension ConversationListViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchSplittedConversation[section].count
+        //return searchSplittedConversation[section].count
+        return searchedConversations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.cellId, for: indexPath) as! ConversationTableViewCell
-        let cellData = searchSplittedConversation[indexPath.section][indexPath.row]
+        let cellData = searchedConversations[indexPath.row]
         cell.setup(name: cellData.name, message: cellData.message, date: cellData.date, online: cellData.online, hasUnreadMessages: cellData.hasUnreadMessages)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dialogName = searchSplittedConversation[indexPath.section][indexPath.row].name
+        let dialogName = searchedConversations[indexPath.row].name
         let vc = ConversationViewController()
         vc.dialogTitle = dialogName
         if (searchController.isActive) {

@@ -12,25 +12,27 @@ import UIKit
 class ConversationListViewController : UIViewController {
     let rowHeight: CGFloat = 80
     
-    var sectionNames: [String] = ["Online", "History"]
-    
+    var sectionNames: [String] = ["Online"]
+        
     let searchController = UISearchController(searchResultsController: nil)
     
-    var searchSplittedConversation = [[ConversationCellConfiguration]]()
+    var searchedConversations = [ConversationCellConfiguration]()
     
-    var allConversations: [ConversationCellConfiguration] = [ConversationCellConfiguration]()
+    //var searchSplittedConversation = [[ConversationCellConfiguration]]()
     
-    var allSplittedConversations: [[ConversationCellConfiguration]] = [[ConversationCellConfiguration]]()
+    //var allConversations: [ConversationCellConfiguration] = [ConversationCellConfiguration]()
     
-    private func fillSplittedConversations() {
+    //var allSplittedConversations: [[ConversationCellConfiguration]] = [[ConversationCellConfiguration]]()
+    
+    /*private func fillSplittedConversations() {
         let activeConversations = allConversations.filter({ $0.online })
         let inactiveConversations = allConversations.filter({ !$0.online })
         allSplittedConversations.removeAll()
         allSplittedConversations.append(activeConversations)
         allSplittedConversations.append(inactiveConversations)
-    }
+    }*/
     
-    private func fillWithData() {
+    /*private func fillWithData() {
         let names = ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain", "Mackenzie Foy", "Ellen Burstyn", "Matt Damon", "John Lithgow", "Michael Caine", "Casey Affleck", "Timothée Chalamet", "Wes Bentley", "Bill Irwin", "Josh Stewart", "Topher Grace", "David Gyasi", "Leah Cairns", "David Oyelowo", "Collette Wolfe", "William Devane", "Elyes Gabel "]
         let lastMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
         
@@ -41,7 +43,7 @@ class ConversationListViewController : UIViewController {
             allConversations.append(model)
         }
         fillSplittedConversations()
-    }
+    }*/
     
     lazy var tableView: UITableView = {
         let tv = UITableView()
@@ -55,6 +57,7 @@ class ConversationListViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ConversationListDataProvider.shared.listViewController = self
         self.navigationController?.view.backgroundColor = .white
         self.navigationItem.title = "Tinkoff Chat"
         
@@ -70,7 +73,7 @@ class ConversationListViewController : UIViewController {
         self.view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
-        self.fillWithData()
+        //self.fillWithData()
         SetUpSearchBar()
         self.tableView.reloadData()
     }
@@ -95,3 +98,11 @@ class ConversationListViewController : UIViewController {
 }
 
 
+extension ConversationListViewController: UpdateConversationListControllerDelegate {
+    func updateConversationList() {
+        searchedConversations = ConversationListDataProvider.shared.allConversationListCellData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+}

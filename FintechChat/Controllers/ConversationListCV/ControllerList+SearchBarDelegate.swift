@@ -21,25 +21,11 @@ extension ConversationListViewController: UISearchBarDelegate {
     }
     
     func fillSearchResultsDefault() {
-        searchSplittedConversation.removeAll()
-        
-        for i in 0..<allSplittedConversations.count {
-            searchSplittedConversation.append(allSplittedConversations[i])
-        }
-        tableView.reloadData()
+        ConversationListDataProvider.shared.filterString = ""
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if (!searchText.isEmpty) {
-            searchSplittedConversation.removeAll()
-            
-            for i in 0..<allSplittedConversations.count {
-                searchSplittedConversation.append(allSplittedConversations[i].filter( { $0.name!.lowercased().contains(searchText.lowercased()) } ))
-            }
-        } else {
-            fillSearchResultsDefault()
-            
-        }
+        ConversationListDataProvider.shared.filterString = searchText
         tableView.reloadData()
     }
     
