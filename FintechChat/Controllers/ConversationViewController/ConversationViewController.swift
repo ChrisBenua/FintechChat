@@ -11,12 +11,19 @@ import UIKit
 import MultipeerConnectivity
 
 class ConversationViewController: UIViewController {
-        
+    
     private var shouldScrollToLast: Bool! = true
     
     private var didLeaveDialog: Bool = false
     
     private let accessoryViewHeight: CGFloat = 65
+    
+    private func markMessagesAsRead() {
+        for el in ConversationListDataProvider.shared.messageStorage[dialogTitle]! {
+            el.didRead = true
+        }
+    }
+    
     
     override func willMove(toParent parent: UIViewController?) {
         super.willMove(toParent: parent)
@@ -70,6 +77,8 @@ class ConversationViewController: UIViewController {
         ConversationListDataProvider.shared.conversationViewController = self
         self.messages = ConversationListDataProvider.shared.getConversationCellData(name: dialogTitle)
         super.viewDidLoad()
+        
+        self.markMessagesAsRead()
         
         //self.navigationItem.backBarButtonItem?.action = #selector(customBackButtonOnClick(_:))
         
@@ -219,7 +228,7 @@ extension ConversationViewController: UpdateConversationControllerDelegate {
                 self.tableView.insertRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
             }
             //self.toggleTableView()
-            
+            self.markMessagesAsRead()
             self.scrollToBottom()
         }
        

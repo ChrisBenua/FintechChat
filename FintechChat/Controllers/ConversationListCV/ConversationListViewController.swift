@@ -54,6 +54,12 @@ class ConversationListViewController : UIViewController {
         return tv
     }()
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.updateConversationList()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

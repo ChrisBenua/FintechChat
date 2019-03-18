@@ -99,7 +99,7 @@ class ConversationListDataProvider {
         let model = searchedMessages.sorted(by: predicate(el1:el2:))
         
         return model.compactMap { (val) -> ConversationCellModelHelper in
-            ConversationCellModelHelper(name: val.key, message: val.value.last?.message, date: val.value.last?.date ?? Date(timeIntervalSince1970: 0), online: true, hasUnreadMessages: val.value.last?.didRead ?? false)
+            ConversationCellModelHelper(name: val.key, message: val.value.last?.message, date: val.value.last?.date ?? Date(timeIntervalSince1970: 0), online: true, hasUnreadMessages: !(val.value.last?.didRead ?? true))
         }
     }
     
