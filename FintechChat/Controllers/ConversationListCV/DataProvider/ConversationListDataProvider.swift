@@ -84,14 +84,14 @@ class ConversationListDataProvider {
                 if res == .orderedSame {
                     return el1.key < el2.key
                 }
-                return res == .orderedAscending
+                return res == .orderedDescending
             }
-            return false
+            return true
         }
-        if el2.value.last == nil {
-            return false
+        if el2.value.last == nil && el1.value.last == nil {
+            return el1.key < el2.key
         }
-        return true
+        return false
     }
     
     func allConversationListCellData() -> [ConversationCellConfiguration] {

@@ -183,6 +183,11 @@ class ProfileViewController: UIViewController {
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(mainViewOnTap)))
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.removeObservers()
+    }
+    
     @objc func mainViewOnTap(_ sender: Any) {
         self.view.endEditing(true)
     }
@@ -277,6 +282,11 @@ class ProfileViewController: UIViewController {
         GCDDataManager.shared.saveUserProfileInfo(state: profileStateWithoutSameFieldsInProfile(), onComplete: { [weak self] in
             if (self != nil) {
                 self!.FetchProfileInfo(showAlert: true, shared: GCDDataManager.shared)
+                
+                
+                DispatchQueue.main.async {
+                    CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
+                }
             }
         }) { [weak self] in
             if (self != nil) {
@@ -296,6 +306,10 @@ class ProfileViewController: UIViewController {
         OperationDataManager.shared.saveUserProfileInfo(state: profileStateWithoutSameFieldsInProfile(), onComplete: { [weak self] in
             if (self != nil) {
                 self!.FetchProfileInfo(showAlert: true, shared: OperationDataManager.shared)
+                
+                DispatchQueue.main.async {
+                    CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
+                }
             }
         }) { [weak self] in
             if (self != nil) {
@@ -512,3 +526,4 @@ extension ProfileViewController {
 extension ProfileViewController : UINavigationControllerDelegate {
     
 }
+

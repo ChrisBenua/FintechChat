@@ -64,13 +64,18 @@ class MultipeerCommunicator: NSObject, Communicator {
     }
     
     func disconnectWithUser(username: String) {
-        let neededPeer = currentPeers.filter({$0.displayName == username})
-        if (neededPeer.count > 0) {
-            self.sessions.disconnect()
-        }
+        Logger.log(self.sessions.connectedPeers.debugDescription)
+        self.sessions.disconnect()
+        
+        Logger.log(self.sessions.connectedPeers.debugDescription)
+        
     }
     
+    weak var onDisconnectDelegate: OnUserDisconnectedDelegate?
+    
     var mcAdvertiserAssistant: MCAdvertiserAssistant!
+    
+    var lastState: MCSessionState = MCSessionState.notConnected
     
     weak var delegate: CommunicatorDelegate?
     
@@ -87,6 +92,27 @@ class MultipeerCommunicator: NSObject, Communicator {
     var browser: MCNearbyServiceBrowser
     
     var advertiser: MCNearbyServiceAdvertiser
+    
+    func reinitAdvertiser(newUserName: String) {
+        self.advertiser.stopAdvertisingPeer()
+        self.browser.stopBrowsingForPeers()
+        self.username = newUserName
+        self.userPeerID = MCPeerID(displayName: self.username)
+        self.sessions = MCSession(peer: self.userPeerID)
+
+        
+        self.advertiser = MCNearbyServiceAdvertiser(peer: userPeerID, discoveryInfo: ["userName": self.username], serviceType: "tinkoff-chat")
+        self.advertiser.delegate = self
+        self.advertiser.startAdvertisingPeer()
+        
+        self.browser = MCNearbyServiceBrowser(peer: userPeerID,
+                                              serviceType: "tinkoff-chat")
+        self.browser.startBrowsingForPeers()
+        
+       // mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "tinkoff-chat", discoveryInfo: ["userName": self.username], session: sessions)
+        //mcAdvertiserAssistant.start()
+        
+    }
     
     init(username: String) {
         online = true
@@ -109,9 +135,9 @@ class MultipeerCommunicator: NSObject, Communicator {
         
         self.advertiser.startAdvertisingPeer()
         self.browser.startBrowsingForPeers()
-        
-        mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "tinkoff-chat", discoveryInfo: ["userName": self.username], session: sessions)
-        mcAdvertiserAssistant.start()
+        //mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "tinkoff-chat", discoveryInfo: ["userName": self.username], session: sessions)
+        //mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "tinkoff-chat", discoveryInfo: ["userName": self.username], session: sessions)
+        //mcAdvertiserAssistant.start()
     }
 }
 
@@ -120,8 +146,10 @@ extension MultipeerCommunicator : MCNearbyServiceAdvertiserDelegate {
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         print("Received invitation from \(peerID)")
-        if (self.sessions.connectedPeers.count == 0) {
+        if (!self.sessions.connectedPeers.contains(peerID) && self.sessions.connectedPeers.count < 1) {
             invitationHandler(true, self.sessions)
+        } else {
+            invitationHandler(false, nil)
         }
     }
     
@@ -129,6 +157,7 @@ extension MultipeerCommunicator : MCNearbyServiceAdvertiserDelegate {
         self.delegate?.failedToStartAdvertising(error: error)
     }
 }
+
 
 
 extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
@@ -155,9 +184,19 @@ extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
 
 extension MultipeerCommunicator: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+        
+        self.lastState = state
+        
         if (state == .connected) {
-            print(self.sessions.connectedPeers.count)
+            print("Connected " + self.sessions.connectedPeers.first!.debugDescription)
         }
+        if (state == .notConnected) {
+            print("DisconnectedPeer")
+        }
+        
+        onDisconnectDelegate?.userDidDisconnected(state: state)
+        print("All Connected Peers: \(sessions.connectedPeers.count)")
+
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {

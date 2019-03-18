@@ -62,7 +62,7 @@ class ConversationTableViewCell: UITableViewCell, ConversationCellConfiguration 
             self.lastMessageLabel.text = "No Messages Yet"
         }
         
-        if let date = self.date {
+        if let date = self.date, self.message != nil {
             let dateFormatter = DateFormatter()
             let calender = Calendar.current
             
