@@ -24,23 +24,21 @@ class MessageData {
 }
 
 
-protocol UpdateConversationListControllerDelegate: class {
-    func updateConversationList()
-}
 
 protocol UpdateConversationControllerDelegate: class {
     func updateConversation()
+    func onError(error: Error)
 }
 
 class ConversationListDataProvider {
     
-    weak var listViewController: UpdateConversationListControllerDelegate?
+    weak var listViewController: UpdateConversationControllerDelegate?
     weak var conversationViewController: UpdateConversationControllerDelegate?
     
     var onlineUsers: [(String, String)] = [] {
         didSet {
             updateSearchedMessages()
-            listViewController?.updateConversationList()
+            listViewController?.updateConversation()
         }
     }
     
@@ -57,7 +55,7 @@ class ConversationListDataProvider {
     var filterString: String = "" {
         didSet {
             updateSearchedMessages()
-            listViewController?.updateConversationList()
+            listViewController?.updateConversation()
         }
     }
     
@@ -125,7 +123,7 @@ class ConversationListDataProvider {
         for el in searchedMessages.filter({$0.key == name}).first!.value {
             el.didRead = true
         }
-        self.listViewController?.updateConversationList()
+        self.listViewController?.updateConversation()
     }
 }
 
@@ -141,7 +139,7 @@ extension ConversationListDataProvider: CommunicatorDelegate {
                 self.messageStorage[userID] = []
             }
         }
-        self.listViewController?.updateConversationList()
+        self.listViewController?.updateConversation()
     }
     
     func didLostUser(userID: String) {
@@ -149,16 +147,16 @@ extension ConversationListDataProvider: CommunicatorDelegate {
             el.0 == userID
         }
         self.updateSearchedMessages()
-        self.listViewController?.updateConversationList()
+        self.listViewController?.updateConversation()
 
     }
     
     func failedToStartBrowsingForUsers(error: Error) {
-        
+        self.listViewController?.onError(error: error)
     }
     
     func failedToStartAdvertising(error: Error) {
-        
+        self.listViewController?.onError(error: error)
     }
     
     func didReceiveMessage(text: String, fromUser: String, toUser: String) {
@@ -167,7 +165,7 @@ extension ConversationListDataProvider: CommunicatorDelegate {
         } else {
             self.messageStorage[fromUser]?.append(MessageData(text: text, isIncoming: true))
         }
-        self.listViewController?.updateConversationList()
+        self.listViewController?.updateConversation()
         self.conversationViewController?.updateConversation()
 
     }

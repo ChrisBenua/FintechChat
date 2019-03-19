@@ -225,6 +225,13 @@ extension ConversationViewController: UITableViewDelegate {
 }
 
 extension ConversationViewController: UpdateConversationControllerDelegate {
+    func onError(error: Error) {
+        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction.okAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     func updateConversation() {
         self.messages = ConversationListDataProvider.shared.getConversationCellData(name: connectedUserID)
         DispatchQueue.main.async {

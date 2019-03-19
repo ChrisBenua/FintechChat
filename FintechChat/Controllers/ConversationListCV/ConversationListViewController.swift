@@ -57,7 +57,7 @@ class ConversationListViewController : UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.updateConversationList()
+        self.updateConversation()
     }
     
     override func viewDidLoad() {
@@ -104,11 +104,18 @@ class ConversationListViewController : UIViewController {
 }
 
 
-extension ConversationListViewController: UpdateConversationListControllerDelegate {
-    func updateConversationList() {
+extension ConversationListViewController: UpdateConversationControllerDelegate {
+    func updateConversation() {
         searchedConversations = ConversationListDataProvider.shared.allConversationListCellData()
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
+    }
+    
+    func onError(error: Error) {
+        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction.okAction)
+        
+        self.present(alertController, animated: true, completion: nil)
     }
 }

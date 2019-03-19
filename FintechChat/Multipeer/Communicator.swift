@@ -43,7 +43,7 @@ class MultipeerCommunicator: NSObject, Communicator {
     func sendMessage(message: String, to userID: String, completionHandler: ((Bool, Error?) -> ())?) {
         
         let message = Message(text: message)
-        print(sessions.connectedPeers)
+        Logger.log(sessions.connectedPeers.debugDescription)
         do {
             try self.sessions.send(try JSONEncoder().encode(message), toPeers: sessions.connectedPeers, with: .reliable)
             
@@ -128,7 +128,7 @@ class MultipeerCommunicator: NSObject, Communicator {
         self.username = username
         self.userPeerID = MCPeerID(displayName: UIDevice.current.name)
         
-        print("MY PEER \(userPeerID.displayName)")
+        Logger.log("MY PEER \(userPeerID.displayName)")
         self.sessions = MCSession(peer: self.userPeerID)
         self.browser = MCNearbyServiceBrowser(peer: userPeerID,
                                     serviceType: "tinkoff-chat")
@@ -153,7 +153,7 @@ class MultipeerCommunicator: NSObject, Communicator {
 extension MultipeerCommunicator : MCNearbyServiceAdvertiserDelegate {
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        print("Received invitation from \(peerID)")
+        Logger.log("Received invitation from \(peerID)")
         if (!self.sessions.connectedPeers.contains(peerID) && self.sessions.connectedPeers.count < 1) {
             invitationHandler(true, self.sessions)
         } else {
@@ -179,7 +179,8 @@ extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
         self.currentPeers.append(peerID)
         
         self.delegate?.didFoundUser(userID: peerID.displayName, username: info!["userName"])
-        
+        //self.delegate?.failedToStartBrowsingForUsers(error: NSError(domain: "shit", code: 1, userInfo: nil))
+
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
@@ -196,37 +197,37 @@ extension MultipeerCommunicator: MCSessionDelegate {
         self.lastState = state
         
         if (state == .connected) {
-            print("Connected " + self.sessions.connectedPeers.first!.debugDescription)
+            Logger.log("Connected " + self.sessions.connectedPeers.first!.debugDescription)
         }
         if (state == .notConnected) {
-            print("DisconnectedPeer")
+            Logger.log("DisconnectedPeer")
         }
         
         onDisconnectDelegate?.userDidDisconnected(state: state)
-        print("All Connected Peers: \(sessions.connectedPeers.count)")
+        Logger.log("All Connected Peers: \(sessions.connectedPeers.count)")
 
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        print("Did receive data from \(peerID.displayName)")
+        Logger.log("Did receive data from \(peerID.displayName)")
         do {
             let message = try JSONDecoder().decode(Message.self, from: data)
             self.delegate?.didReceiveMessage(text: message.text, fromUser: peerID.displayName, toUser: userPeerID.displayName)
         } catch let err {
-            print(err)
+            Logger.log(err.localizedDescription)
         }
     }
     
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
-        print("Did receive stream from \(peerID.displayName)")
+        Logger.log("Did receive stream from \(peerID.displayName)")
     }
     
     func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
-        print("Did start receiving resource \(peerID.displayName)")
+        Logger.log("Did start receiving resource \(peerID.displayName)")
     }
     
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
-        print("did finish receiving resource \(peerID.displayName)")
+        Logger.log("did finish receiving resource \(peerID.displayName)")
     }
     
     
