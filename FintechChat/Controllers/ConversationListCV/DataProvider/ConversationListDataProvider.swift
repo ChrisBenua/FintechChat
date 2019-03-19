@@ -61,7 +61,17 @@ class ConversationListDataProvider {
         }
     }
     
+    func getUsernameBy(userId: String) -> String {
+        return onlineUsers.first(where: { (el) -> Bool in
+            el.0 == userId
+        })?.1 ?? userId
+    }
     
+    func getUserIdBy(username: String) -> String {
+        return onlineUsers.first(where: { (el) -> Bool in
+            el.1 == username
+        })?.0 ?? username
+    }
     
     var messageStorage: [String: [MessageData]] = [:]
     
@@ -99,7 +109,7 @@ class ConversationListDataProvider {
         let model = searchedMessages.sorted(by: predicate(el1:el2:))
         
         return model.compactMap { (val) -> ConversationCellModelHelper in
-            ConversationCellModelHelper(name: val.key, message: val.value.last?.message, date: val.value.last?.date ?? Date(timeIntervalSince1970: 0), online: true, hasUnreadMessages: !(val.value.last?.didRead ?? true))
+            ConversationCellModelHelper(name: self.getUsernameBy(userId: val.key), message: val.value.last?.message, date: val.value.last?.date ?? Date(timeIntervalSince1970: 0), online: true, hasUnreadMessages: !(val.value.last?.didRead ?? true))
         }
     }
     
@@ -122,13 +132,12 @@ class ConversationListDataProvider {
 extension ConversationListDataProvider: CommunicatorDelegate {
     func didFoundUser(userID: String, username: String?) {
         if !onlineUsers.contains(where: { (el) -> Bool in
-            el.0 == userID &&
-            el.1 == username ?? userID
+            el.0 == userID
         }) {
             onlineUsers.insert((userID, username ?? userID), at: 0)
             updateSearchedMessages()
-            if (!self.messageStorage.keys.contains(username ?? userID)) {
-                self.messageStorage[username ?? userID] = []
+            if (!self.messageStorage.keys.contains(userID)) {
+                self.messageStorage[userID] = []
             }
         }
         self.listViewController?.updateConversationList()
@@ -152,7 +161,7 @@ extension ConversationListDataProvider: CommunicatorDelegate {
     }
     
     func didReceiveMessage(text: String, fromUser: String, toUser: String) {
-        if (fromUser == CommunicationManager.shared.communicator.username) {
+        if (fromUser == CommunicationManager.shared.communicator.userPeerID.displayName) {
             self.messageStorage[toUser]?.append(MessageData(text: text, isIncoming: false))
         } else {
             self.messageStorage[fromUser]?.append(MessageData(text: text, isIncoming: true))

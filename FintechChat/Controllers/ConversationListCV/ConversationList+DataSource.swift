@@ -29,9 +29,10 @@ extension ConversationListViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dialogName = searchedConversations[indexPath.row].name
+        let dialogName = searchedConversations[indexPath.row].name!
         let vc = ConversationViewController()
         vc.dialogTitle = dialogName
+        vc.connectedUserID = ConversationListDataProvider.shared.getUserIdBy(username: dialogName)
         if (searchController.isActive) {
             self.searchController.dismiss(animated: true) { [weak self] in
                 self?.navigationController?.pushViewController(vc, animated: true)

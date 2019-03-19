@@ -52,7 +52,7 @@ class MultipeerCommunicator: NSObject, Communicator {
             completionHandler?(false, err)
         }
         
-        self.delegate?.didReceiveMessage(text: message.text, fromUser: username, toUser: userID)
+        self.delegate?.didReceiveMessage(text: message.text, fromUser: self.userPeerID.displayName, toUser: userID)
     }
     
     func connectWithUser(username: String) {
@@ -97,7 +97,7 @@ class MultipeerCommunicator: NSObject, Communicator {
         self.advertiser.stopAdvertisingPeer()
         self.browser.stopBrowsingForPeers()
         self.username = newUserName
-        self.userPeerID = MCPeerID(displayName: self.username)
+        self.userPeerID = MCPeerID(displayName: UIDevice.current.name)
         self.sessions = MCSession(peer: self.userPeerID)
 
         
@@ -118,7 +118,7 @@ class MultipeerCommunicator: NSObject, Communicator {
         online = true
         
         self.username = username
-        self.userPeerID = MCPeerID(displayName: self.username)
+        self.userPeerID = MCPeerID(displayName: UIDevice.current.name)
         
         print("MY PEER \(userPeerID.displayName)")
         self.sessions = MCSession(peer: self.userPeerID)

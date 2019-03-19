@@ -19,7 +19,7 @@ class ConversationViewController: UIViewController {
     private let accessoryViewHeight: CGFloat = 65
     
     private func markMessagesAsRead() {
-        for el in ConversationListDataProvider.shared.messageStorage[dialogTitle]! {
+        for el in ConversationListDataProvider.shared.messageStorage[connectedUserID]! {
             el.didRead = true
         }
     }
@@ -55,7 +55,12 @@ class ConversationViewController: UIViewController {
     var dialogTitle: String! {
         didSet {
             self.navigationItem.title = dialogTitle
-            CommunicationManager.shared.communicator.connectWithUser(username: dialogTitle)
+        }
+    }
+    
+    var connectedUserID: String! {
+        didSet {
+            CommunicationManager.shared.communicator.connectWithUser(username: connectedUserID)
         }
     }
     
@@ -75,7 +80,7 @@ class ConversationViewController: UIViewController {
         self.addObservers()
         CommunicationManager.shared.communicator.onDisconnectDelegate = self
         ConversationListDataProvider.shared.conversationViewController = self
-        self.messages = ConversationListDataProvider.shared.getConversationCellData(name: dialogTitle)
+        self.messages = ConversationListDataProvider.shared.getConversationCellData(name: connectedUserID)
         super.viewDidLoad()
         
         self.markMessagesAsRead()
@@ -183,7 +188,7 @@ class ConversationViewController: UIViewController {
     @objc func submitButtonOnClick() {
         let text = messageTextField.text!
         if (text.count != 0) {
-            CommunicationManager.shared.communicator.sendMessage(message: text, to: dialogTitle) { [weak self] (suc, err) in
+            CommunicationManager.shared.communicator.sendMessage(message: text, to: connectedUserID) { [weak self] (suc, err) in
                 
                 if (!suc) {
                     let alertController = UIAlertController(title: "Error", message: err?.localizedDescription, preferredStyle: .alert)
@@ -221,7 +226,7 @@ extension ConversationViewController: UITableViewDelegate {
 
 extension ConversationViewController: UpdateConversationControllerDelegate {
     func updateConversation() {
-        self.messages = ConversationListDataProvider.shared.getConversationCellData(name: dialogTitle)
+        self.messages = ConversationListDataProvider.shared.getConversationCellData(name: connectedUserID)
         DispatchQueue.main.async {
             let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
             if (indexPath.row >= 0) {
