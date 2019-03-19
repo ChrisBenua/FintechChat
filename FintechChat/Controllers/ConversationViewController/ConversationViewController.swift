@@ -34,11 +34,11 @@ class ConversationViewController: UIViewController {
 
     }
     
-    func scrollToBottom(){
+    func scrollToBottom(animated: Bool = false){
         DispatchQueue.main.async {
             let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
             if indexPath.row >= 0 {
-                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
                 Logger.log("SCROLL")
             }
         }
@@ -299,31 +299,31 @@ extension ConversationViewController {
     
     @objc func onShowKeyboard(notification: NSNotification) {
         if let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+            
+            self.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: -keyboardHeight + 10, right: 0)
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight - 10, right: 0)
+            
             UIView.animate(withDuration: 0.5, animations: { [weak self] in
-                DispatchQueue.main.async { [weak self] in
-                    self?.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: -keyboardHeight + 10, right: 0)
-                    self?.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight - 10, right: 0)
-                }
+                
+                self?.view.layoutIfNeeded()
+                
             })
             { [weak self] (_) in
-                self?.scrollToBottom()
+                self?.scrollToBottom(animated: true)
             }
             
         }
     }
     
     @objc func onHideKeyboard() {
-        UIView.animate(withDuration: 0.5, animations: {
-            DispatchQueue.main.async { [weak self] in
-                if (self != nil) {
-                    self!.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: -self!.accessoryViewHeight, right: 0)
-                    self!.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: -self!.accessoryViewHeight, right: 0)
-                }
-            }
-        }) { [weak self] (_) in
-            self?.scrollToBottom()
-
-        }
+        
+        self.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: -self.accessoryViewHeight + 10, right: 0)
+        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: self.accessoryViewHeight - 10, right: 0)
+        
+        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+            
+            self?.view.layoutIfNeeded()
+        })
 
     }
 }
