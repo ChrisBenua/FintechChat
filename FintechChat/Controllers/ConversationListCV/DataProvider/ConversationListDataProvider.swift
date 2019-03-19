@@ -62,9 +62,7 @@ class ConversationListDataProvider {
     }
     
     func getUsernameBy(userId: String) -> String {
-        return onlineUsers.first(where: { (el) -> Bool in
-            el.0 == userId
-        })?.1 ?? userId
+        return userIdToUsername[userId]!
     }
     
     func getUserIdBy(username: String) -> String {
@@ -72,6 +70,8 @@ class ConversationListDataProvider {
             el.1 == username
         })?.0 ?? username
     }
+    
+    var userIdToUsername: [String: String] = [:]
     
     var messageStorage: [String: [MessageData]] = [:]
     
@@ -92,14 +92,14 @@ class ConversationListDataProvider {
             if let lastEl2 = el2.value.last?.date {
                 let res = lastEl1.compare(lastEl2)
                 if res == .orderedSame {
-                    return el1.key < el2.key
+                    return userIdToUsername[el1.key]! < userIdToUsername[el2.key]!
                 }
                 return res == .orderedDescending
             }
             return true
         }
         if el2.value.last == nil && el1.value.last == nil {
-            return el1.key < el2.key
+            return userIdToUsername[el1.key]! < userIdToUsername[el2.key]!
         }
         return false
     }
@@ -131,6 +131,7 @@ class ConversationListDataProvider {
 
 extension ConversationListDataProvider: CommunicatorDelegate {
     func didFoundUser(userID: String, username: String?) {
+        userIdToUsername[userID] = username ?? userID
         if !onlineUsers.contains(where: { (el) -> Bool in
             el.0 == userID
         }) {

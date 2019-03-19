@@ -93,6 +93,14 @@ class MultipeerCommunicator: NSObject, Communicator {
     
     var advertiser: MCNearbyServiceAdvertiser
     
+    func didEnterConversation() {
+        self.advertiser.stopAdvertisingPeer()
+    }
+    
+    func didLeaveConversation() {
+        self.advertiser.startAdvertisingPeer()
+    }
+    
     func reinitAdvertiser(newUserName: String) {
         self.advertiser.stopAdvertisingPeer()
         self.browser.stopBrowsingForPeers()
