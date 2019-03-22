@@ -42,29 +42,17 @@ class ProfileViewController: UIViewController {
         button.layer.borderColor = borderColor
     }
     
-    lazy var saveGCDButton : UIButton = {
+    lazy var saveButton: UIButton = {
         let button = UIButton()
         styleButton(button: button)
-        button.addTarget(self, action: #selector(saveGCDButtonOnClick(_:)), for: .touchUpInside)
+        
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("GCD", for: .normal)
+        button.setTitle("Сохранить", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.setTitleColor(UIColor.lightGray, for: .disabled)
         button.isEnabled = false
-
-        return button
-    }()
-    
-    lazy var saveOperationButton: UIButton = {
-        let button = UIButton()
-        styleButton(button: button)
-        button.addTarget(self, action: #selector(saveOperationButtonOnClick(_:)), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Operation", for: .normal)
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.setTitleColor(UIColor.lightGray, for: .disabled)
-
-        button.isEnabled = false
+        button.addTarget(self, action: #selector(saveButtonOnClick(_:)), for: .touchUpInside)
+        button.isHidden = true
         
         return button
     }()
@@ -93,27 +81,6 @@ class ProfileViewController: UIViewController {
         
         return view
     }()
-    
-    lazy var saveButtonsStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [saveGCDButton, helperView, saveOperationButton])
-        sv.axis = .horizontal
-        sv.distribution = .fill
-        sv.spacing = 0
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        let firstButtonWidthMultiplier: CGFloat = 0.44
-        let secondButtonWidthMultiplier: CGFloat = 0.44
-        
-        stackViewConstraints = [
-            helperView.widthAnchor.constraint(equalTo: sv.widthAnchor, multiplier: 1 - secondButtonWidthMultiplier - firstButtonWidthMultiplier),
-
-            saveGCDButton.widthAnchor.constraint(equalTo: sv.widthAnchor, multiplier: firstButtonWidthMultiplier),
-            saveOperationButton.widthAnchor.constraint(equalTo: sv.widthAnchor, multiplier: secondButtonWidthMultiplier)
-            ]
-        //NSLayoutConstraint.activate(stackViewConstraints)
-        return sv
-    }()
-    
-    
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -152,12 +119,11 @@ class ProfileViewController: UIViewController {
     }
     
     fileprivate func placeEditingButtons() {
-        self.view.addSubview(self.saveButtonsStackView)
-        self.saveButtonsStackView.isHidden = true
+        self.view.addSubview(self.saveButton)
         
-        self.saveButtonsStackView.anchor(top: nil, left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 16, paddingRight: 16, width: 0, height: 0)
-        self.stackViewConstraints.append(self.saveButtonsStackView.heightAnchor.constraint(greaterThanOrEqualTo: self.view.heightAnchor, multiplier: 0.06))
-        NSLayoutConstraint.activate(self.stackViewConstraints)
+        self.saveButton.anchor(top: nil, left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 16, paddingRight: 16, width: 0, height: 0)
+        self.saveButton.heightAnchor.constraint(greaterThanOrEqualTo: self.view.heightAnchor, multiplier: 0.06).isActive = true
+        
     }
     
     fileprivate func SetupTextChangedHandlers() {
@@ -170,12 +136,18 @@ class ProfileViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    private func fetchProfileInfoCoreData() {
+        let profileState = StorageManager.shared.getUserProfileState()
+        self.UpdateUIAfterFetch(state: profileState)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         Logger.log(editProfileButton.frame.debugDescription)
         self.SetupUI()
-        self.FetchProfileInfo(shared: GCDDataManager.shared)
+        //self.FetchProfileInfo(shared: GCDDataManager.shared)
+        self.fetchProfileInfoCoreData()
         self.SetupTextChangedHandlers()
         self.placeEditingButtons()
         self.addObservers()
@@ -275,30 +247,19 @@ class ProfileViewController: UIViewController {
         
     }
     
-    @objc func saveGCDButtonOnClick(_ sender : Any?) {
+    @objc func saveButtonOnClick(_ sender: Any?) {
         showSavingProccessView()
         self.toggleEditingButtons(false)
         
-        GCDDataManager.shared.saveUserProfileInfo(state: profileStateWithoutSameFieldsInProfile(), onComplete: { [weak self] in
-            if (self != nil) {
-                self!.FetchProfileInfo(showAlert: true, shared: GCDDataManager.shared)
-                
-                
-                DispatchQueue.main.async {
-                    CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
-                }
-            }
-        }) { [weak self] in
-            if (self != nil) {
-                DispatchQueue.main.async {
-                    self!.present((self!.generateAlertController(retryFunc: (self!.saveGCDButtonOnClick(_:)))), animated: true, completion: nil)
-                    self?.toggleEditingButtons(true)
-                }
-                
-            }
-        }
+        StorageManager.shared.saveUserProfileState(profileState: self.constructUserProfileInfo(), completion: { [weak self] in
+            let profileState = StorageManager.shared.getUserProfileState()
+            self?.UpdateUIAfterFetch(state: profileState, showAlert: true)
+            CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
+            //self?.toggleEditingInputFields(false)
+        })
+        
     }
-    
+    /*
     @objc func saveOperationButtonOnClick(_ sender : Any?) {
         showSavingProccessView()
         self.toggleEditingButtons(false)
@@ -320,7 +281,7 @@ class ProfileViewController: UIViewController {
                 }
             }
         }
-    }
+    }*/
     
     private func profileStateWithoutSameFieldsInProfile() -> UserProfileState {
         var currentUserProfileInfo = constructUserProfileInfo()
@@ -385,8 +346,8 @@ class ProfileViewController: UIViewController {
     
     func toggleEditingButtons(_ enable: Bool) {
         self.tapGestureRecognizer.isEnabled = enable
-        self.saveGCDButton.isEnabled = enable
-        self.saveOperationButton.isEnabled = enable
+        
+        self.saveButton.isEnabled = enable
     }
     
     private func toggleEditingInputFields(_ enable: Bool) {
@@ -437,14 +398,14 @@ extension ProfileViewController {
             UIView.animate(withDuration: 0.5, animations: { [weak self] in
                 self?.editProfileButton.alpha = 0
             }) { [weak self] (_) in
-                self?.saveButtonsStackView.isHidden = false
+                self?.saveButton.isHidden = false
                 self?.editProfileButton.isHidden = true
                 self?.toggleEditingInputFields(true)
                 self?.tapGestureRecognizer.isEnabled = true
 
                 
                 UIView.animate(withDuration: 0.5, animations: { [weak self] in
-                    self?.saveButtonsStackView.alpha = 1
+                    self?.saveButton.alpha = 1
                     }, completion: nil)
             }
             
@@ -452,9 +413,9 @@ extension ProfileViewController {
             
         } else {
             UIView.animate(withDuration: 0.5, animations: { [weak self] in
-                self?.saveButtonsStackView.alpha = 0
+                self?.saveButton.alpha = 0
             }) { [weak self] (_) in
-                self?.saveButtonsStackView.isHidden = true
+                self?.saveButton.isHidden = true
                 self?.editProfileButton.isHidden = false
                 self?.tapGestureRecognizer.isEnabled = false
                 

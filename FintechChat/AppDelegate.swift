@@ -33,12 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         let navController = CustomNavigationController(rootViewController: ConversationListViewController())
         window?.rootViewController = navController
-        do {
-            CommunicationManager.shared = CommunicationManager(username: try FetchSaveManager.getSavedStringFromFile(DataManagersFilePaths.userNameFile) + "")
-        } catch let err {
-            CommunicationManager.shared = CommunicationManager(username: "justUsername")
-            Logger.log(err.localizedDescription)
-        }
+        CommunicationManager.shared = CommunicationManager(username: StorageManager.shared.getUserProfileState().username ?? "justUsername")
+        
         
         return true
     }

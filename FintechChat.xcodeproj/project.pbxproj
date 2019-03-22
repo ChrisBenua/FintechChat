@@ -31,6 +31,9 @@
 		AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAB221B0A11001BC709 /* Actions.swift */; };
 		AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */; };
 		AABA1981220F043100321179 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABA1980220F043100321179 /* Debug.swift */; };
+		AAC53B5022454F8900151EA3 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC53B4F22454F8900151EA3 /* CoreDataStack.swift */; };
+		AAC53B52224551F500151EA3 /* AppUserExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC53B51224551F500151EA3 /* AppUserExtension.swift */; };
+		AAC53B54224554FC00151EA3 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC53B53224554FC00151EA3 /* StorageManager.swift */; };
 		AAD462372232A7DD008BE8C0 /* UserDefaultsProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD462362232A7DD008BE8C0 /* UserDefaultsProfile.swift */; };
 		AAD462392232B109008BE8C0 /* GCDDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD462382232B109008BE8C0 /* GCDDataManager.swift */; };
 		AAD73B67221EF6870085512B /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD73B66221EF6870085512B /* ConversationListViewController.swift */; };
@@ -80,6 +83,9 @@
 		AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileVC+UIImagePickerDelegate.swift"; sourceTree = "<group>"; };
 		AABA1980220F043100321179 /* Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		AAC40B2B223934FA0093673E /* FintechChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FintechChat.entitlements; sourceTree = "<group>"; };
+		AAC53B4F22454F8900151EA3 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		AAC53B51224551F500151EA3 /* AppUserExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUserExtension.swift; sourceTree = "<group>"; };
+		AAC53B53224554FC00151EA3 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		AAD462362232A7DD008BE8C0 /* UserDefaultsProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProfile.swift; sourceTree = "<group>"; };
 		AAD462382232B109008BE8C0 /* GCDDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDDataManager.swift; sourceTree = "<group>"; };
 		AAD73B66221EF6870085512B /* ConversationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListViewController.swift; sourceTree = "<group>"; };
@@ -209,6 +215,16 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		AAC53B4E22454F7500151EA3 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				AAC53B4F22454F8900151EA3 /* CoreDataStack.swift */,
+				AAC53B51224551F500151EA3 /* AppUserExtension.swift */,
+				AAC53B53224554FC00151EA3 /* StorageManager.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		AAD73B65221EF6760085512B /* ConversationListCV */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,6 +283,7 @@
 		AAF2276E220BD16000AF5DFA /* FintechChat */ = {
 			isa = PBXGroup;
 			children = (
+				AAC53B4E22454F7500151EA3 /* CoreData */,
 				AA1E0858223B809800B56281 /* Multipeer */,
 				AAC40B2B223934FA0093673E /* FintechChat.entitlements */,
 				AA8E111522338A7E007BF480 /* DataManagers */,
@@ -372,6 +389,7 @@
 				AAD73B6C221EF8680085512B /* ConversationTableViewCell.swift in Sources */,
 				AA1E085F223B82FC00B56281 /* MessageIDGenerator.swift in Sources */,
 				AAD462372232A7DD008BE8C0 /* UserDefaultsProfile.swift in Sources */,
+				AAC53B54224554FC00151EA3 /* StorageManager.swift in Sources */,
 				AAD73B70221F072B0085512B /* ConversationCellModelHelper.swift in Sources */,
 				AA9ED4E22233A0A8001DC94B /* OperationDataManager.swift in Sources */,
 				AA8E111822338AC4007BF480 /* FetchOperations.swift in Sources */,
@@ -392,6 +410,7 @@
 				AA3D28EC22243C340001D79F /* ConversationList+DataSource.swift in Sources */,
 				AAF22772220BD16000AF5DFA /* ProfileViewController.swift in Sources */,
 				AA9ED4E82233E7AB001DC94B /* ProfileVC+TextViewDelegate.swift in Sources */,
+				AAC53B5022454F8900151EA3 /* CoreDataStack.swift in Sources */,
 				AA69B8B7222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift in Sources */,
 				AA7E680D22395A900004ED94 /* TextViewWithDoneButton.swift in Sources */,
 				AAD462392232B109008BE8C0 /* GCDDataManager.swift in Sources */,
@@ -402,6 +421,7 @@
 				AAD73B77221F14E10085512B /* ConversationViewController.swift in Sources */,
 				AA8E111A22338BC0007BF480 /* UserProfileState.swift in Sources */,
 				AAF22770220BD16000AF5DFA /* AppDelegate.swift in Sources */,
+				AAC53B52224551F500151EA3 /* AppUserExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

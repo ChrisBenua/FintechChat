@@ -11,6 +11,9 @@ import UIKit
 
 
 struct UserProfileState: Equatable {
+    
+    public static var defaultImageData = #imageLiteral(resourceName: "placeholder-user").pngData()!
+    
     var username: String?
     
     var profileImage: UIImage?
