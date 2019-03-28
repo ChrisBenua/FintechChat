@@ -46,7 +46,7 @@ class CommunicationManager: CommunicatorDelegate {
     init(username: String) {
         self.communicator = MultipeerCommunicator(username: username)
         self.communicator.delegate = self
-        self.contollerDataProvider = ConversationListDataProvider.shared
+        //self.contollerDataProvider = ConversationListDataProvider.shared
     }
     
 }

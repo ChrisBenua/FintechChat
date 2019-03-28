@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Message: Codable {
+class CodableMessage: Codable {
     var eventType: String
     var text: String
     var messageId: String

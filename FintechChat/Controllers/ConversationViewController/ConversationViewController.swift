@@ -12,6 +12,8 @@ import MultipeerConnectivity
 
 class ConversationViewController: UIViewController {
     
+    var conversationListDataProvider: ConversationListDataProvider
+    
     private var shouldScrollToLast: Bool! = true
     
     private var didLeaveDialog: Bool = false
@@ -19,7 +21,7 @@ class ConversationViewController: UIViewController {
     private let accessoryViewHeight: CGFloat = 65
     
     private func markMessagesAsRead() {
-        for el in ConversationListDataProvider.shared.messageStorage[connectedUserID]! {
+        for el in self.conversationListDataProvider.messageStorage[connectedUserID]! {
             el.didRead = true
         }
     }
@@ -75,12 +77,22 @@ class ConversationViewController: UIViewController {
         return tv
     }()
     
+    init(conversationListDataProvider: ConversationListDataProvider) {
+        self.conversationListDataProvider = conversationListDataProvider
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.conversationListDataProvider = ConversationListDataProvider()
+        super.init(coder: aDecoder)
+    }
+    
     override func viewDidLoad() {
         //CommunicationManager.shared.communicator.advertiser.stopAdvertisingPeer()
         self.addObservers()
         CommunicationManager.shared.communicator.onDisconnectDelegate = self
-        ConversationListDataProvider.shared.conversationViewController = self
-        self.messages = ConversationListDataProvider.shared.getConversationCellData(name: connectedUserID)
+        self.conversationListDataProvider.conversationViewController = self
+        self.messages = self.conversationListDataProvider.getConversationCellData(name: connectedUserID)
         super.viewDidLoad()
         
         self.markMessagesAsRead()
@@ -233,7 +245,7 @@ extension ConversationViewController: UpdateConversationControllerDelegate {
     }
     
     func updateConversation() {
-        self.messages = ConversationListDataProvider.shared.getConversationCellData(name: connectedUserID)
+        self.messages = self.conversationListDataProvider.getConversationCellData(name: connectedUserID)
         DispatchQueue.main.async {
             let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
             if (indexPath.row >= 0) {

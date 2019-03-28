@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 class ConversationListViewController : UIViewController {
+    
+    var viewModel = ConversationListDataProvider()
+    
     let rowHeight: CGFloat = 80
     
     var sectionNames: [String] = ["Online"]
@@ -62,8 +65,9 @@ class ConversationListViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        ConversationListDataProvider.shared.listViewController = self
+        self.viewModel.listViewController = self
+        CommunicationManager.shared.contollerDataProvider = self.viewModel
+        //ConversationListDataProvider.shared.listViewController = self
         self.navigationController?.view.backgroundColor = .white
         self.navigationItem.title = "Tinkoff Chat"
         
@@ -106,7 +110,7 @@ class ConversationListViewController : UIViewController {
 
 extension ConversationListViewController: UpdateConversationControllerDelegate {
     func updateConversation() {
-        searchedConversations = ConversationListDataProvider.shared.allConversationListCellData()
+        searchedConversations = self.viewModel.allConversationListCellData()
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }

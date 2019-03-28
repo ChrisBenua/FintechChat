@@ -21,11 +21,11 @@ extension ConversationListViewController: UISearchBarDelegate {
     }
     
     func fillSearchResultsDefault() {
-        ConversationListDataProvider.shared.filterString = ""
+        self.viewModel.filterString = ""
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        ConversationListDataProvider.shared.filterString = searchText
+        self.viewModel.filterString = searchText
         tableView.reloadData()
     }
     

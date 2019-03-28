@@ -83,7 +83,7 @@ class ConversationListDataProvider {
     
     
     
-    public static var shared = ConversationListDataProvider()
+    //public static var shared = ConversationListDataProvider()
     
     private func predicate(el1: (key: String, value: [MessageData]), el2: (key: String, value: [MessageData])) -> Bool {
         if let lastEl1 = el1.value.last?.date {
@@ -112,11 +112,14 @@ class ConversationListDataProvider {
     }
     
     func getConversationCellData(name: String) -> [ConversationMessageModelHelper] {
-        return searchedMessages.filter({ (el) -> Bool in
+        if let value =  searchedMessages.filter({ (el) -> Bool in
             el.key == name
-        }).first!.value.compactMap({ (el) -> ConversationMessageModelHelper in
-            ConversationMessageModelHelper(messageText: el.message, isIncoming: el.isIncoming)
-        })
+        }).first?.value {
+            return value.compactMap({ (data) -> ConversationMessageModelHelper in
+                 ConversationMessageModelHelper(messageText: data.message, isIncoming: data.isIncoming)
+            })
+        }
+        return []
     }
     
     func markAsReadAllConversation(with name: String) {

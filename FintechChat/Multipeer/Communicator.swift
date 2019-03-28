@@ -42,10 +42,12 @@ class MultipeerCommunicator: NSObject, Communicator {
     
     func sendMessage(message: String, to userID: String, completionHandler: ((Bool, Error?) -> ())?) {
         
-        let message = Message(text: message)
+        let message = CodableMessage(text: message)
         Logger.log(sessions.connectedPeers.debugDescription)
         do {
-            try self.sessions.send(try JSONEncoder().encode(message), toPeers: sessions.connectedPeers, with: .reliable)
+            if let session = allSessions[userID] {
+                try session.send(try JSONEncoder().encode(message), toPeers: session.connectedPeers, with: .reliable)
+            }
             
             completionHandler?(true, nil)
         } catch let err {
@@ -56,16 +58,20 @@ class MultipeerCommunicator: NSObject, Communicator {
     }
     
     func connectWithUser(username: String) {
-        let neededPeer = currentPeers.filter({$0.displayName == username})
+        /*let neededPeer = currentPeers.filter({$0.displayName == username})
         if (neededPeer.count > 0) {
             browser.invitePeer(neededPeer.first!, to: sessions, withContext: nil, timeout: TimeInterval(exactly: 10) ?? TimeInterval())
             
+        }*/
+        let neededPeer = currentPeers.filter({$0.displayName == username})
+        if let session = self.allSessions[username], neededPeer.count > 0 {
+            browser.invitePeer(neededPeer.first!, to: session, withContext: nil, timeout: TimeInterval(exactly: 10) ?? TimeInterval())
         }
     }
     
     func disconnectWithUser(username: String) {
         Logger.log(self.sessions.connectedPeers.debugDescription)
-        self.sessions.disconnect()
+        //self.sessions.disconnect()
         
         Logger.log(self.sessions.connectedPeers.debugDescription)
         
@@ -92,6 +98,8 @@ class MultipeerCommunicator: NSObject, Communicator {
     var browser: MCNearbyServiceBrowser
     
     var advertiser: MCNearbyServiceAdvertiser
+    
+     var allSessions: [String: MCSession] = [String: MCSession]()
     
     func didEnterConversation() {
         self.advertiser.stopAdvertisingPeer()
@@ -178,6 +186,16 @@ extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
         
         self.currentPeers.append(peerID)
         
+        let displayName = peerID.displayName
+        
+        if allSessions[displayName] == nil {
+            let session = MCSession(peer: userPeerID)
+            session.delegate = self
+            
+            self.allSessions[displayName] = session
+        }
+        
+        
         self.delegate?.didFoundUser(userID: peerID.displayName, username: info!["userName"])
         //self.delegate?.failedToStartBrowsingForUsers(error: NSError(domain: "shit", code: 1, userInfo: nil))
 
@@ -185,6 +203,8 @@ extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         self.delegate?.didLostUser(userID: peerID.displayName)
+        self.allSessions[peerID.displayName]?.disconnect()
+        //onDisconnectDelegate?.userDidDisconnected(state: state)
         self.currentPeers.removeAll(where: {$0 == peerID})
     }
     
@@ -197,21 +217,21 @@ extension MultipeerCommunicator: MCSessionDelegate {
         self.lastState = state
         
         if (state == .connected) {
-            Logger.log("Connected " + self.sessions.connectedPeers.first!.debugDescription)
+            //Logger.log("Connected " + self.sessions.connectedPeers.first!.debugDescription)
         }
         if (state == .notConnected) {
             Logger.log("DisconnectedPeer")
         }
-        
         onDisconnectDelegate?.userDidDisconnected(state: state)
-        Logger.log("All Connected Peers: \(sessions.connectedPeers.count)")
+
+        Logger.log("All Connected Peers: \(session.connectedPeers.count)")
 
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         Logger.log("Did receive data from \(peerID.displayName)")
         do {
-            let message = try JSONDecoder().decode(Message.self, from: data)
+            let message = try JSONDecoder().decode(CodableMessage.self, from: data)
             self.delegate?.didReceiveMessage(text: message.text, fromUser: peerID.displayName, toUser: userPeerID.displayName)
         } catch let err {
             Logger.log(err.localizedDescription)
