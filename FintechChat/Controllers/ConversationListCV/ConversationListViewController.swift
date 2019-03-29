@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class ConversationListViewController : UIViewController {
     
@@ -48,6 +49,18 @@ class ConversationListViewController : UIViewController {
         fillSplittedConversations()
     }*/
     
+    lazy var fetchedResultsController: NSFetchedResultsController<Conversation> = {
+        let frc = self.viewModel.generateConversationListFRC()
+        frc.delegate = self
+        do {
+            try frc.performFetch()
+        } catch let err {
+            print("Cant fetch in ConversationListVC")
+            print(err)
+        }
+        return frc
+    }()
+    
     lazy var tableView: UITableView = {
         let tv = UITableView()
         tv.delegate = self
@@ -61,6 +74,7 @@ class ConversationListViewController : UIViewController {
         super.viewDidAppear(animated)
         
         self.updateConversation()
+        self.tableView.reloadData()
     }
     
     override func viewDidLoad() {
@@ -107,12 +121,35 @@ class ConversationListViewController : UIViewController {
     
 }
 
+extension ConversationListViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        self.tableView.beginUpdates()
+    }
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        self.tableView.endUpdates()
+        
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            tableView.insertRows(at: [newIndexPath!], with: .automatic)
+        case .move:
+            tableView.deleteRows(at: [indexPath!], with: .automatic)
+            tableView.insertRows(at: [newIndexPath!], with: .automatic)
+        case .update:
+            tableView.reloadRows(at: [indexPath!], with: .automatic)
+        case .delete:
+            tableView.deleteRows(at: [indexPath!], with: .automatic)
+        }
+    }
+}
 
 extension ConversationListViewController: UpdateConversationControllerDelegate {
     func updateConversation() {
-        searchedConversations = self.viewModel.allConversationListCellData()
+        //searchedConversations = self.viewModel.allConversationListCellData()
         DispatchQueue.main.async {
-            self.tableView.reloadData()
+            //self.tableView.reloadData()
         }
     }
     

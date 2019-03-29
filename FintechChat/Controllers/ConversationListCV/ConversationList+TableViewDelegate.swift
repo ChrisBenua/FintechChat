@@ -18,7 +18,10 @@ extension ConversationListViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionNames[section]
+        guard let sections = self.fetchedResultsController.sections else {
+            fatalError("No sections for FRC")
+        }
+        return sections[section].name
     }
 }
 

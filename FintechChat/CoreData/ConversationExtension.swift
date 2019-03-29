@@ -12,9 +12,14 @@ import CoreData
 extension Conversation {
     
     static func insertConversation(into context: NSManagedObjectContext) -> Conversation? {
-        guard let conversation = NSEntityDescription.insertNewObject(forEntityName: "Conversation", into: context) as? Conversation else { return nil }
+        var conv: Conversation? = nil
+        context.performAndWait {
+             guard let conversation = NSEntityDescription.insertNewObject(forEntityName: "Conversation", into: context) as? Conversation else { return  }
+            conv = conversation
+        }
+       
         
-        return conversation
+        return conv
     }
     
     static func fetchConversationWith(conversationId: String) -> NSFetchRequest<Conversation> {
@@ -31,5 +36,11 @@ extension Conversation {
         return request
     }
     
+    static func fetchSortedByDateConversations() -> NSFetchRequest<Conversation> {
+        let request: NSFetchRequest<Conversation> = Conversation.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "lastMessage.timestamp", ascending: true)]
+        
+        return request
+    }
     
 }

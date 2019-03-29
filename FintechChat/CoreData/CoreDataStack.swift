@@ -14,7 +14,7 @@ class CoreDataStack {
     
     var storeURL: URL {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        return documentsURL.appendingPathComponent("Mystore.sqlite")
+        return documentsURL.appendingPathComponent("Mystore12.sqlite")
     }
     
     let dataModelName = "FintechChat"

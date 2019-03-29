@@ -9,10 +9,25 @@
 import Foundation
 import UIKit
 import MultipeerConnectivity
+import CoreData
 
 class ConversationViewController: UIViewController {
     
+    private var fetchedResultsController: NSFetchedResultsController<Message>!
+    
+    var conversation: Conversation! {
+        didSet {
+            //StorageManager.shared.markAsReadMessages(in: conversation)
+        }
+    }
+    
     var conversationListDataProvider: ConversationListDataProvider
+    
+    /*lazy var fetchedResultsController: NSFetchedResultsController<Message> = {
+        let frc = conversationListDataProvider.generateConversationFRC(conversationId: conversation.conversationId!)
+        frc.delegate = self
+        return frc
+    }()*/
     
     private var shouldScrollToLast: Bool! = true
     
@@ -20,11 +35,11 @@ class ConversationViewController: UIViewController {
     
     private let accessoryViewHeight: CGFloat = 65
     
-    private func markMessagesAsRead() {
+    /*private func markMessagesAsRead() {
         for el in self.conversationListDataProvider.messageStorage[connectedUserID]! {
             el.didRead = true
         }
-    }
+    }*/
     
     
     override func willMove(toParent parent: UIViewController?) {
@@ -38,7 +53,7 @@ class ConversationViewController: UIViewController {
     
     func scrollToBottom(animated: Bool = false){
         DispatchQueue.main.async {
-            let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
+            let indexPath = IndexPath(row: (self.fetchedResultsController.fetchedObjects?.count ?? 0) - 1, section: 0)
             if indexPath.row >= 0 {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
                 Logger.log("SCROLL")
@@ -62,7 +77,7 @@ class ConversationViewController: UIViewController {
     
     var connectedUserID: String! {
         didSet {
-            CommunicationManager.shared.communicator.connectWithUser(username: connectedUserID)
+        CommunicationManager.shared.communicator.connectWithUser(username: connectedUserID)
         }
     }
     
@@ -77,9 +92,18 @@ class ConversationViewController: UIViewController {
         return tv
     }()
     
-    init(conversationListDataProvider: ConversationListDataProvider) {
+    init(conversationListDataProvider: ConversationListDataProvider, conversationId: String = "") {
         self.conversationListDataProvider = conversationListDataProvider
+        
         super.init(nibName: nil, bundle: nil)
+        self.fetchedResultsController = self.conversationListDataProvider.generateConversationFRC(conversationId: conversationId)
+        self.fetchedResultsController.delegate = self
+        do {
+            try fetchedResultsController.performFetch()
+        } catch let err {
+            print("Cant fetch in ConversationListVC")
+            print(err)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -92,10 +116,10 @@ class ConversationViewController: UIViewController {
         self.addObservers()
         CommunicationManager.shared.communicator.onDisconnectDelegate = self
         self.conversationListDataProvider.conversationViewController = self
-        self.messages = self.conversationListDataProvider.getConversationCellData(name: connectedUserID)
+        //self.messages = self.conversationListDataProvider.getConversationCellData(name: connectedUserID)
         super.viewDidLoad()
         
-        self.markMessagesAsRead()
+        
         
         //self.navigationItem.backBarButtonItem?.action = #selector(customBackButtonOnClick(_:))
         
@@ -111,6 +135,7 @@ class ConversationViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         CommunicationManager.shared.communicator.disconnectWithUser(username: dialogTitle)
+        StorageManager.shared.markAsReadMessages(in: self.conversation)
         //CommunicationManager.shared.communicator.advertiser.startAdvertisingPeer()
 
     }
@@ -130,7 +155,8 @@ class ConversationViewController: UIViewController {
         super.viewDidAppear(animated)
         
         toggleTableView()
-       
+        //StorageManager.shared.markAsReadMessages(in: self.conversation)
+
         
         /*if (!messages.isEmpty && shouldScrollToLast && tableView.contentSize.height >= self.view.frame.height) {
             shouldScrollToLast = false
@@ -218,15 +244,46 @@ class ConversationViewController: UIViewController {
     
 }
 
+
+extension ConversationViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        self.tableView.beginUpdates()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        self.tableView.endUpdates()
+        self.scrollToBottom(animated: true)
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            tableView.insertRows(at: [newIndexPath!], with: .automatic)
+        case .move:
+            tableView.deleteRows(at: [indexPath!], with: .automatic)
+            tableView.insertRows(at: [newIndexPath!], with: .automatic)
+        case .update:
+            tableView.reloadRows(at: [indexPath!], with: .automatic)
+        case .delete:
+            tableView.deleteRows(at: [indexPath!], with: .automatic)
+        }
+    }
+}
+
+
 extension ConversationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages.count
+        return self.fetchedResultsController.sections![section].numberOfObjects
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.cellId, for: indexPath) as! MessageTableViewCell
         
-        cell.setup(messageText: messages[indexPath.row].messageText, isIncoming: messages[indexPath.row].isIncoming)
+        let message = self.fetchedResultsController.object(at: indexPath)
+        
+        let isIncoming = (self.conversation.participants!.allObjects.first as! User).userId! == message.senderId!
+        
+        cell.setup(messageText: message.text ?? "", isIncoming: isIncoming)
         return cell
     }
     
@@ -245,8 +302,8 @@ extension ConversationViewController: UpdateConversationControllerDelegate {
     }
     
     func updateConversation() {
-        self.messages = self.conversationListDataProvider.getConversationCellData(name: connectedUserID)
-        DispatchQueue.main.async {
+        //self.messages = self.conversationListDataProvider.getConversationCellData(name: connectedUserID)
+        /*DispatchQueue.main.async {
             let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
             if (indexPath.row >= 0) {
                 self.tableView.insertRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
@@ -255,7 +312,7 @@ extension ConversationViewController: UpdateConversationControllerDelegate {
             self.markMessagesAsRead()
             self.scrollToBottom()
         }
-       
+       */
     }
     
     

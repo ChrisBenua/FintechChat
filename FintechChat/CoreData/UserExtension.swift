@@ -11,8 +11,26 @@ import CoreData
 
 extension User {
     static func insertUser(into context: NSManagedObjectContext) -> User? {
-        guard let user = NSEntityDescription.insertNewObject(forEntityName: "User", into: context) as? User else { return nil }
+        var res: User? = nil
+        context.performAndWait {
+            guard let user = NSEntityDescription.insertNewObject(forEntityName: "User", into: context) as? User else { return }
+            
+            res = user
+        }
+        return res
+    }
+    
+    static func onlineUsersFetchRequest() -> NSFetchRequest<User> {
+        let request: NSFetchRequest<User> = User.fetchRequest()
+        request.predicate = NSPredicate(format: "isOnline == true")
         
-        return user
+        return request
+    }
+    
+    static func fetchUserWithId(id: String) -> NSFetchRequest<User> {
+        let request: NSFetchRequest<User> = User.fetchRequest()
+        request.predicate = NSPredicate(format: "userId == %@", id)
+        
+        return request
     }
 }

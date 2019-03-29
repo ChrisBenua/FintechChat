@@ -21,12 +21,12 @@ extension ConversationListViewController: UISearchBarDelegate {
     }
     
     func fillSearchResultsDefault() {
-        self.viewModel.filterString = ""
+        //self.viewModel.filterString = ""
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.viewModel.filterString = searchText
-        tableView.reloadData()
+        //self.viewModel.filterString = searchText
+        //tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

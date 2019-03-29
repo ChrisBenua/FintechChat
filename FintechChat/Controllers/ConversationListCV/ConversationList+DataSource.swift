@@ -13,26 +13,39 @@ import UIKit
 extension ConversationListViewController : UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionNames.count
+        guard let sections = self.fetchedResultsController.sections else {
+            fatalError("No sections in FRC")
+        }
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //return searchSplittedConversation[section].count
-        return searchedConversations.count
+        guard let sections = self.fetchedResultsController.sections else {
+            fatalError("No sections in FRC")
+        }
+        return sections[section].numberOfObjects
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.cellId, for: indexPath) as! ConversationTableViewCell
-        let cellData = searchedConversations[indexPath.row]
-        cell.setup(name: cellData.name, message: cellData.message, date: cellData.date, online: cellData.online, hasUnreadMessages: cellData.hasUnreadMessages)
+        let cellData = self.fetchedResultsController.object(at: indexPath)
+        let participantUsername = (cellData.participants?.allObjects.first! as! User).name
+        let lastMessage = (cellData.lastMessage)?.text
+        let lastMessageDate = (cellData.lastMessage)?.timestamp ?? Date(timeIntervalSince1970: 0)
+        let isOnline = cellData.isOnline
+        let hasUnreadMessages = !(cellData.lastMessage?.didRead ?? true)
+        cell.setup(name: participantUsername, message: lastMessage, date: lastMessageDate, online: isOnline, hasUnreadMessages: hasUnreadMessages)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dialogName = searchedConversations[indexPath.row].name!
-        let vc = ConversationViewController(conversationListDataProvider: self.viewModel)
-        vc.dialogTitle = dialogName
-        vc.connectedUserID = self.viewModel.getUserIdBy(username: dialogName)
+        //let dialogName = searchedConversations[indexPath.row].name!
+        let vc = ConversationViewController(conversationListDataProvider: self.viewModel, conversationId: self.fetchedResultsController.object(at: indexPath).conversationId!)
+        vc.dialogTitle = (self.fetchedResultsController.object(at: indexPath).participants?.allObjects.first as! User).name
+        //vc.connectedUserID = self.viewModel.getUserIdBy(username: dialogName)
+        vc.connectedUserID = (self.fetchedResultsController.object(at: indexPath).participants?.allObjects.first! as! User).userId!
+        vc.conversation = self.fetchedResultsController.object(at: indexPath)
         if (searchController.isActive) {
             self.searchController.dismiss(animated: true) { [weak self] in
                 self?.navigationController?.pushViewController(vc, animated: true)

@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import CoreData
+
 
 class MessageData {
     var message: String?
@@ -35,14 +37,27 @@ class ConversationListDataProvider {
     weak var listViewController: UpdateConversationControllerDelegate?
     weak var conversationViewController: UpdateConversationControllerDelegate?
     
-    var onlineUsers: [(String, String)] = [] {
+    func generateConversationListFRC() -> NSFetchedResultsController<Conversation> {
+        let frc = NSFetchedResultsController(fetchRequest: Conversation.fetchSortedByDateConversations(), managedObjectContext: StorageManager.shared.mainContext, sectionNameKeyPath: nil, cacheName: nil)
+        return frc
+    }
+    
+    func generateConversationFRC(conversationId: String) -> NSFetchedResultsController<Message> {
+        let frc = NSFetchedResultsController(fetchRequest: Message.fetchMessagesInConversation(conversationID: conversationId), managedObjectContext: StorageManager.shared.mainContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        return frc
+    }
+    
+    /*var onlineUsers: [(String, String)] = [] {
         didSet {
             updateSearchedMessages()
             listViewController?.updateConversation()
         }
-    }
+    }*/
     
-    private func updateSearchedMessages() {
+    var userIdToUser: [String: User] = [:]
+    
+   /* private func updateSearchedMessages() {
         self.searchedMessages = messageStorage.filter { (arg0) -> Bool in
             
             let (key, _) = arg0
@@ -57,35 +72,37 @@ class ConversationListDataProvider {
             updateSearchedMessages()
             listViewController?.updateConversation()
         }
-    }
+    }*/
     
-    func getUsernameBy(userId: String) -> String {
+    /*func getUsernameBy(userId: String) -> String {
         return userIdToUsername[userId]!
-    }
+    }*/
     
-    func getUserIdBy(username: String) -> String {
+    /*func getUserIdBy(username: String) -> String {
         return onlineUsers.first(where: { (el) -> Bool in
             el.1 == username
         })?.0 ?? username
-    }
+    }*/
     
-    var userIdToUsername: [String: String] = [:]
+    var userIdToConversation: [String: Conversation] = [:]
     
-    var messageStorage: [String: [MessageData]] = [:]
+    //var userIdToUsername: [String: String] = [:]
     
-    private var searchedMessages: [String: [MessageData]] = [:]
+    //var messageStorage: [String: [MessageData]] = [:]
     
-    var searchedMessageStorage: [String: [MessageData]] {
+    //private var searchedMessages: [String: [MessageData]] = [:]
+    
+    /*var searchedMessageStorage: [String: [MessageData]] {
         get {
             return searchedMessages
         }
-    }
+    }*/
     
     
     
     //public static var shared = ConversationListDataProvider()
     
-    private func predicate(el1: (key: String, value: [MessageData]), el2: (key: String, value: [MessageData])) -> Bool {
+    /*private func predicate(el1: (key: String, value: [MessageData]), el2: (key: String, value: [MessageData])) -> Bool {
         if let lastEl1 = el1.value.last?.date {
             if let lastEl2 = el2.value.last?.date {
                 let res = lastEl1.compare(lastEl2)
@@ -100,18 +117,18 @@ class ConversationListDataProvider {
             return userIdToUsername[el1.key]! < userIdToUsername[el2.key]!
         }
         return false
-    }
+    }*/
     
-    func allConversationListCellData() -> [ConversationCellConfiguration] {
+    /*func allConversationListCellData() -> [ConversationCellConfiguration] {
         self.updateSearchedMessages()
         let model = searchedMessages.sorted(by: predicate(el1:el2:))
         
         return model.compactMap { (val) -> ConversationCellModelHelper in
             ConversationCellModelHelper(name: self.getUsernameBy(userId: val.key), message: val.value.last?.message, date: val.value.last?.date ?? Date(timeIntervalSince1970: 0), online: true, hasUnreadMessages: !(val.value.last?.didRead ?? true))
         }
-    }
+    }*/
     
-    func getConversationCellData(name: String) -> [ConversationMessageModelHelper] {
+    /*func getConversationCellData(name: String) -> [ConversationMessageModelHelper] {
         if let value =  searchedMessages.filter({ (el) -> Bool in
             el.key == name
         }).first?.value {
@@ -120,19 +137,67 @@ class ConversationListDataProvider {
             })
         }
         return []
-    }
+    }*/
     
-    func markAsReadAllConversation(with name: String) {
+    /*func markAsReadAllConversation(with name: String) {
         for el in searchedMessages.filter({$0.key == name}).first!.value {
             el.didRead = true
         }
         self.listViewController?.updateConversation()
-    }
+    }*/
 }
 
 extension ConversationListDataProvider: CommunicatorDelegate {
     func didFoundUser(userID: String, username: String?) {
-        userIdToUsername[userID] = username ?? userID
+        // creates or updates user's online status
+        if userIdToUser[userID] == nil {
+            
+            let request = User.fetchUserWithId(id: userID)
+            var result = [User]()
+            do {
+            
+                result = try StorageManager.shared.mainContext.fetch(request)
+            } catch let err {
+                print("Cant fetch USERs with ID")
+                print(err)
+            }
+            
+            if (result.count == 0) {
+                let newUser = StorageManager.shared.foundedNewUser(userId: userID, username: username)
+                userIdToUser[userID] = newUser
+            }
+            else {
+                StorageManager.shared.updateUserOnlineState(user: result[0], isOnline: true)
+                userIdToUser[userID] = result[0]
+            }
+            
+        } else {
+            StorageManager.shared.updateUserOnlineState(user: userIdToUser[userID], isOnline: true)
+        }
+        // creates or updates conversation
+        if (userIdToConversation[userID] == nil) {
+            
+            var result = [Conversation]()
+            
+            do {
+                result = try  StorageManager.shared.mainContext.fetch(Conversation.fetchConversationWith(conversationId: userID))
+            } catch let err {
+                print(err)
+            }
+            
+            if (result.count == 0) {
+                userIdToConversation[userID] = StorageManager.shared.createConversation(with: userIdToUser[userID]!)
+            } else {
+                StorageManager.shared.updateConversationOnlineStatus(conversation: result[0], isOnline: true)
+                userIdToConversation[userID] = result[0]
+            }
+            
+        } else {
+            StorageManager.shared.updateConversationOnlineStatus(conversation: userIdToConversation[userID]!, isOnline: true)
+        }
+        
+        
+        /*userIdToUsername[userID] = username ?? userID
         if !onlineUsers.contains(where: { (el) -> Bool in
             el.0 == userID
         }) {
@@ -141,16 +206,19 @@ extension ConversationListDataProvider: CommunicatorDelegate {
             if (!self.messageStorage.keys.contains(userID)) {
                 self.messageStorage[userID] = []
             }
-        }
-        self.listViewController?.updateConversation()
+        }*/
+        //self.listViewController?.updateConversation()
     }
     
     func didLostUser(userID: String) {
-        onlineUsers.removeAll { (el) -> Bool in
+        StorageManager.shared.updateUserOnlineState(user: userIdToUser[userID], isOnline: false)
+        StorageManager.shared.updateConversationOnlineStatus(conversation: userIdToConversation[userID]!, isOnline: false)
+        
+        /*onlineUsers.removeAll { (el) -> Bool in
             el.0 == userID
-        }
-        self.updateSearchedMessages()
-        self.listViewController?.updateConversation()
+        }*/
+        //self.updateSearchedMessages()
+        //self.listViewController?.updateConversation()
 
     }
     
@@ -163,13 +231,20 @@ extension ConversationListDataProvider: CommunicatorDelegate {
     }
     
     func didReceiveMessage(text: String, fromUser: String, toUser: String) {
-        if (fromUser == CommunicationManager.shared.communicator.userPeerID.displayName) {
+        /*if (fromUser == CommunicationManager.shared.communicator.userPeerID.displayName) {
             self.messageStorage[toUser]?.append(MessageData(text: text, isIncoming: false))
         } else {
             self.messageStorage[fromUser]?.append(MessageData(text: text, isIncoming: true))
+        }*/
+        
+        if (fromUser == CommunicationManager.shared.communicator.userPeerID.displayName) {
+            StorageManager.shared.createMessage(from: fromUser, to: toUser, text: text, conversation: userIdToConversation[toUser]!)
+        } else {
+            StorageManager.shared.createMessage(from: fromUser, to: toUser, text: text, conversation: userIdToConversation[fromUser]!)
         }
-        self.listViewController?.updateConversation()
-        self.conversationViewController?.updateConversation()
+        
+        //self.listViewController?.updateConversation()
+        //self.conversationViewController?.updateConversation()
 
     }
     
