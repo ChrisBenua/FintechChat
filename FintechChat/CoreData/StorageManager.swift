@@ -63,7 +63,7 @@ class StorageManager {
         DispatchQueue.global(qos: .background).async {
             AppUser.getOrCreateAppUser(in: context) { user in
                 
-                context.perform {
+                context.performAndWait {
                     user?.username = profileState.username
                     user?.detailInfo = profileState.detailInfo
                     user?.profileImage = profileState.profileImage?.pngData()
@@ -169,7 +169,7 @@ class StorageManager {
         DispatchQueue.global(qos: .background).async  {
             let conv = Conversation.insertConversation(into: self.saveContext)
             
-            self.saveContext.perform {
+            self.saveContext.performAndWait {
                 conv?.conversationId = user.userId
                 AppUser.getOrCreateAppUser(in: self.saveContext) { appUser in
                     self.saveContext.perform {
