@@ -113,8 +113,8 @@ class MultipeerCommunicator: NSObject, Communicator {
         self.advertiser.stopAdvertisingPeer()
         self.browser.stopBrowsingForPeers()
         self.username = newUserName
-        self.userPeerID = MCPeerID(displayName: UIDevice.current.name)
-        self.sessions = MCSession(peer: self.userPeerID)
+        //self.userPeerID = MCPeerID(displayName: UIDevice.current.name)
+        //self.sessions = MCSession(peer: self.userPeerID)
 
         
         self.advertiser = MCNearbyServiceAdvertiser(peer: userPeerID, discoveryInfo: ["userName": self.username], serviceType: "tinkoff-chat")
@@ -123,12 +123,18 @@ class MultipeerCommunicator: NSObject, Communicator {
         
         self.browser = MCNearbyServiceBrowser(peer: userPeerID,
                                               serviceType: "tinkoff-chat")
+        browser.delegate = self
         self.browser.startBrowsingForPeers()
         
        // mcAdvertiserAssistant = MCAdvertiserAssistant(serviceType: "tinkoff-chat", discoveryInfo: ["userName": self.username], session: sessions)
         //mcAdvertiserAssistant.start()
         
     }
+    
+    /*deinit {
+        self.advertiser.stopAdvertisingPeer()
+        self.browser.stopBrowsingForPeers()
+    }*/
     
     init(username: String) {
         online = true
@@ -162,10 +168,11 @@ extension MultipeerCommunicator : MCNearbyServiceAdvertiserDelegate {
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         Logger.log("Received invitation from \(peerID)")
-        if (!self.sessions.connectedPeers.contains(peerID) && self.sessions.connectedPeers.count < 1) {
-            invitationHandler(true, self.sessions)
-        } else {
+        let session = self.allSessions[peerID.displayName]
+        if session?.connectedPeers.contains(peerID) ?? false {
             invitationHandler(false, nil)
+        } else {
+            invitationHandler(true, session)
         }
     }
     

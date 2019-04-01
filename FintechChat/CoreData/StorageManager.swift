@@ -30,106 +30,230 @@ class StorageManager {
         }
     }
     
-    public func saveUserProfileState(profileState: UserProfileState, completion: (() ->())?, in context: NSManagedObjectContext? = nil) {
-        let context = context ?? self.stack.mainContext
-        let user = AppUser.getOrCreateAppUser(in: context)
-        context.performAndWait {
-            user?.username = profileState.username
-            user?.detailInfo = profileState.detailInfo
-            user?.profileImage = profileState.profileImage?.pngData()
-            user?.timestamp = Date()
-        }
-        self.stack.performSave(with: context, completion: completion)
+    func performSave(in context: NSManagedObjectContext) {
+        DispatchQueue.global(qos: .background).async {
+            self.stack.performSave(with: context)
 
+        }
     }
     
-    public func getUserProfileState(from context: NSManagedObjectContext? = nil) -> UserProfileState {
+    public func restoreOrCreateDefaltProfileState(in context: NSManagedObjectContext? = nil) -> AppUser {
         let context = context ?? self.stack.mainContext
-        let user = AppUser.getOrCreateAppUser(in: context)
-        self.stack.performSave(with: context, completion: nil)
+        //DispatchQueue.global(qos: .background).async {
+        let user = AppUser.getOrCreateAppUserSync(in: context) //{ user in
+        context.performAndWait {
+            if (user?.username == nil) {
+                user?.username = "Christian"
+                user?.detailInfo = "None"
+                user?.profileImage = UserProfileState.defaultImageData
+                user?.timestamp = Date()
+            }
+        }
+        self.stack.performSave(with: context)
+            //}
+        //}
+        
+        return user!
         
         
-        
+    }
+    
+    public func saveUserProfileState(profileState: UserProfileState, completion: (() ->())?, in context: NSManagedObjectContext? = nil) {
+        let context = context ?? self.stack.saveContext
+        DispatchQueue.global(qos: .background).async {
+            AppUser.getOrCreateAppUser(in: context) { user in
+                
+                context.perform {
+                    user?.username = profileState.username
+                    user?.detailInfo = profileState.detailInfo
+                    user?.profileImage = profileState.profileImage?.pngData()
+                    user?.timestamp = Date()
+                    self.stack.performSave(with: context, completion: completion)
+                }
+                
+            }
+        }
+    }
+    
+    public func updateUsersUsername(user: User, newUsername: String?, completion: (() -> ())?) {
+        DispatchQueue.global(qos: .background).async {
+            if let username = newUsername {
+                user.managedObjectContext!.performAndWait {
+                    user.name = username
+                    completion?()
+                }
+            }
+        }
+    }
+    
+    public func getUserProfileStateSync(from context: NSManagedObjectContext? = nil) -> UserProfileState {
+        let context = context ?? self.stack.mainContext
+        let user = AppUser.getOrCreateAppUserSync(in: context)
+        self.stack.performSave(with: context)
         return UserProfileState(username: user?.username, profileImage: UIImage(data: user?.profileImage ?? UserProfileState.defaultImageData), detailInfo: user?.detailInfo)
     }
     
-    public func foundedNewUser(userId: String, username: String?) -> User {
-        //CHANGE TO SAVE CONTEXT
-        let user = User.insertUser(into: self.mainContext)
-        
-        self.mainContext.performAndWait {
-            user?.userId = userId
-            user?.isOnline = true
-            user?.name = username
-            //user?.appUser = AppUser.insertAppUser(into: self.saveContext)
-            //user?.appUser?.username = username
+    public func getUserProfileState(from context: NSManagedObjectContext? = nil, completion: ((UserProfileState) -> ())?) {
+        //return DispatchQueue.global(qos: .background).sync {
+            let context = context ?? self.stack.saveContext
+        DispatchQueue.global(qos: .background).async {
+            AppUser.getOrCreateAppUser(in: context) { user in
+                user?.managedObjectContext!.performAndWait {
+                    user?.username = user?.username ?? "Кристиан Бенуа"
+                }
+                self.stack.performSave(with: context) {
+                    user?.managedObjectContext?.performAndWait {
+                        completion?(UserProfileState(username: user?.username, profileImage: UIImage(data: user?.profileImage ?? UserProfileState.defaultImageData), detailInfo: user?.detailInfo))
+                    }
+                
+                }
+            }
         }
-        self.stack.performSave(with: self.mainContext)
+        
+        
+       // }
+       
+    }
+    
+    public func foundedNewUser(userId: String, username: String?, completion: @escaping (User) -> ()) {
+        //CHANGE TO SAVE CONTEXT
+        
+        DispatchQueue.global(qos: .background).async  {
+            let user = User.insertUser(into: self.saveContext)
+            self.saveContext.performAndWait {
+                user?.userId = userId
+                user?.isOnline = true
+                user?.name = username
+                self.stack.performSave(with: self.saveContext) {
+                    DispatchQueue.main.async {
+                        completion(user!)
 
+                    }
+                }
+            }
+        }
+    }
+    
+    public func foundedNewUserSync(userId: String, username: String?) -> User {
+        //CHANGE TO SAVE CONTEXT
+        
+        //DispatchQueue.global(qos: .background).async {
+            let user = User.insertUser(into: self.mainContext)
+            self.mainContext.performAndWait {
+                user?.userId = userId
+                user?.isOnline = true
+                user?.name = username
+                self.stack.performSave(with: self.mainContext)
+            }
         return user!
+       // }
     }
     
     public func updateUserOnlineState(user: User?, isOnline: Bool) {
-        self.mainContext.performAndWait {
-            user?.isOnline = isOnline
+        
+        DispatchQueue.global(qos: .background).async {
+            if let user = user {
+                user.managedObjectContext!.performAndWait{
+                    user.isOnline = isOnline
+                    DispatchQueue.main.async {
+                        self.stack.performSave(with: user.managedObjectContext!)
+                    }
+                }
+            }
+            
         }
-        self.stack.performSave(with: self.mainContext)
-
     }
     
-    public func createConversation(with user: User) -> Conversation {
-        let conv = Conversation.insertConversation(into: self.mainContext)
+    public func createConversation(with user: User, completion: @escaping (Conversation) -> ()) {
         
-        self.mainContext.performAndWait {
-            conv?.conversationId = user.userId
-            conv?.appUser = AppUser.getOrCreateAppUser(in: self.mainContext)
-            conv?.addToParticipants(user)
-            conv?.isOnline = true
-        }
-        self.stack.performSave(with: self.saveContext)
+        DispatchQueue.global(qos: .background).async  {
+            let conv = Conversation.insertConversation(into: self.saveContext)
+            
+            self.saveContext.perform {
+                conv?.conversationId = user.userId
+                AppUser.getOrCreateAppUser(in: self.saveContext) { appUser in
+                    self.saveContext.perform {
+                        conv?.appUser = appUser
+                        conv?.addToParticipants(user)
+                        conv?.isOnline = true
+                        self.stack.performSave(with: self.saveContext) {
+                            DispatchQueue.main.async {
+                                completion(conv!)
+                            }
+                        }
+                    }
+                }
 
+            }
+        }
+    }
+    
+    public func createConversationSync(with user: User) -> Conversation {
+        
+        //DispatchQueue.global(qos: .background).async {
+            let conv = Conversation.insertConversation(into: self.mainContext)
+            
+            self.mainContext.performAndWait {
+                conv?.conversationId = user.userId
+                let appUser = AppUser.getOrCreateAppUserSync(in: self.mainContext)
+                self.mainContext.performAndWait {
+                    conv?.appUser = appUser
+                    conv?.addToParticipants(user)
+                    conv?.isOnline = true
+                }
+                
+                self.stack.performSave(with: self.mainContext)
+
+            }
         return conv!
+        //}
     }
     
     public func createMessage(from: String, to: String, text: String, conversation: Conversation) {
-        let message = Message.insert(into: self.mainContext)
-        self.mainContext.performAndWait {
-            message?.text = text
-            message?.receiverId = to
-            message?.senderId = from
-            message?.conversation = conversation
-            message?.didRead = false
-            conversation.lastMessage = message
-            message?.timestamp = Date()
-            message?.messageId = MessageIDGenerator.generateMessageId()
-            if let mes = message {
-                conversation.addToMessages(mes)
+        
+        DispatchQueue.global(qos: .background).async  {
+            let message = Message.insert(into: conversation.managedObjectContext!)
+            conversation.managedObjectContext!.performAndWait{
+                message?.text = text
+                message?.receiverId = to
+                message?.senderId = from
+                message?.conversation = conversation
+                message?.didRead = false
+                conversation.lastMessage = message
+                message?.timestamp = Date()
+                message?.messageId = MessageIDGenerator.generateMessageId()
+                if let mes = message {
+                    conversation.addToMessages(mes)
+                }
+                self.stack.performSave(with: conversation.managedObjectContext!)
             }
-
         }
-        self.stack.performSave(with: self.mainContext)
-
     }
     
     
     public func updateConversationOnlineStatus(conversation: Conversation, isOnline: Bool) {
-        self.mainContext.performAndWait {
-            conversation.isOnline = isOnline
-
+        
+        DispatchQueue.global(qos: .background).async {
+            conversation.managedObjectContext!.performAndWait {
+                conversation.isOnline = isOnline
+                self.stack.performSave(with: conversation.managedObjectContext!)
+            }
+            
         }
-        self.stack.performSave(with: self.mainContext)
-
+        
     }
     
     public func markAsReadMessages(in conversation: Conversation) {
-        self.mainContext.performAndWait {
-            for el in conversation.messages ?? NSSet(array: []) {
-                (el as! Message).didRead = true
-            }
-
-        }
-        self.stack.performSave(with: self.mainContext)
-
         
+        DispatchQueue.global(qos: .background).async {
+            conversation.managedObjectContext!.performAndWait{
+                for el in conversation.messages ?? NSSet(array: []) {
+                    (el as! Message).didRead = true
+                }
+                self.stack.performSave(with: conversation.managedObjectContext!)
+
+            }
+        }
     }
+    
 }

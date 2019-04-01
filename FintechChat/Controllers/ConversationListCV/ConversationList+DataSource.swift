@@ -30,7 +30,7 @@ extension ConversationListViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.cellId, for: indexPath) as! ConversationTableViewCell
         let cellData = self.fetchedResultsController.object(at: indexPath)
-        let participantUsername = (cellData.participants?.allObjects.first! as! User).name
+        let participantUsername = (cellData.participants?.allObjects.first as? User)?.name ?? "Unrecognized"
         let lastMessage = (cellData.lastMessage)?.text
         let lastMessageDate = (cellData.lastMessage)?.timestamp ?? Date(timeIntervalSince1970: 0)
         let isOnline = cellData.isOnline

@@ -122,7 +122,7 @@ class ProfileViewController: UIViewController {
         self.view.addSubview(self.saveButton)
         
         self.saveButton.anchor(top: nil, left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 16, paddingRight: 16, width: 0, height: 0)
-        self.saveButton.heightAnchor.constraint(greaterThanOrEqualTo: self.view.heightAnchor, multiplier: 0.06).isActive = true
+        self.saveButton.heightAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.06).isActive = true
         
     }
     
@@ -137,8 +137,9 @@ class ProfileViewController: UIViewController {
     }
     
     private func fetchProfileInfoCoreData() {
-        let profileState = StorageManager.shared.getUserProfileState()
-        self.UpdateUIAfterFetch(state: profileState)
+        StorageManager.shared.getUserProfileState() { profileState in
+            self.UpdateUIAfterFetch(state: profileState)
+        }
     }
     
     override func viewDidLoad() {
@@ -252,9 +253,14 @@ class ProfileViewController: UIViewController {
         self.toggleEditingButtons(false)
         
         StorageManager.shared.saveUserProfileState(profileState: self.constructUserProfileInfo(), completion: { [weak self] in
-            let profileState = StorageManager.shared.getUserProfileState()
-            self?.UpdateUIAfterFetch(state: profileState, showAlert: true)
-            CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
+            StorageManager.shared.getUserProfileState() { profileState in
+                DispatchQueue.main.async {
+                    self?.UpdateUIAfterFetch(state: profileState, showAlert: true)
+                    CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
+                }
+                
+            }
+            
             //self?.toggleEditingInputFields(false)
         })
         

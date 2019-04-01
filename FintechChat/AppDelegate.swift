@@ -24,9 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //printState(currState: "Inactive", methodName: #function)
         stateLogger.moveToNewState(newState: "Inactive")
         
-        StorageManager.shared.saveUserProfileState(profileState: UserProfileState(username: "Christian", profileImage: UIImage(data: UserProfileState.defaultImageData), detailInfo: "None"), completion: nil)
+        //StorageManager.shared.saveUserProfileState(profileState: UserProfileState(username: "Christian", profileImage: UIImage(data: UserProfileState.defaultImageData), detailInfo: "None"), completion: nil)
         
-        CommunicationManager.shared = CommunicationManager(username: StorageManager.shared.getUserProfileState().username ?? "justUsername")
+        
+        
         UINavigationBar.appearance().prefersLargeTitles = true
         UINavigationBar.appearance().isTranslucent = false
 

@@ -11,8 +11,13 @@ import CoreData
 
 extension Conversation {
     
+    @objc func getSectionName() -> String {
+        return self.isOnline ? "Online" : "Offline"
+    }
+    
     static func insertConversation(into context: NSManagedObjectContext) -> Conversation? {
         var conv: Conversation? = nil
+        
         context.performAndWait {
              guard let conversation = NSEntityDescription.insertNewObject(forEntityName: "Conversation", into: context) as? Conversation else { return  }
             conv = conversation
@@ -38,7 +43,7 @@ extension Conversation {
     
     static func fetchSortedByDateConversations() -> NSFetchRequest<Conversation> {
         let request: NSFetchRequest<Conversation> = Conversation.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "lastMessage.timestamp", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(key: "isOnline", ascending: false), NSSortDescriptor(key: "lastMessage.timestamp", ascending: false)]
         
         return request
     }

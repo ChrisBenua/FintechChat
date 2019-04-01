@@ -38,7 +38,8 @@ class ConversationListDataProvider {
     weak var conversationViewController: UpdateConversationControllerDelegate?
     
     func generateConversationListFRC() -> NSFetchedResultsController<Conversation> {
-        let frc = NSFetchedResultsController(fetchRequest: Conversation.fetchSortedByDateConversations(), managedObjectContext: StorageManager.shared.mainContext, sectionNameKeyPath: nil, cacheName: nil)
+        let frc = NSFetchedResultsController(fetchRequest: Conversation.fetchSortedByDateConversations(), managedObjectContext: StorageManager.shared.mainContext, sectionNameKeyPath: "getSectionName", cacheName: nil)
+        
         return frc
     }
     
@@ -47,6 +48,7 @@ class ConversationListDataProvider {
         
         return frc
     }
+
     
     /*var onlineUsers: [(String, String)] = [] {
         didSet {
@@ -85,6 +87,46 @@ class ConversationListDataProvider {
     }*/
     
     var userIdToConversation: [String: Conversation] = [:]
+    
+    init() {
+        let userRequest: NSFetchRequest<User> = User.fetchRequest()
+        do {
+            var results: [User] = []
+            var appUsers: ([AppUser]?)
+            //DispatchQueue.global(qos: .background).async  {
+                StorageManager.shared.saveContext.performAndWait {
+                    do {
+                        results = try StorageManager.shared.saveContext.fetch(userRequest)
+                        appUsers = try (StorageManager.shared.saveContext.fetch(AppUser.fetchRequest()) as? [AppUser])
+                        
+                        for el in results {
+                            if let userId = el.userId {
+                                self.userIdToUser[userId] = el
+                            }
+                        }
+                        if let conversations = appUsers?.first?.conversations {
+                            for conversation in conversations {
+                                if let conversation = conversation as? Conversation {
+                                    if let userId = (conversation.participants?.allObjects.first as? User)?.userId {
+                                        self.userIdToConversation[userId] = conversation
+                                    }
+                                    conversation.isOnline = false
+                                }
+                                StorageManager.shared.performSave(in: StorageManager.shared.saveContext)
+                            }
+                        }
+                    } catch let err {
+                        print(err)
+                    }
+                }
+            //}
+            
+        } catch let err {
+            print("Cant fetch All Users in ConversationListDataProvider init")
+            print(err.localizedDescription)
+        }
+        
+    }
     
     //var userIdToUsername: [String: String] = [:]
     
@@ -148,6 +190,32 @@ class ConversationListDataProvider {
 }
 
 extension ConversationListDataProvider: CommunicatorDelegate {
+    
+    func createConversationWith(userID: String, username: String?) {
+        if (userIdToConversation[userID] == nil) {
+            
+            var result = [Conversation]()
+            
+            do {
+                result = try  StorageManager.shared.mainContext.fetch(Conversation.fetchConversationWith(conversationId: userID))
+            } catch let err {
+                print(err)
+            }
+            
+            if (result.count == 0) {
+                StorageManager.shared.createConversation(with: userIdToUser[userID]!) { conv in
+                    self.userIdToConversation[userID] = conv
+                }
+            } else {
+                StorageManager.shared.updateConversationOnlineStatus(conversation: result[0], isOnline: true)
+                userIdToConversation[userID] = result[0]
+            }
+            
+        } else {
+            StorageManager.shared.updateConversationOnlineStatus(conversation: userIdToConversation[userID]!, isOnline: true)
+        }
+    }
+    
     func didFoundUser(userID: String, username: String?) {
         // creates or updates user's online status
         if userIdToUser[userID] == nil {
@@ -163,38 +231,32 @@ extension ConversationListDataProvider: CommunicatorDelegate {
             }
             
             if (result.count == 0) {
-                let newUser = StorageManager.shared.foundedNewUser(userId: userID, username: username)
-                userIdToUser[userID] = newUser
+                //self.userIdToUser[userID] =
+                //StorageManager.shared.updateUsersUsername(user: userIdToUser[userID]!, newUsername: username) {
+                    StorageManager.shared.foundedNewUser(userId: userID, username: username) { user in
+                        self.userIdToUser[userID] = user
+                        self.createConversationWith(userID: userID, username: username)
+                    }
+               // }
             }
             else {
-                StorageManager.shared.updateUserOnlineState(user: result[0], isOnline: true)
-                userIdToUser[userID] = result[0]
+                StorageManager.shared.updateUsersUsername(user: userIdToUser[userID]!, newUsername: username) {
+                
+                    StorageManager.shared.updateUserOnlineState(user: result[0], isOnline: true)
+                    self.userIdToUser[userID] = result[0]
+                    self.createConversationWith(userID: userID, username: username)
+                }
             }
             
         } else {
-            StorageManager.shared.updateUserOnlineState(user: userIdToUser[userID], isOnline: true)
+            StorageManager.shared.updateUsersUsername(user: userIdToUser[userID]!, newUsername: username) {
+                StorageManager.shared.updateUserOnlineState(user: self.userIdToUser[userID], isOnline: true)
+                self.createConversationWith(userID: userID, username: username)
+            }
+            
         }
         // creates or updates conversation
-        if (userIdToConversation[userID] == nil) {
-            
-            var result = [Conversation]()
-            
-            do {
-                result = try  StorageManager.shared.mainContext.fetch(Conversation.fetchConversationWith(conversationId: userID))
-            } catch let err {
-                print(err)
-            }
-            
-            if (result.count == 0) {
-                userIdToConversation[userID] = StorageManager.shared.createConversation(with: userIdToUser[userID]!)
-            } else {
-                StorageManager.shared.updateConversationOnlineStatus(conversation: result[0], isOnline: true)
-                userIdToConversation[userID] = result[0]
-            }
-            
-        } else {
-            StorageManager.shared.updateConversationOnlineStatus(conversation: userIdToConversation[userID]!, isOnline: true)
-        }
+        
         
         
         /*userIdToUsername[userID] = username ?? userID

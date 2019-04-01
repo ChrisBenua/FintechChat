@@ -79,8 +79,15 @@ class ConversationListViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.viewModel.listViewController = self
-        CommunicationManager.shared.contollerDataProvider = self.viewModel
+        
+        StorageManager.shared.getUserProfileState { (state) in
+            CommunicationManager.shared = CommunicationManager(username: state.username ?? "justUsername")
+            CommunicationManager.shared.contollerDataProvider = self.viewModel
+            }
+        
+        
         //ConversationListDataProvider.shared.listViewController = self
         self.navigationController?.view.backgroundColor = .white
         self.navigationItem.title = "Tinkoff Chat"
@@ -122,12 +129,15 @@ class ConversationListViewController : UIViewController {
 }
 
 extension ConversationListViewController: NSFetchedResultsControllerDelegate {
+    
+    
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.beginUpdates()
+        self.tableView.reloadSectionIndexTitles()
     }
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        //self.tableView.reloadSectionIndexTitles()
         self.tableView.endUpdates()
-        
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -141,6 +151,19 @@ extension ConversationListViewController: NSFetchedResultsControllerDelegate {
             tableView.reloadRows(at: [indexPath!], with: .automatic)
         case .delete:
             tableView.deleteRows(at: [indexPath!], with: .automatic)
+        }
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        switch type {
+        case .insert:
+            tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .delete:
+            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .move:
+            break
+        case .update:
+            break
         }
     }
 }

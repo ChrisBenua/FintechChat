@@ -19,7 +19,7 @@ extension AppUser {
         return appUser
     }
     
-    static func getOrCreateAppUser(in context: NSManagedObjectContext) -> AppUser? {
+    static func getOrCreateAppUserSync(in context: NSManagedObjectContext) -> AppUser? {
         let fetchRequest: NSFetchRequest<AppUser> = AppUser.fetchRequest()
         var foundUser: AppUser? = nil
         
@@ -34,13 +34,41 @@ extension AppUser {
             } catch let err {
                 print("Error in fetching \(err)")
             }
-            
             if foundUser == nil {
                 foundUser = AppUser.insertAppUser(into: context)
             }
         }
-        
         return foundUser
+    }
+    
+    static func getOrCreateAppUser(in context: NSManagedObjectContext, completion: ((AppUser?) -> ())?) {
+        
+        DispatchQueue.global(qos: .background).async  {
+            let fetchRequest: NSFetchRequest<AppUser> = AppUser.fetchRequest()
+            var foundUser: AppUser? = nil
+            
+            
+            context.perform {
+                do {
+                    
+                    let result = try context.fetch(fetchRequest)
+                    if let user = result.first {
+                        foundUser = user
+                    }
+                } catch let err {
+                    print("Error in fetching \(err)")
+                }
+                if foundUser == nil {
+                    foundUser = AppUser.insertAppUser(into: context)
+                }
+                DispatchQueue.main.async {
+                    completion?(foundUser)
+                }
+            }
+
+        }
+        
+        
     }
 }
 

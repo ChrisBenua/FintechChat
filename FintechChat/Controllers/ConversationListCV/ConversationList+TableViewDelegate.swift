@@ -18,10 +18,8 @@ extension ConversationListViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard let sections = self.fetchedResultsController.sections else {
-            fatalError("No sections for FRC")
-        }
-        return sections[section].name
+        print(self.fetchedResultsController.object(at: IndexPath(item: 0, section: section)).isOnline ? "OnlineBBOm" : "HistoryBBOm")
+        return self.fetchedResultsController.sections![section].name
     }
 }
 

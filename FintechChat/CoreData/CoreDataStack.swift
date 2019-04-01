@@ -64,14 +64,12 @@ class CoreDataStack {
     }()
     
     func performSave(with context: NSManagedObjectContext, completion: (() -> Void)? = nil) {
-        context.performAndWait {
+        context.perform {
             guard context.hasChanges else {
                 completion?()
                 return
             }
-        }
-        
-        context.perform {
+            
             do {
                 try context.save()
             } catch let err {
@@ -81,12 +79,13 @@ class CoreDataStack {
             if let parentContext = context.parent {
                 self.performSave(with: parentContext, completion: completion)
             } else {
-                DispatchQueue.main.async {
+                //DispatchQueue.main.async {
                     completion?()
-                }
+                //}
             }
             
         }
+    
     }
 
 }
