@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CoreData
 
-class ConversationListViewController : UIViewController {
+class ConversationListViewController: UIViewController {
     
     var viewModel = ConversationListDataProvider()
     
@@ -62,12 +62,12 @@ class ConversationListViewController : UIViewController {
     }()
     
     lazy var tableView: UITableView = {
-        let tv = UITableView()
-        tv.delegate = self
-        tv.dataSource = self
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
         
-        tv.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.cellId)
-        return tv
+        tableView.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.cellId)
+        return tableView
     }()
     
     override func viewDidAppear(_ animated: Bool) {
@@ -105,7 +105,7 @@ class ConversationListViewController : UIViewController {
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         //self.fillWithData()
-        SetUpSearchBar()
+        setUpSearchBar()
         self.tableView.reloadData()
     }
     

@@ -16,8 +16,8 @@ class NotifyOperation: Operation {
     
     var failed: Bool {
         get {
-            return myFailiableDependencies.contains(where: { (op) -> Bool in
-                op.failed
+            return myFailiableDependencies.contains(where: { (operation) -> Bool in
+                operation.failed
             })
         }
     }

@@ -11,7 +11,7 @@ import CoreData
 
 extension User {
     static func insertUser(into context: NSManagedObjectContext) -> User? {
-        var res: User? = nil
+        var res: User?
         context.performAndWait {
             guard let user = NSEntityDescription.insertNewObject(forEntityName: "User", into: context) as? User else { return }
             
@@ -27,9 +27,9 @@ extension User {
         return request
     }
     
-    static func fetchUserWithId(id: String) -> NSFetchRequest<User> {
+    static func fetchUserWithId(userId: String) -> NSFetchRequest<User> {
         let request: NSFetchRequest<User> = User.fetchRequest()
-        request.predicate = NSPredicate(format: "userId == %@", id)
+        request.predicate = NSPredicate(format: "userId == %@", userId)
         
         return request
     }

@@ -17,14 +17,14 @@ class ThemesViewController: UIViewController {
     
     lazy var themesButtons: [UIButton] = {
         let arr = [UIButton(), UIButton(), UIButton()]
-        for i in 0..<arr.count {
-            arr[i].setTitle("Тема \(i + 1)", for: .normal)
-            arr[i].layer.cornerRadius = 10
-            arr[i].backgroundColor = UIColor.init(red: 255.0 / 255.0, green:250.0 / 255.0, blue:205.0 / 255.0, alpha: 1.0)
-            arr[i].setTitleColor(UIColor.black, for: .normal)
-            arr[i].layer.borderWidth = 1
-            arr[i].layer.borderColor = UIColor.black.cgColor
-            arr[i].addTarget(self, action: #selector(themesButtonOnClick), for: .touchUpInside)
+        for buttonIndex in 0..<arr.count {
+            arr[buttonIndex].setTitle("Тема \(i + 1)", for: .normal)
+            arr[buttonIndex].layer.cornerRadius = 10
+            arr[buttonIndex].backgroundColor = UIColor.init(red: 255.0 / 255.0, green: 250.0 / 255.0, blue: 205.0 / 255.0, alpha: 1.0)
+            arr[buttonIndex].setTitleColor(UIColor.black, for: .normal)
+            arr[buttonIndex].layer.borderWidth = 1
+            arr[buttonIndex].layer.borderColor = UIColor.black.cgColor
+            arr[buttonIndex].addTarget(self, action: #selector(themesButtonOnClick), for: .touchUpInside)
         }
         
         return arr
@@ -47,10 +47,10 @@ class ThemesViewController: UIViewController {
     }()
     
     @objc func themesButtonOnClick(_ sender: Any) {
-        let index = themesButtons.index(of: sender as! UIButton)
-        if (index == 0) {
+        let index = themesButtons.index(of: sender as? UIButton)
+        if index == 0 {
             self.view.backgroundColor = self.model.theme1()
-        } else if (index == 1) {
+        } else if index == 1 {
             self.view.backgroundColor = self.model.theme2()
         } else {
             self.view.backgroundColor = self.model.theme3()

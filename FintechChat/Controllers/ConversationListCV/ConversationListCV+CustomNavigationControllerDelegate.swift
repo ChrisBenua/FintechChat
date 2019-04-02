@@ -9,15 +9,12 @@
 import Foundation
 import UIKit
 
-extension ConversationListViewController : CustomNavigationControllerDelegate {
+extension ConversationListViewController: CustomNavigationControllerDelegate {
     func isLightThemeChanged(isLightTheme: Bool) {
-        if (isLightTheme) {
+        if isLightTheme {
             self.navigationItem.rightBarButtonItem?.tintColor = .black
         } else {
             self.navigationItem.rightBarButtonItem?.tintColor = .white
         }
     }
-    
-    
 }
-

@@ -45,13 +45,13 @@ class ConversationViewController: UIViewController {
     override func willMove(toParent parent: UIViewController?) {
         super.willMove(toParent: parent)
         
-        if (parent == nil) {
+        if parent == nil {
             didLeaveDialog = true
         }
 
     }
     
-    func scrollToBottom(animated: Bool = false){
+    func scrollToBottom(animated: Bool = false) {
         DispatchQueue.main.async {
             let indexPath = IndexPath(row: (self.fetchedResultsController.fetchedObjects?.count ?? 0) - 1, section: 0)
             if indexPath.row >= 0 {
@@ -84,12 +84,12 @@ class ConversationViewController: UIViewController {
     private var messages = [MessageCellExtendedConfiguration]()
     
     lazy var tableView: UITableView = {
-        let tv = UITableView()
-        tv.separatorStyle = .none
-        tv.delegate = self
-        tv.dataSource = self
-        tv.register(MessageTableViewCell.self, forCellReuseIdentifier: MessageTableViewCell.cellId)
-        return tv
+        let tview = UITableView()
+        tview.separatorStyle = .none
+        tview.delegate = self
+        tview.dataSource = self
+        tview.register(MessageTableViewCell.self, forCellReuseIdentifier: MessageTableViewCell.cellId)
+        return tview
     }()
     
     init(conversationListDataProvider: ConversationListDataProvider, conversationId: String = "") {
@@ -164,16 +164,16 @@ class ConversationViewController: UIViewController {
         }*/
     }
     
-    lazy var messageTextField : UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "   Enter comment"
+    lazy var messageTextField: UITextField = {
+        let tfield = UITextField()
+        tfield.placeholder = "   Enter comment"
         
-        tf.backgroundColor = .white
-        tf.layer.cornerRadius = 5
-        tf.layer.borderWidth = 0.5
-        tf.layer.borderColor = UIColor.white.cgColor
-        tf.delegate = self
-        return tf
+        tfield.backgroundColor = .white
+        tfield.layer.cornerRadius = 5
+        tfield.layer.borderWidth = 0.5
+        tfield.layer.borderColor = UIColor.white.cgColor
+        tfield.delegate = self
+        return tfield
     }()
     
     lazy var submitButton: UIButton = {
@@ -191,7 +191,7 @@ class ConversationViewController: UIViewController {
         return button
     }()
     
-    lazy var containerView : UIView = {
+    lazy var containerView: UIView = {
         let container = UIView()
         container.backgroundColor = UIColor.init(red: 245 / 255.0, green: 245 / 255.0, blue: 245 / 255.0, alpha: 1.0)
         container.frame = CGRect(x: 0, y: 0, width: 100, height: self.accessoryViewHeight)
@@ -225,10 +225,10 @@ class ConversationViewController: UIViewController {
     
     @objc func submitButtonOnClick() {
         let text = messageTextField.text!
-        if (text.count != 0) {
+        if text.count != 0 {
             CommunicationManager.shared.communicator.sendMessage(message: text, to: connectedUserID) { [weak self] (suc, err) in
                 
-                if (!suc) {
+                if !suc {
                     let alertController = UIAlertController(title: "Error", message: err?.localizedDescription, preferredStyle: .alert)
                     alertController.addAction(UIAlertAction.okAction)
                     
@@ -277,11 +277,13 @@ extension ConversationViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.cellId, for: indexPath) as! MessageTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.cellId, for: indexPath) as? MessageTableViewCell else {
+            fatalError()
+        }
         
         let message = self.fetchedResultsController.object(at: indexPath)
         
-        let isIncoming = (self.conversation.participants!.allObjects.first as! User).userId! == message.senderId!
+        let isIncoming = ((self.conversation.participants?.allObjects.first as? User)?.userId ?? "NotExistingId") == (message.senderId ?? "NotExitstingId2")
         
         cell.setup(messageText: message.text ?? "", isIncoming: isIncoming)
         return cell
@@ -335,9 +337,9 @@ extension ConversationViewController: OnUserDisconnectedDelegate {
     func userDidDisconnected(state: MCSessionState) {
         DispatchQueue.main.async { [weak self] in
             
-            if (self != nil && !self!.didLeaveDialog) {
+            if self != nil && !self!.didLeaveDialog {
                 
-                if (state == .notConnected) {
+                if state == .notConnected {
                     self!.submitButton.isEnabled = false
                     let alertController = UIAlertController(title: "Alert", message: "This peer disconnected from you", preferredStyle: .alert)
                     alertController.addAction(UIAlertAction.okAction)
@@ -345,7 +347,7 @@ extension ConversationViewController: OnUserDisconnectedDelegate {
                         self!.navigationController?.popViewController(animated: true)
                     }))
                     self!.present(alertController, animated: true, completion: nil)
-                } else if (state == .connected) {
+                } else if state == .connected {
                     self!.submitButton.isEnabled = true
                 }
             }
@@ -354,7 +356,7 @@ extension ConversationViewController: OnUserDisconnectedDelegate {
     }
 }
 
-//MARK:- Keyboard
+// MARK: - Keyboard
 extension ConversationViewController {
     func removeObservers() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -376,10 +378,9 @@ extension ConversationViewController {
                 
                 self?.view.layoutIfNeeded()
                 
-            })
-            { [weak self] (_) in
+            }, completion: { [weak self] (_) in
                 self?.scrollToBottom(animated: true)
-            }
+            })
             
         }
     }

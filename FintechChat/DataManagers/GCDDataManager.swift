@@ -21,10 +21,10 @@ class DataManagersFilePaths {
 protocol UserProfileDataDriver: class {
     static var shared: UserProfileDataDriver { get set }
     
-    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> (),
-                             onError: @escaping () -> ())
+    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> Void,
+                             onError: @escaping () -> Void)
     
-    func getUserProfileInfo(onComplete: @escaping (UserProfileState) -> ())
+    func getUserProfileInfo(onComplete: @escaping (UserProfileState) -> Void)
 }
 
 class GCDDataManager: UserProfileDataDriver {
@@ -35,10 +35,10 @@ class GCDDataManager: UserProfileDataDriver {
     
     public static var shared: UserProfileDataDriver = GCDDataManager()
     
-    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> (), onError: @escaping () -> ()) {
+    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> Void, onError: @escaping () -> Void) {
         
         let group = DispatchGroup()
-        if (state.detailInfo != nil) {
+        if state.detailInfo != nil {
             group.enter()
             savingQueue.async {
                 do {
@@ -53,7 +53,7 @@ class GCDDataManager: UserProfileDataDriver {
             }
         }
         
-        if (state.username != nil) {
+        if state.username != nil {
             group.enter()
             savingQueue.async {
                 do {
@@ -68,7 +68,7 @@ class GCDDataManager: UserProfileDataDriver {
             }
         }
         
-        if (state.profileImage != nil) {
+        if state.profileImage != nil {
             group.enter()
             savingQueue.async {
                 do {
@@ -89,7 +89,7 @@ class GCDDataManager: UserProfileDataDriver {
     
     }
     
-    func getUserProfileInfo(onComplete: @escaping (UserProfileState) -> ()) {
+    func getUserProfileInfo(onComplete: @escaping (UserProfileState) -> Void) {
         let group = DispatchGroup()
         var image: UIImage?
         var username: String?

@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 
-//MARK:- UITableViewDelegate
-extension ConversationListViewController : UITableViewDelegate {
+// MARK: - UITableViewDelegate
+extension ConversationListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return rowHeight
@@ -22,4 +22,3 @@ extension ConversationListViewController : UITableViewDelegate {
         return self.fetchedResultsController.sections![section].name
     }
 }
-

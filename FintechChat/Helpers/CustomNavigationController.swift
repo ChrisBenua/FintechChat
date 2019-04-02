@@ -9,11 +9,11 @@
 import Foundation
 import UIKit
 
-protocol CustomNavigationControllerDelegate : class {
+protocol CustomNavigationControllerDelegate: class {
     func isLightThemeChanged(isLightTheme: Bool)
 }
 
-class CustomNavigationController : UINavigationController {
+class CustomNavigationController: UINavigationController {
     
     var isLightTheme: Bool = true {
         didSet {
@@ -24,7 +24,7 @@ class CustomNavigationController : UINavigationController {
     weak var themeDelegate: CustomNavigationControllerDelegate?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        if (isLightTheme) {
+        if isLightTheme {
             return .default
         }
         return .lightContent

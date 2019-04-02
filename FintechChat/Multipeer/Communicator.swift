@@ -11,7 +11,7 @@ import MultipeerConnectivity
 
 protocol Communicator {
     
-    func sendMessage(message: String, to userID: String, completionHandler: ((_ success: Bool, _ error : Error?) -> ())?)
+    func sendMessage(message: String, to userID: String, completionHandler: ((_ success: Bool, _ error: Error?) -> Void)?)
     
     var delegate: CommunicatorDelegate? { get set }
     
@@ -19,7 +19,7 @@ protocol Communicator {
 }
 
 
-protocol CommunicatorDelegate : class {
+protocol CommunicatorDelegate: class {
     //discovering
     func didFoundUser(userID: String, username: String?)
     
@@ -40,7 +40,7 @@ protocol CommunicatorDelegate : class {
 
 class MultipeerCommunicator: NSObject, Communicator {
     
-    func sendMessage(message: String, to userID: String, completionHandler: ((Bool, Error?) -> ())?) {
+    func sendMessage(message: String, to userID: String, completionHandler: ((Bool, Error?) -> Void)?) {
         
         let message = CodableMessage(text: message)
         Logger.log(sessions.connectedPeers.debugDescription)
@@ -164,7 +164,7 @@ class MultipeerCommunicator: NSObject, Communicator {
 }
 
 
-extension MultipeerCommunicator : MCNearbyServiceAdvertiserDelegate {
+extension MultipeerCommunicator: MCNearbyServiceAdvertiserDelegate {
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         Logger.log("Received invitation from \(peerID)")
@@ -189,7 +189,7 @@ extension MultipeerCommunicator: MCNearbyServiceBrowserDelegate {
         self.delegate?.failedToStartBrowsingForUsers(error: error)
     }
     
-    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
         
         self.currentPeers.append(peerID)
         
@@ -223,10 +223,10 @@ extension MultipeerCommunicator: MCSessionDelegate {
         
         self.lastState = state
         
-        if (state == .connected) {
+        if state == .connected {
             //Logger.log("Connected " + self.sessions.connectedPeers.first!.debugDescription)
         }
-        if (state == .notConnected) {
+        if state == .notConnected {
             Logger.log("DisconnectedPeer")
         }
         onDisconnectDelegate?.userDidDisconnected(state: state)

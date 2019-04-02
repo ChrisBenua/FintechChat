@@ -16,7 +16,7 @@ extension Conversation {
     }
     
     static func insertConversation(into context: NSManagedObjectContext) -> Conversation? {
-        var conv: Conversation? = nil
+        var conv: Conversation?
         
         context.performAndWait {
              guard let conversation = NSEntityDescription.insertNewObject(forEntityName: "Conversation", into: context) as? Conversation else { return  }

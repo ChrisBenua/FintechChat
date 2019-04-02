@@ -16,7 +16,7 @@ extension UserDefaults {
     static var savingQueue = DispatchQueue(label: "savingUserProfileTouserDefaults.queue", qos: .background, attributes: .concurrent)
     
     
-    /*static func saveUserProfileInfoGCD(profileImage: UIImage, username: String, userDetailInfo: String, onComplete: @escaping () -> ()) {
+    /*static func saveUserProfileInfoGCD(profileImage: UIImage, username: String, userDetailInfo: String, onComplete: @escaping () -> Void) {
         
         let group = DispatchGroup()
         

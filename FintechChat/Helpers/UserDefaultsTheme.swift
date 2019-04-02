@@ -22,7 +22,7 @@ extension UserDefaults {
     }
     
     static func getIsLightTheme() -> Bool {
-        guard let data = UserDefaults.standard.data(forKey: isLightThemeKey) else  { return true }
+        guard let data = UserDefaults.standard.data(forKey: isLightThemeKey) else { return true }
         guard let isLightTheme = NSKeyedUnarchiver.unarchiveObject(with: data) as? Bool else { return true }
         return isLightTheme
     }

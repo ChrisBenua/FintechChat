@@ -90,7 +90,7 @@ class ConversationListDataProvider {
     
     init() {
         let userRequest: NSFetchRequest<User> = User.fetchRequest()
-        do {
+        //do {
             var results: [User] = []
             var appUsers: ([AppUser]?)
             //DispatchQueue.global(qos: .background).async  {
@@ -99,9 +99,9 @@ class ConversationListDataProvider {
                         results = try StorageManager.shared.saveContext.fetch(userRequest)
                         appUsers = try (StorageManager.shared.saveContext.fetch(AppUser.fetchRequest()) as? [AppUser])
                         
-                        for el in results {
-                            if let userId = el.userId {
-                                self.userIdToUser[userId] = el
+                        for user in results {
+                            if let userId = user.userId {
+                                self.userIdToUser[userId] = user
                             }
                         }
                         if let conversations = appUsers?.first?.conversations {
@@ -121,10 +121,10 @@ class ConversationListDataProvider {
                 }
             //}
             
-        } catch let err {
+        /*} catch let err {
             print("Cant fetch All Users in ConversationListDataProvider init")
             print(err.localizedDescription)
-        }
+        }*/
         
     }
     
@@ -192,7 +192,7 @@ class ConversationListDataProvider {
 extension ConversationListDataProvider: CommunicatorDelegate {
     
     func createConversationWith(userID: String, username: String?) {
-        if (userIdToConversation[userID] == nil) {
+        if userIdToConversation[userID] == nil {
             
             var result = [Conversation]()
             
@@ -202,7 +202,7 @@ extension ConversationListDataProvider: CommunicatorDelegate {
                 print(err)
             }
             
-            if (result.count == 0) {
+            if result.count == 0 {
                 StorageManager.shared.createConversation(with: userIdToUser[userID]!) { conv in
                     self.userIdToConversation[userID] = conv
                 }
@@ -220,7 +220,7 @@ extension ConversationListDataProvider: CommunicatorDelegate {
         // creates or updates user's online status
         if userIdToUser[userID] == nil {
             
-            let request = User.fetchUserWithId(id: userID)
+            let request = User.fetchUserWithId(userId: userID)
             var result = [User]()
             do {
             
@@ -230,7 +230,7 @@ extension ConversationListDataProvider: CommunicatorDelegate {
                 print(err)
             }
             
-            if (result.count == 0) {
+            if result.count == 0 {
                 //self.userIdToUser[userID] =
                 //StorageManager.shared.updateUsersUsername(user: userIdToUser[userID]!, newUsername: username) {
                     StorageManager.shared.foundedNewUser(userId: userID, username: username) { user in
@@ -238,8 +238,7 @@ extension ConversationListDataProvider: CommunicatorDelegate {
                         self.createConversationWith(userID: userID, username: username)
                     }
                // }
-            }
-            else {
+            } else {
                 StorageManager.shared.updateUsersUsername(user: userIdToUser[userID]!, newUsername: username) {
                 
                     StorageManager.shared.updateUserOnlineState(user: result[0], isOnline: true)
@@ -299,10 +298,10 @@ extension ConversationListDataProvider: CommunicatorDelegate {
             self.messageStorage[fromUser]?.append(MessageData(text: text, isIncoming: true))
         }*/
         
-        if (fromUser == CommunicationManager.shared.communicator.userPeerID.displayName) {
-            StorageManager.shared.createMessage(from: fromUser, to: toUser, text: text, conversation: userIdToConversation[toUser]!)
+        if fromUser == CommunicationManager.shared.communicator.userPeerID.displayName {
+            StorageManager.shared.createMessage(fromId: fromUser, toId: toUser, text: text, conversation: userIdToConversation[toUser]!)
         } else {
-            StorageManager.shared.createMessage(from: fromUser, to: toUser, text: text, conversation: userIdToConversation[fromUser]!)
+            StorageManager.shared.createMessage(fromId: fromUser, toId: toUser, text: text, conversation: userIdToConversation[fromUser]!)
         }
         
         //self.listViewController?.updateConversation()

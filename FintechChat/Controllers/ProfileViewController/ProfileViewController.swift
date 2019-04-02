@@ -35,7 +35,7 @@ class ProfileViewController: UIViewController {
     }()
 
     
-    private func styleButton(button: UIButton, cornerRadius: CGFloat = 10 , borderColor: CGColor = UIColor.black.cgColor, borderWidth: CGFloat = 0.8) {
+    private func styleButton(button: UIButton, cornerRadius: CGFloat = 10, borderColor: CGColor = UIColor.black.cgColor, borderWidth: CGFloat = 0.8) {
         
         button.layer.cornerRadius = cornerRadius
         button.layer.borderWidth = borderWidth
@@ -101,7 +101,7 @@ class ProfileViewController: UIViewController {
         profilePhotoImageView.layer.cornerRadius = cornerRadius
     }
     
-    fileprivate func SetupUI() {
+    fileprivate func setupUI() {
         backButton.addTarget(self, action: #selector(backButtonOnClick), for: .touchUpInside)
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapOnLogo))
         tapGestureRecognizer.isEnabled = false
@@ -126,7 +126,7 @@ class ProfileViewController: UIViewController {
         
     }
     
-    fileprivate func SetupTextChangedHandlers() {
+    fileprivate func setupTextChangedHandlers() {
         detailInfoTextField.delegate = self
         nameTextField.delegate = self
         nameTextField.addTarget(self, action: #selector(textDidChanged(_:)), for: .editingChanged)
@@ -137,19 +137,19 @@ class ProfileViewController: UIViewController {
     }
     
     private func fetchProfileInfoCoreData() {
-        StorageManager.shared.getUserProfileState() { profileState in
-            self.UpdateUIAfterFetch(state: profileState)
-        }
+        StorageManager.shared.getUserProfileState(completion: { profileState in
+            self.updateUIAfterFetch(state: profileState)
+        })
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         Logger.log(editProfileButton.frame.debugDescription)
-        self.SetupUI()
+        self.setupUI()
         //self.FetchProfileInfo(shared: GCDDataManager.shared)
         self.fetchProfileInfoCoreData()
-        self.SetupTextChangedHandlers()
+        self.setupTextChangedHandlers()
         self.placeEditingButtons()
         self.addObservers()
         
@@ -173,14 +173,14 @@ class ProfileViewController: UIViewController {
     }
     
     fileprivate func checkAccessToCamera() -> Bool {
-        if (!UIImagePickerController.isSourceTypeAvailable(.camera)) {
+        if !UIImagePickerController.isSourceTypeAvailable(.camera) {
             let noCameraAlert = UIAlertController(title: "Ошибка", message: "Камера не найдена", preferredStyle: .alert)
             
             noCameraAlert.addAction(.okAction)
             
             self.present(noCameraAlert, animated: true)
             return false
-        } else if (AVCaptureDevice.authorizationStatus(for: .video) != .authorized) {
+        } else if AVCaptureDevice.authorizationStatus(for: .video) != .authorized {
             let noAccessAlert = UIAlertController(title: "Беда", message: "Нет доступа к камере, дайте разрешение в настройках", preferredStyle: .alert)
             noAccessAlert.addAction(.okAction)
             self.present(noAccessAlert, animated: true)
@@ -205,7 +205,7 @@ class ProfileViewController: UIViewController {
         
         let takePhotoAction = UIAlertAction(title: "Сделать фото", style: .default) { [weak self] (_) in
             
-            if (self?.checkAccessToCamera() ?? false) {
+            if self?.checkAccessToCamera() ?? false {
             
                 let picker = self?.getDefaultImagePicker()
                 picker?.sourceType = UIImagePickerController.SourceType.camera
@@ -227,23 +227,7 @@ class ProfileViewController: UIViewController {
         
     }
     
-    @objc func editButtonOnClick(_ sender : Any) {
-        
-        /*UIView.animate(withDuration: 0.5, animations: { [weak self] in
-            self?.editProfileButton.alpha = 0
-        }) { (_) in
-            self.editProfileButton.isUserInteractionEnabled = false
-//            self.view.addSubview(self.saveButtonsStackView)
-//            self.saveButtonsStackView.alpha = 0
-//            self.saveButtonsStackView.anchor(top: nil, left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingTop: 0, paddingLeft: 16, paddingBottom: 16, paddingRight: 16, width: 0, height: 0)
-//            self.stackViewConstraints.append(self.saveButtonsStackView.heightAnchor.constraint(greaterThanOrEqualTo: self.view.heightAnchor, multiplier: 0.06))
-//            NSLayoutConstraint.activate(self.stackViewConstraints)
-            
-            UIView.animate(withDuration: 0.5, animations: { [weak self] in
-                self?.saveButtonsStackView.alpha = 1
-            })
-        }*/
-        
+    @objc func editButtonOnClick(_ sender: Any) {
         self.changeEditingMode(true)
         
     }
@@ -253,74 +237,51 @@ class ProfileViewController: UIViewController {
         self.toggleEditingButtons(false)
         
         StorageManager.shared.saveUserProfileState(profileState: self.constructUserProfileInfo(), completion: { [weak self] in
-            StorageManager.shared.getUserProfileState() { profileState in
+            StorageManager.shared.getUserProfileState(completion: { profileState in
                 DispatchQueue.main.async {
-                    self?.UpdateUIAfterFetch(state: profileState, showAlert: true)
+                    self?.updateUIAfterFetch(state: profileState, showAlert: true)
                     CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
                 }
                 
-            }
+            })
             
             //self?.toggleEditingInputFields(false)
         })
         
     }
-    /*
-    @objc func saveOperationButtonOnClick(_ sender : Any?) {
-        showSavingProccessView()
-        self.toggleEditingButtons(false)
-        
-        OperationDataManager.shared.saveUserProfileInfo(state: profileStateWithoutSameFieldsInProfile(), onComplete: { [weak self] in
-            if (self != nil) {
-                self!.FetchProfileInfo(showAlert: true, shared: OperationDataManager.shared)
-                
-                DispatchQueue.main.async {
-                    CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
-                }
-            }
-        }) { [weak self] in
-            if (self != nil) {
-                DispatchQueue.main.async {
-                    self!.present(self!.generateAlertController(retryFunc: self!.saveOperationButtonOnClick(_:)), animated: true, completion: nil)
-                    
-                    self?.toggleEditingButtons(true)
-                }
-            }
-        }
-    }*/
     
     private func profileStateWithoutSameFieldsInProfile() -> UserProfileState {
         var currentUserProfileInfo = constructUserProfileInfo()
         
-        if (currentUserProfileInfo.detailInfo == lastState.detailInfo) {
+        if currentUserProfileInfo.detailInfo == lastState.detailInfo {
             currentUserProfileInfo.detailInfo = nil
         }
         
-        if (currentUserProfileInfo.username == lastState.username) {
+        if currentUserProfileInfo.username == lastState.username {
             currentUserProfileInfo.username = nil
         }
         
-        if (currentUserProfileInfo.profileImage == lastState.profileImage) {
+        if currentUserProfileInfo.profileImage == lastState.profileImage {
             currentUserProfileInfo.profileImage = nil
         }
         
         return currentUserProfileInfo
     }
     
-    private func FetchProfileInfo(showAlert: Bool = false, shared: UserProfileDataDriver) {
+    private func fetchProfileInfo(showAlert: Bool = false, shared: UserProfileDataDriver) {
         shared.getUserProfileInfo(onComplete: { [weak self] (state) in
-            self?.UpdateUIAfterFetch(state: state, showAlert: showAlert)
+            self?.updateUIAfterFetch(state: state, showAlert: showAlert)
         })
     }
     
-    private func UpdateUIAfterFetch(state: UserProfileState, showAlert: Bool = false) {
+    private func updateUIAfterFetch(state: UserProfileState, showAlert: Bool = false) {
         DispatchQueue.main.async { [weak self] in
             self?.dismissSavingProcessView()
             self?.detailInfoTextField.text = state.detailInfo ?? self?.detailInfoTextField.text
             self?.nameTextField.text = state.username ?? self?.nameTextField.text
             self?.profilePhotoImageView.image = state.profileImage ?? self?.profilePhotoImageView.image
             
-            if (showAlert) {
+            if showAlert {
                 self?.present(UIAlertController.okAlertController(title: "Saved Succesfully"), animated: true, completion: nil)
                 //self?.toggleEditing(true)
                 self?.tapGestureRecognizer.isEnabled = true
@@ -333,7 +294,7 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    private func generateAlertController(retryFunc: @escaping (Any?) -> ()?) -> UIAlertController {
+    private func generateAlertController(retryFunc: @escaping (Any?) -> Void?) -> UIAlertController {
         let alertController = UIAlertController(title: "Error", message: "Can't save to file", preferredStyle: .alert)
         let okAction = UIAlertAction.okAction
         
@@ -374,12 +335,13 @@ class ProfileViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //Скорее всего, в viewDidLoad у нас подгружается расположение элементов UI для девайса, который указан в сториборде(то есть их позиции и тд), так как там ViewController еще не добавлен в иерархию view. А уже в viewDidAppear - сработал AutoLayout и расположил их заново и правильно
+        //Скорее всего, в viewDidLoad у нас подгружается расположение элементов UI для девайса, который указан в сториборде
+        //(то есть их позиции и тд), так как там ViewController еще не добавлен в иерархию view. А уже в viewDidAppear - сработал AutoLayout и расположил их заново и правильно
         Logger.log(editProfileButton.frame.debugDescription)
     }
 }
 
-//MARK: ActivityIndicator
+// MARK: ActivityIndicator
 extension ProfileViewController {
     func showSavingProccessView() {
         self.view.addSubview(self.savingProcessView)
@@ -397,13 +359,13 @@ extension ProfileViewController {
     }
 }
 
-//MARK: EditingButtons
+// MARK: EditingButtons
 extension ProfileViewController {
     func changeEditingMode(_ isEditing: Bool) {
         if isEditing {
             UIView.animate(withDuration: 0.5, animations: { [weak self] in
                 self?.editProfileButton.alpha = 0
-            }) { [weak self] (_) in
+            }, completion: { [weak self] (_) in
                 self?.saveButton.isHidden = false
                 self?.editProfileButton.isHidden = true
                 self?.toggleEditingInputFields(true)
@@ -413,14 +375,14 @@ extension ProfileViewController {
                 UIView.animate(withDuration: 0.5, animations: { [weak self] in
                     self?.saveButton.alpha = 1
                     }, completion: nil)
-            }
+            })
             
             
             
         } else {
             UIView.animate(withDuration: 0.5, animations: { [weak self] in
                 self?.saveButton.alpha = 0
-            }) { [weak self] (_) in
+            }, completion: { [weak self] (_) in
                 self?.saveButton.isHidden = true
                 self?.editProfileButton.isHidden = false
                 self?.tapGestureRecognizer.isEnabled = false
@@ -429,14 +391,13 @@ extension ProfileViewController {
                     self?.editProfileButton.alpha = 1
                 }
                 self?.toggleEditingInputFields(false)
-            }
+            })
             
         }
     }
 }
 
-//MARK:- Moving Keyboards
-
+// MARK: - Moving Keyboards
 extension ProfileViewController {
     
     func removeObservers() {
@@ -459,7 +420,7 @@ extension ProfileViewController {
                         
                         Logger.log((lastFrameBottomY - currentTopKeyboardY).description)
                         
-                        if (lastFrameBottomY > currentTopKeyboardY) {
+                        if lastFrameBottomY > currentTopKeyboardY {
                             self.view.frame.origin.y -= (lastFrameBottomY - currentTopKeyboardY)
                         }
                         
@@ -479,18 +440,16 @@ extension ProfileViewController {
     }
 }
 
-//MARK:- TextFieldTextChanged
+// MARK: - TextFieldTextChanged
 extension ProfileViewController {
     @objc func textDidChanged(_ textField: UITextField) {
-        if (textField.text!.count > ProfileViewController.maxNameLen) {
+        if textField.text!.count > ProfileViewController.maxNameLen {
             textField.text = String(textField.text!.prefix(ProfileViewController.maxNameLen))
         }
         self.toggleEditingButtons(true)
     }
 }
 
-//MARK:- UINavigationControllerDelegate
-extension ProfileViewController : UINavigationControllerDelegate {
-    
+// MARK: - UINavigationControllerDelegate
+extension ProfileViewController: UINavigationControllerDelegate {
 }
-

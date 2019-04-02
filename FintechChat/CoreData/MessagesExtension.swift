@@ -11,8 +11,8 @@ import CoreData
 
 extension Message {
     
-    static func insert(into context: NSManagedObjectContext) -> Message?  {
-        var mes: Message? = nil
+    static func insert(into context: NSManagedObjectContext) -> Message? {
+        var mes: Message?
         context.performAndWait {
             guard let message = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as? Message else { return }
             mes = message

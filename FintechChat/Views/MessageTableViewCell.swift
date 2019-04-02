@@ -27,11 +27,11 @@ class MessageTableViewCell: UITableViewCell, MessageCellExtendedConfiguration {
     private static let bubbleCornerRadius: CGFloat = 12
     
     lazy var bubbleBackgroundView: UIView = {
-        let v = UIView()
-        v.clipsToBounds = true
+        let view = UIView()
+        view.clipsToBounds = true
         //v.layer.cornerRadius = MessageTableViewCell.bubbleCornerRadius
-        v.translatesAutoresizingMaskIntoConstraints = false
-        return v
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     let messageLabel: UILabel = {
@@ -70,7 +70,7 @@ class MessageTableViewCell: UITableViewCell, MessageCellExtendedConfiguration {
         self.messageText = messageText
         self.isIncoming = isIncoming
         
-        if (isIncoming) {
+        if isIncoming {
             currentConstraints.append(contentsOf: [
                 bubbleBackgroundView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 12)
                 ])

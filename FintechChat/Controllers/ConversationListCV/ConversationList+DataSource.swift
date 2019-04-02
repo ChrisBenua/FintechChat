@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-//MARK:- UITableViewDataSource
-extension ConversationListViewController : UITableViewDataSource {
+// MARK: - UITableViewDataSource
+extension ConversationListViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         guard let sections = self.fetchedResultsController.sections else {
@@ -28,7 +28,7 @@ extension ConversationListViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.cellId, for: indexPath) as! ConversationTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.cellId, for: indexPath) as? ConversationTableViewCell else { fatalError() }
         let cellData = self.fetchedResultsController.object(at: indexPath)
         let participantUsername = (cellData.participants?.allObjects.first as? User)?.name ?? "Unrecognized"
         let lastMessage = (cellData.lastMessage)?.text
@@ -41,17 +41,17 @@ extension ConversationListViewController : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //let dialogName = searchedConversations[indexPath.row].name!
-        let vc = ConversationViewController(conversationListDataProvider: self.viewModel, conversationId: self.fetchedResultsController.object(at: indexPath).conversationId!)
-        vc.dialogTitle = (self.fetchedResultsController.object(at: indexPath).participants?.allObjects.first as! User).name
+        let viewController = ConversationViewController(conversationListDataProvider: self.viewModel, conversationId: self.fetchedResultsController.object(at: indexPath).conversationId!)
+        viewController.dialogTitle = (self.fetchedResultsController.object(at: indexPath).participants?.allObjects.first as? User)?.name ?? "Undefined"
         //vc.connectedUserID = self.viewModel.getUserIdBy(username: dialogName)
-        vc.connectedUserID = (self.fetchedResultsController.object(at: indexPath).participants?.allObjects.first! as! User).userId!
-        vc.conversation = self.fetchedResultsController.object(at: indexPath)
-        if (searchController.isActive) {
+        viewController.connectedUserID = (self.fetchedResultsController.object(at: indexPath).participants?.allObjects.first as? User)?.userId ?? "Undefined"
+        viewController.conversation = self.fetchedResultsController.object(at: indexPath)
+        if searchController.isActive {
             self.searchController.dismiss(animated: true) { [weak self] in
-                self?.navigationController?.pushViewController(vc, animated: true)
+                self?.navigationController?.pushViewController(viewController, animated: true)
             }
         } else {
-            self.navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
 }

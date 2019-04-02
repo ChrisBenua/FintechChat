@@ -21,7 +21,7 @@ extension AppUser {
     
     static func getOrCreateAppUserSync(in context: NSManagedObjectContext) -> AppUser? {
         let fetchRequest: NSFetchRequest<AppUser> = AppUser.fetchRequest()
-        var foundUser: AppUser? = nil
+        var foundUser: AppUser?
         
         
         context.performAndWait {
@@ -41,11 +41,11 @@ extension AppUser {
         return foundUser
     }
     
-    static func getOrCreateAppUser(in context: NSManagedObjectContext, completion: ((AppUser?) -> ())?) {
+    static func getOrCreateAppUser(in context: NSManagedObjectContext, completion: ((AppUser?) -> Void)?) {
         
-        DispatchQueue.global(qos: .background).async  {
+        DispatchQueue.global(qos: .background).async {
             let fetchRequest: NSFetchRequest<AppUser> = AppUser.fetchRequest()
-            var foundUser: AppUser? = nil
+            var foundUser: AppUser?
             
             
             context.perform {
@@ -71,4 +71,3 @@ extension AppUser {
         
     }
 }
-

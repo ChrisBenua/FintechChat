@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 class MessageIDGenerator {
     public static func generateMessageId() -> String {
         return "\(arc4random_uniform(UINT32_MAX))+\(Date.timeIntervalSinceReferenceDate)"

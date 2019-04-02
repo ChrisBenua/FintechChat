@@ -9,15 +9,15 @@
 import Foundation
 import UIKit
 
-//MARK: UIImagePickerControllerDelegate
-extension ProfileViewController : UIImagePickerControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// MARK: UIImagePickerControllerDelegate
+extension ProfileViewController: UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let chosenImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
         
         self.profilePhotoImageView.image = chosenImage
         self.toggleEditingButtons(true)
         //to be sure that ImagePickerController will be dismissed
-        defer {
+        do {
             dismiss(animated: true, completion: nil)
         }
     }
@@ -26,5 +26,3 @@ extension ProfileViewController : UIImagePickerControllerDelegate {
         dismiss(animated: true, completion: nil)
     }
 }
-
-

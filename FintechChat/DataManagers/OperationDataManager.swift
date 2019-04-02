@@ -9,12 +9,12 @@
 import Foundation
 import UIKit
 
-class OperationDataManager : UserProfileDataDriver {
+class OperationDataManager: UserProfileDataDriver {
     public static var shared: UserProfileDataDriver = OperationDataManager()
     private var operationQueue = OperationQueue()
     private var savingOperationQueue = OperationQueue()
     
-    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> (), onError: @escaping () -> ()) {
+    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> Void, onError: @escaping () -> Void) {
         let task1 = SaveProfileImageOperation(state.profileImage)
         let task2 = SaveUsernameOperation(state.username)
         let task3 = SaveDetailInfoOperation(state.detailInfo)
@@ -39,14 +39,18 @@ class OperationDataManager : UserProfileDataDriver {
         }
     }
     
-    func getUserProfileInfo(onComplete: @escaping (UserProfileState) -> ()) {
+    func getUserProfileInfo(onComplete: @escaping (UserProfileState) -> Void) {
         let task1 = FetchUserProfileImageOperation()
         let task2 = FetchUserDetailInfo()
         let task3 = FetchUsernameOperation()
         let tasks = [task1, task2, task3]
         
-        let notifyOperation = NotifyOperation(tasks.compactMap({ (op) -> FailiableOperation in
-            op as! FailiableOperation
+        let notifyOperation = NotifyOperation(tasks.compactMap({ (operation) -> FailiableOperation in
+            if let operation = operation as? FailiableOperation {
+                return operation
+            } else {
+                fatalError()
+            }
         }))
         
         for dependencyOperation in tasks {

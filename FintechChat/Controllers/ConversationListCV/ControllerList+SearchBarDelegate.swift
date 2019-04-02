@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-//MARK: SearchBarDelegate
+// MARK: - SearchBarDelegate
 extension ConversationListViewController: UISearchBarDelegate {
-    func SetUpSearchBar() {
+    func setUpSearchBar() {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.dimsBackgroundDuringPresentation = false
@@ -34,4 +34,3 @@ extension ConversationListViewController: UISearchBarDelegate {
     }
     
 }
-
