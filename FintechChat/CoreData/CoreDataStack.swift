@@ -9,7 +9,27 @@
 import Foundation
 import CoreData
 
-class CoreDataStack {
+protocol IBaseCoreDataStack {
+    var storeURL: URL { get }
+    
+    var managedObjectModel: NSManagedObjectModel { get set }
+    
+    var persistantStoreCoordinator: NSPersistentStoreCoordinator { get set }
+    
+    var mainContext: NSManagedObjectContext { get set }
+
+}
+
+protocol ICoreDataStack: IBaseCoreDataStack {
+   
+    var masterContext: NSManagedObjectContext { get set }
+    
+    var saveContext: NSManagedObjectContext { get set }
+
+    func performSave(with context: NSManagedObjectContext, completion: (() -> Void)?)
+}
+
+class CoreDataStack: ICoreDataStack {
     //public static var shared: CoreDataStack = CoreDataStack()
     
     var storeURL: URL {

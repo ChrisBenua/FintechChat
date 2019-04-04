@@ -283,7 +283,7 @@ extension ConversationViewController: UITableViewDataSource {
         
         let message = self.fetchedResultsController.object(at: indexPath)
         
-        let isIncoming = ((self.conversation.participants?.allObjects.first as? User)?.userId ?? "NotExistingId") == (message.senderId ?? "NotExitstingId2")
+        let isIncoming = ((self.conversation.participants)?.userId ?? "NotExistingId") == (message.senderId ?? "NotExitstingId2")
         
         cell.setup(messageText: message.text ?? "", isIncoming: isIncoming)
         return cell

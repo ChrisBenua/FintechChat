@@ -107,7 +107,7 @@ class ConversationListDataProvider {
                         if let conversations = appUsers?.first?.conversations {
                             for conversation in conversations {
                                 if let conversation = conversation as? Conversation {
-                                    if let userId = (conversation.participants?.allObjects.first as? User)?.userId {
+                                    if let userId = conversation.participants?.userId {
                                         self.userIdToConversation[userId] = conversation
                                     }
                                     conversation.isOnline = false

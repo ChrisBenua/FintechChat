@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA10D82A2256562A004BC482 /* MessageStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D8292256562A004BC482 /* MessageStoreManager.swift */; };
+		AA10D82C225657D7004BC482 /* ConversationStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D82B225657D7004BC482 /* ConversationStorageManager.swift */; };
+		AA10D82E22565880004BC482 /* UserStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D82D22565880004BC482 /* UserStorageManager.swift */; };
+		AA10D8302256599A004BC482 /* UserProfileStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D82F2256599A004BC482 /* UserProfileStorageManager.swift */; };
 		AA1AB901222BDF530088E3D8 /* UserDefaultsTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1AB900222BDF530088E3D8 /* UserDefaultsTheme.swift */; };
 		AA1AB903222BE8170088E3D8 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1AB902222BE8170088E3D8 /* CustomNavigationController.swift */; };
 		AA1E085A223B80B200B56281 /* Communicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1E0859223B80B200B56281 /* Communicator.swift */; };
@@ -59,6 +63,10 @@
 /* Begin PBXFileReference section */
 		13883D2A11B981076B8E3E94 /* Pods-FintechChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FintechChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FintechChat/Pods-FintechChat.debug.xcconfig"; sourceTree = "<group>"; };
 		7A9B12E557956DFDFEEB59D0 /* Pods_FintechChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FintechChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA10D8292256562A004BC482 /* MessageStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStoreManager.swift; sourceTree = "<group>"; };
+		AA10D82B225657D7004BC482 /* ConversationStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStorageManager.swift; sourceTree = "<group>"; };
+		AA10D82D22565880004BC482 /* UserStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStorageManager.swift; sourceTree = "<group>"; };
+		AA10D82F2256599A004BC482 /* UserProfileStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileStorageManager.swift; sourceTree = "<group>"; };
 		AA1AB900222BDF530088E3D8 /* UserDefaultsTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsTheme.swift; sourceTree = "<group>"; };
 		AA1AB902222BE8170088E3D8 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
 		AA1AB904222BF6490088E3D8 /* ThemesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemesViewController.swift; sourceTree = "<group>"; };
@@ -143,6 +151,18 @@
 				D9D35FFD5102E153FAE00F0E /* Pods-FintechChat.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		AA10D8282256555D004BC482 /* StorageManagers */ = {
+			isa = PBXGroup;
+			children = (
+				AAC53B53224554FC00151EA3 /* StorageManager.swift */,
+				AA10D8292256562A004BC482 /* MessageStoreManager.swift */,
+				AA10D82B225657D7004BC482 /* ConversationStorageManager.swift */,
+				AA10D82D22565880004BC482 /* UserStorageManager.swift */,
+				AA10D82F2256599A004BC482 /* UserProfileStorageManager.swift */,
+			);
+			path = StorageManagers;
 			sourceTree = "<group>";
 		};
 		AA1E0858223B809800B56281 /* Multipeer */ = {
@@ -246,9 +266,9 @@
 		AAC53B4E22454F7500151EA3 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				AA10D8282256555D004BC482 /* StorageManagers */,
 				AAC53B4F22454F8900151EA3 /* CoreDataStack.swift */,
 				AAC53B51224551F500151EA3 /* AppUserExtension.swift */,
-				AAC53B53224554FC00151EA3 /* StorageManager.swift */,
 				AA59A0FD224D046000FCE9A3 /* ConversationExtension.swift */,
 				AA59A0FF224D083900FCE9A3 /* MessagesExtension.swift */,
 				AAF654E5224D305E005C8821 /* UserExtension.swift */,
@@ -450,7 +470,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/SwiftLint/swiftlint --config ${PROJECT_DIR}/swiftlint.yml\"\n\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/SwiftLint/swiftlint --config ${PROJECT_DIR}/swiftlint.yml\"\n\n\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -483,8 +503,12 @@
 				AAD73B7B221F2E180085512B /* MessageTableViewCell.swift in Sources */,
 				AA2CC7EE2230290400FE3776 /* ThemesViewController.m in Sources */,
 				AAD73B67221EF6870085512B /* ConversationListViewController.swift in Sources */,
+				AA10D8302256599A004BC482 /* UserProfileStorageManager.swift in Sources */,
 				AA3D28EA22243C0E0001D79F /* ConversationList+TableViewDelegate.swift in Sources */,
+				AA10D82A2256562A004BC482 /* MessageStoreManager.swift in Sources */,
+				AA10D82E22565880004BC482 /* UserStorageManager.swift in Sources */,
 				AABA1981220F043100321179 /* Debug.swift in Sources */,
+				AA10D82C225657D7004BC482 /* ConversationStorageManager.swift in Sources */,
 				AA3D28EC22243C340001D79F /* ConversationList+DataSource.swift in Sources */,
 				AAF22772220BD16000AF5DFA /* ProfileViewController.swift in Sources */,
 				AA9ED4E82233E7AB001DC94B /* ProfileVC+TextViewDelegate.swift in Sources */,

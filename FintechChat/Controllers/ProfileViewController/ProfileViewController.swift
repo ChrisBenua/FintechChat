@@ -137,7 +137,7 @@ class ProfileViewController: UIViewController {
     }
     
     private func fetchProfileInfoCoreData() {
-        StorageManager.shared.getUserProfileState(completion: { profileState in
+        StorageManager.shared.getUserProfileState(from: nil, completion: { profileState in
             self.updateUIAfterFetch(state: profileState)
         })
     }
@@ -237,7 +237,7 @@ class ProfileViewController: UIViewController {
         self.toggleEditingButtons(false)
         
         StorageManager.shared.saveUserProfileState(profileState: self.constructUserProfileInfo(), completion: { [weak self] in
-            StorageManager.shared.getUserProfileState(completion: { profileState in
+            StorageManager.shared.getUserProfileState(from: nil, completion: { profileState in
                 DispatchQueue.main.async {
                     self?.updateUIAfterFetch(state: profileState, showAlert: true)
                     CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
@@ -246,7 +246,7 @@ class ProfileViewController: UIViewController {
             })
             
             //self?.toggleEditingInputFields(false)
-        })
+            }, in: nil)
         
     }
     

@@ -30,7 +30,7 @@ extension ConversationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.cellId, for: indexPath) as? ConversationTableViewCell else { fatalError() }
         let cellData = self.fetchedResultsController.object(at: indexPath)
-        let participantUsername = (cellData.participants?.allObjects.first as? User)?.name ?? "Unrecognized"
+        let participantUsername = (cellData.participants)?.name ?? "Unrecognized"
         let lastMessage = (cellData.lastMessage)?.text
         let lastMessageDate = (cellData.lastMessage)?.timestamp ?? Date(timeIntervalSince1970: 0)
         let isOnline = cellData.isOnline
@@ -42,9 +42,9 @@ extension ConversationListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //let dialogName = searchedConversations[indexPath.row].name!
         let viewController = ConversationViewController(conversationListDataProvider: self.viewModel, conversationId: self.fetchedResultsController.object(at: indexPath).conversationId!)
-        viewController.dialogTitle = (self.fetchedResultsController.object(at: indexPath).participants?.allObjects.first as? User)?.name ?? "Undefined"
+        viewController.dialogTitle = (self.fetchedResultsController.object(at: indexPath).participants)?.name ?? "Undefined"
         //vc.connectedUserID = self.viewModel.getUserIdBy(username: dialogName)
-        viewController.connectedUserID = (self.fetchedResultsController.object(at: indexPath).participants?.allObjects.first as? User)?.userId ?? "Undefined"
+        viewController.connectedUserID = (self.fetchedResultsController.object(at: indexPath).participants)?.userId ?? "Undefined"
         viewController.conversation = self.fetchedResultsController.object(at: indexPath)
         if searchController.isActive {
             self.searchController.dismiss(animated: true) { [weak self] in

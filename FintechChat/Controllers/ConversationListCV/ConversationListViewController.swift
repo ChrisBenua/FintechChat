@@ -82,7 +82,7 @@ class ConversationListViewController: UIViewController {
         
         self.viewModel.listViewController = self
         
-        StorageManager.shared.getUserProfileState { (state) in
+        StorageManager.shared.getUserProfileState(from: nil) { (state) in
             CommunicationManager.shared = CommunicationManager(username: state.username ?? "justUsername")
             CommunicationManager.shared.contollerDataProvider = self.viewModel
             }
@@ -132,6 +132,7 @@ extension ConversationListViewController: NSFetchedResultsControllerDelegate {
     
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        Logger.log("Updated Controller")
         self.tableView.beginUpdates()
         self.tableView.reloadSectionIndexTitles()
     }
