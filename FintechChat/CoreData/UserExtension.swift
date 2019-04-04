@@ -27,7 +27,7 @@ extension User {
         return request
     }
     
-    static func fetchUserWithId(userId: String) -> NSFetchRequest<User> {
+    static func requestUserWithId(userId: String) -> NSFetchRequest<User> {
         let request: NSFetchRequest<User> = User.fetchRequest()
         request.predicate = NSPredicate(format: "userId == %@", userId)
         

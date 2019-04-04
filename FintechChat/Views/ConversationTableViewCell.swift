@@ -17,7 +17,13 @@ protocol ConversationCellConfiguration: class {
     var hasUnreadMessages: Bool { get set }
 }
 
-class ConversationTableViewCell: UITableViewCell, ConversationCellConfiguration {
+protocol ConfigurableConversationCell: ConversationCellConfiguration {
+    func setup(name: String?, message: String?, date: Date?, online: Bool, hasUnreadMessages: Bool)
+    
+    func setup(model: ConversationCellConfiguration)
+}
+
+class ConversationTableViewCell: UITableViewCell, ConfigurableConversationCell {
     
     public static let cellId = "ConversationCellID"
     
@@ -105,6 +111,10 @@ class ConversationTableViewCell: UITableViewCell, ConversationCellConfiguration 
         self.online = online
         self.hasUnreadMessages = hasUnreadMessages
         updateUI()
+    }
+    
+    func setup(model: ConversationCellConfiguration) {
+        self.setup(name: model.name, message: model.message, date: model.date, online: model.online, hasUnreadMessages: model.hasUnreadMessages)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

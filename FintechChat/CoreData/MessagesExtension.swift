@@ -21,7 +21,7 @@ extension Message {
         return mes
     }
     
-    static func fetchMessagesInConversation(conversationID: String) -> NSFetchRequest<Message> {
+    static func requestMessagesInConversation(conversationID: String) -> NSFetchRequest<Message> {
         let request: NSFetchRequest<Message> = Message.fetchRequest()
         request.predicate = NSPredicate(format: "conversation.conversationId == %@", conversationID)
         request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]

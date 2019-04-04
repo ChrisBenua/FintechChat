@@ -19,7 +19,7 @@ class ConversationCellModelHelper: ConversationCellConfiguration {
     
     var hasUnreadMessages: Bool
     
-    init(name: String?, message: String?, date: Date, online: Bool, hasUnreadMessages: Bool) {
+    init(name: String?, message: String?, date: Date?, online: Bool, hasUnreadMessages: Bool) {
         self.name = name
         self.message = message
         self.date = date

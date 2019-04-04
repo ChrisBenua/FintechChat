@@ -22,53 +22,31 @@ class ConversationListViewController: UIViewController {
     
     var searchedConversations = [ConversationCellConfiguration]()
     
-    //var searchSplittedConversation = [[ConversationCellConfiguration]]()
-    
-    //var allConversations: [ConversationCellConfiguration] = [ConversationCellConfiguration]()
-    
-    //var allSplittedConversations: [[ConversationCellConfiguration]] = [[ConversationCellConfiguration]]()
-    
-    /*private func fillSplittedConversations() {
-        let activeConversations = allConversations.filter({ $0.online })
-        let inactiveConversations = allConversations.filter({ !$0.online })
-        allSplittedConversations.removeAll()
-        allSplittedConversations.append(activeConversations)
-        allSplittedConversations.append(inactiveConversations)
-    }*/
-    
-    /*private func fillWithData() {
-        let names = ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain", "Mackenzie Foy", "Ellen Burstyn", "Matt Damon", "John Lithgow", "Michael Caine", "Casey Affleck", "Timothée Chalamet", "Wes Bentley", "Bill Irwin", "Josh Stewart", "Topher Grace", "David Gyasi", "Leah Cairns", "David Oyelowo", "Collette Wolfe", "William Devane", "Elyes Gabel "]
-        let lastMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
-        
-        for i in 0..<names.count {
-            let message: String? = i % 5 == 0 ? nil : lastMessage
-            let date: Date = i % 7 == 0 ? Date(timeIntervalSince1970: 1194779471) : Date()
-            let model = ConversationCellModelHelper(name: names[i], message: message , date: date, online: i < 10, hasUnreadMessages: i % 3 == 0)
-            allConversations.append(model)
-        }
-        fillSplittedConversations()
-    }*/
-    
-    lazy var fetchedResultsController: NSFetchedResultsController<Conversation> = {
-        let frc = self.viewModel.generateConversationListFRC()
-        frc.delegate = self
-        do {
-            try frc.performFetch()
-        } catch let err {
-            print("Cant fetch in ConversationListVC")
-            print(err)
-        }
-        return frc
-    }()
-    
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
-        tableView.dataSource = self
         
         tableView.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.cellId)
         return tableView
     }()
+    
+    var conversationsDataSource: IConversationTableViewDataSource
+    
+    var frcDelegate: IConversationFetchResultController?
+    
+    init() {
+        //TODO MAKE WITH ASSEMBLY
+        self.conversationsDataSource = ConversationDataSource(viewModel: self.viewModel)
+        super.init(nibName: nil, bundle: nil)
+        self.frcDelegate = ConversationFRCDelegate(tableView: self.tableView)
+        self.conversationsDataSource.fetchedResultsController.delegate = self.frcDelegate
+        self.tableView.dataSource = self.conversationsDataSource
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -106,6 +84,7 @@ class ConversationListViewController: UIViewController {
         
         //self.fillWithData()
         setUpSearchBar()
+        self.conversationsDataSource.performFetch()
         self.tableView.reloadData()
     }
     
@@ -113,11 +92,7 @@ class ConversationListViewController: UIViewController {
         //uncomment it for using obj-c version
         let themesVC = ThemesViewController()
         themesVC.setDelegate(self)
-        /*let themesVC = ThemesViewController { (color) in
-            self.logThemeChanging(selectedTheme: color)
-        }*/
-        
-        
+                
         self.present(themesVC, animated: true, completion: nil)
     }
     
@@ -126,47 +101,6 @@ class ConversationListViewController: UIViewController {
         self.present(profileVC, animated: true, completion: nil)
     }
     
-}
-
-extension ConversationListViewController: NSFetchedResultsControllerDelegate {
-    
-    
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        Logger.log("Updated Controller")
-        self.tableView.beginUpdates()
-        self.tableView.reloadSectionIndexTitles()
-    }
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        //self.tableView.reloadSectionIndexTitles()
-        self.tableView.endUpdates()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            tableView.insertRows(at: [newIndexPath!], with: .automatic)
-        case .move:
-            tableView.deleteRows(at: [indexPath!], with: .automatic)
-            tableView.insertRows(at: [newIndexPath!], with: .automatic)
-        case .update:
-            tableView.reloadRows(at: [indexPath!], with: .automatic)
-        case .delete:
-            tableView.deleteRows(at: [indexPath!], with: .automatic)
-        }
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        switch type {
-        case .insert:
-            tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
-        case .delete:
-            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
-        case .move:
-            break
-        case .update:
-            break
-        }
-    }
 }
 
 extension ConversationListViewController: UpdateConversationControllerDelegate {

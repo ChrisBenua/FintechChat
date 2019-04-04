@@ -11,36 +11,23 @@ import UIKit
 import MultipeerConnectivity
 import CoreData
 
-class ConversationViewController: UIViewController {
+protocol IScrollableViewController: class {
+    func scrollToBottom(animated: Bool)
     
-    private var fetchedResultsController: NSFetchedResultsController<Message>!
+    var tableView: UITableView { get set }
+}
+
+class ConversationViewController: UIViewController, IScrollableViewController {
     
-    var conversation: Conversation! {
-        didSet {
-            //StorageManager.shared.markAsReadMessages(in: conversation)
-        }
-    }
+    var conversation: Conversation
     
-    var conversationListDataProvider: ConversationListDataProvider
-    
-    /*lazy var fetchedResultsController: NSFetchedResultsController<Message> = {
-        let frc = conversationListDataProvider.generateConversationFRC(conversationId: conversation.conversationId!)
-        frc.delegate = self
-        return frc
-    }()*/
+    var conversationListDataProvider: IConversationDataProvider
     
     private var shouldScrollToLast: Bool! = true
     
     private var didLeaveDialog: Bool = false
     
     private let accessoryViewHeight: CGFloat = 65
-    
-    /*private func markMessagesAsRead() {
-        for el in self.conversationListDataProvider.messageStorage[connectedUserID]! {
-            el.didRead = true
-        }
-    }*/
-    
     
     override func willMove(toParent parent: UIViewController?) {
         super.willMove(toParent: parent)
@@ -53,20 +40,12 @@ class ConversationViewController: UIViewController {
     
     func scrollToBottom(animated: Bool = false) {
         DispatchQueue.main.async {
-            let indexPath = IndexPath(row: (self.fetchedResultsController.fetchedObjects?.count ?? 0) - 1, section: 0)
+            let indexPath = IndexPath(row: (self.messagesDataSource.fetchedResultsController.fetchedObjects?.count ?? 0) - 1, section: 0)
             if indexPath.row >= 0 {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
                 Logger.log("SCROLL")
             }
         }
-    }
-    
-    private func fillData() {
-        /*for i in 0..<10 {
-            let model = ConversationMessageModelHelper(messageText: String(repeating: "w", count: 5 + 15 * i), isIncoming: i % 2 == 0)
-            messages.append(model)
-        }
-        tableView.reloadData()*/
     }
     
     var dialogTitle: String! {
@@ -87,47 +66,44 @@ class ConversationViewController: UIViewController {
         let tview = UITableView()
         tview.separatorStyle = .none
         tview.delegate = self
-        tview.dataSource = self
+        //tview.dataSource = self
         tview.register(MessageTableViewCell.self, forCellReuseIdentifier: MessageTableViewCell.cellId)
         return tview
     }()
     
-    init(conversationListDataProvider: ConversationListDataProvider, conversationId: String = "") {
+    var messagesDataSource: IMessageTableViewDataSource
+    
+    var messagesFRCDelegate: IMessagesFetchResultController?
+    
+    init(conversationListDataProvider: IConversationDataProvider, conversation: Conversation) {
+        //TODO get storageManager from assembly
+        self.messagesDataSource = MessagesTableViewDataSource(viewModel: conversationListDataProvider, conversation: conversation)
+        self.conversation = StorageManager.shared.fetchConversation(withId: conversation.conversationId!)!//force unwrap for debug
         self.conversationListDataProvider = conversationListDataProvider
-        
         super.init(nibName: nil, bundle: nil)
-        self.fetchedResultsController = self.conversationListDataProvider.generateConversationFRC(conversationId: conversationId)
-        self.fetchedResultsController.delegate = self
-        do {
-            try fetchedResultsController.performFetch()
-        } catch let err {
-            print("Cant fetch in ConversationListVC")
-            print(err)
-        }
+        self.messagesFRCDelegate = MessagesFRCDelegate(viewController: self)
+        self.tableView.dataSource = self.messagesDataSource
+        self.messagesDataSource.fetchedResultsController.delegate = self.messagesFRCDelegate
+        self.messagesDataSource.performFetch()
+
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.conversationListDataProvider = ConversationListDataProvider()
-        super.init(coder: aDecoder)
+        fatalError("Now implemented init from NSCoder")
     }
     
     override func viewDidLoad() {
-        //CommunicationManager.shared.communicator.advertiser.stopAdvertisingPeer()
         self.addObservers()
         CommunicationManager.shared.communicator.onDisconnectDelegate = self
         self.conversationListDataProvider.conversationViewController = self
-        //self.messages = self.conversationListDataProvider.getConversationCellData(name: connectedUserID)
+
         super.viewDidLoad()
-        
-        
-        
-        //self.navigationItem.backBarButtonItem?.action = #selector(customBackButtonOnClick(_:))
         
         self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -70)
         self.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -70)
         self.view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        fillData()
+        //fillData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -140,28 +116,8 @@ class ConversationViewController: UIViewController {
 
     }
     
-    private func toggleTableView() {
-        /*if (tableView.contentSize.height < self.view.frame.height) {
-            Logger.log(tableView.contentSize.height.description)
-            Logger.log("\(tableView.contentSize.height - self.view.frame.height)")
-            UIView.animate(withDuration: 0.2) {
-                self.tableView.contentInset = UIEdgeInsets(top: self.view.frame.height - self.tableView.contentSize.height, left: 0, bottom: 0, right: 0)
-            }
-            
-        }*/
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        toggleTableView()
-        //StorageManager.shared.markAsReadMessages(in: self.conversation)
-
-        
-        /*if (!messages.isEmpty && shouldScrollToLast && tableView.contentSize.height >= self.view.frame.height) {
-            shouldScrollToLast = false
-            tableView.setContentOffset(CGPoint(x: 0, y: max(tableView.contentSize.height - tableView.frame.height, 0)), animated: true)
-        }*/
     }
     
     lazy var messageTextField: UITextField = {
@@ -240,53 +196,6 @@ class ConversationViewController: UIViewController {
             
             messageTextField.text = ""
         }
-    }
-    
-}
-
-
-extension ConversationViewController: NSFetchedResultsControllerDelegate {
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        self.tableView.beginUpdates()
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        self.tableView.endUpdates()
-        self.scrollToBottom(animated: true)
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            tableView.insertRows(at: [newIndexPath!], with: .automatic)
-        case .move:
-            tableView.deleteRows(at: [indexPath!], with: .automatic)
-            tableView.insertRows(at: [newIndexPath!], with: .automatic)
-        case .update:
-            tableView.reloadRows(at: [indexPath!], with: .automatic)
-        case .delete:
-            tableView.deleteRows(at: [indexPath!], with: .automatic)
-        }
-    }
-}
-
-
-extension ConversationViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.fetchedResultsController.sections![section].numberOfObjects
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.cellId, for: indexPath) as? MessageTableViewCell else {
-            fatalError()
-        }
-        
-        let message = self.fetchedResultsController.object(at: indexPath)
-        
-        let isIncoming = ((self.conversation.participants)?.userId ?? "NotExistingId") == (message.senderId ?? "NotExitstingId2")
-        
-        cell.setup(messageText: message.text ?? "", isIncoming: isIncoming)
-        return cell
     }
     
 }

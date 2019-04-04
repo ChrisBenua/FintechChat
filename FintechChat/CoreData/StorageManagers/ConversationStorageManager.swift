@@ -10,6 +10,19 @@ import Foundation
 import CoreData
 
 class ConversationStorageManager: IConversationStorageManager {
+    
+    func fetchConversation(withId: String) -> Conversation? {
+        let fetchRequst = Conversation.requestConversationWith(conversationId: withId)
+        var res: [Conversation]?
+        do {
+            res = try self.mainContext.fetch(fetchRequst)
+        } catch let err {
+            Logger.log("cant fetch conversation with id \(withId)")
+            Logger.log(err.localizedDescription)
+        }
+        return res?.first
+    }
+    
     func createConversation(with user: User, completion: @escaping (Conversation) -> Void) {
         DispatchQueue.global(qos: .background).async {
             let conv = Conversation.insertConversation(into: self.saveContext)

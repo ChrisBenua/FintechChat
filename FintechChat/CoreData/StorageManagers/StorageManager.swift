@@ -43,6 +43,8 @@ protocol IConversationStorageManager: IBaseStorageManager {
     func createConversation(with user: User, completion: @escaping (Conversation) -> Void)
     
     func updateConversationOnlineStatus(conversation: Conversation, isOnline: Bool)
+    
+    func fetchConversation(withId: String) -> Conversation?
 }
 
 protocol IMessageStorageManager: IBaseStorageManager {
@@ -139,7 +141,10 @@ class StorageManager: IStorageCoordinator {
     
     public func updateConversationOnlineStatus(conversation: Conversation, isOnline: Bool) {
         self.conversationManager.updateConversationOnlineStatus(conversation: conversation, isOnline: isOnline)
-        
+    }
+    
+    func fetchConversation(withId: String) -> Conversation? {
+        return self.conversationManager.fetchConversation(withId: withId)
     }
     
     public func markAsReadMessages(in conversation: Conversation) {
