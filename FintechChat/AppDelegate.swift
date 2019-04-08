@@ -30,7 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow()
         window?.makeKeyAndVisible()
-        let navController = CustomNavigationController(rootViewController: ConversationListViewController())
+        
+        let rootAssembly = RootAssembly()
+        
+        let navController = CustomNavigationController(rootViewController: rootAssembly.presentationAssembly.conversationListViewController())
         window?.rootViewController = navController
         
         
