@@ -7,12 +7,25 @@
 //
 
 import Foundation
+import MultipeerConnectivity
 
-protocol IConversationViewControllerModel: IMessageStorageManager, IConversationStorageManager {
+protocol IConversationViewControllerModel: IMessageStorageManager, IConversationStorageManager, OnUserDisconnectedDelegate {
     var communicator: ICommunicationManager { get }
+    
+    var dialogTitle: String { get }
+    
+    var connectedUserID: String { get }
 }
 
 class ConversationViewControllerModel: IConversationViewControllerModel {
+    var dialogTitle: String
+    
+    var connectedUserID: String
+    
+    func userDidDisconnected(stateDict: [String: MCSessionState]) {
+        self.disconnectService.userDidDisconnected(stateDict: stateDict)
+    }
+    
     func createConversation(with user: User, completion: @escaping (Conversation) -> Void) {
         self.storage.createConversation(with: user, completion: completion)
     }
@@ -37,8 +50,13 @@ class ConversationViewControllerModel: IConversationViewControllerModel {
     
     var storage: (IMessageStorageManager & IConversationStorageManager)
     
-    init(storage: (IMessageStorageManager & IConversationStorageManager), communicator: ICommunicationManager) {
+    var disconnectService: IOnDisconnectedService
+    
+    init(storage: (IMessageStorageManager & IConversationStorageManager), communicator: ICommunicationManager, disconnectService: IOnDisconnectedService, dialogTitle: String, connectedUserID: String) {
         self.storage = storage
         self.communicator = communicator
+        self.disconnectService = disconnectService
+        self.dialogTitle = dialogTitle
+        self.connectedUserID = connectedUserID
     }
 }

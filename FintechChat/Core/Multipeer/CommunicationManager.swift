@@ -44,7 +44,7 @@ class CommunicationManager: ICommunicationManager {
         self.contollerDataProvider?.didReceiveMessage(text: text, fromUser: fromUser, toUser: toUser)
     }
 
-    public static var shared: CommunicationManager!
+    //public static var shared: CommunicationManager!
 
     weak var contollerDataProvider: CommunicatorDelegate?
 

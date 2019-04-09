@@ -21,12 +21,10 @@ extension ConversationListViewController: UITableViewDelegate {
         //let dialogName = searchedConversations[indexPath.row].name!
         //let viewController = ConversationViewController(conversationListDataProvider: self.viewModel, conversation: self.conversationsDataSource.fetchedResultsController.object(at: indexPath))
         let conv = self.conversationsDataSource.fetchedResultsController.object(at: indexPath)
-        
-        let conversationVC = self.assembly.conversationController(with: conv)
-        
-        conversationVC.dialogTitle = (self.conversationsDataSource.fetchedResultsController.object(at: indexPath).participants)?.name ?? "Undefined"
+        let dialogTitle = (self.conversationsDataSource.fetchedResultsController.object(at: indexPath).participants)?.name ?? "Undefined"
+        let connectedUserID = (self.conversationsDataSource.fetchedResultsController.object(at: indexPath).participants)?.userId ?? "Undefined"
+        let conversationVC = self.assembly.conversationController(with: conv, dialogTitle: dialogTitle, connectedUserID: connectedUserID)
         //vc.connectedUserID = self.viewModel.getUserIdBy(username: dialogName)
-        conversationVC.connectedUserID = (self.conversationsDataSource.fetchedResultsController.object(at: indexPath).participants)?.userId ?? "Undefined"
         //viewController.conversation = self.conversationsDataSource.fetchedResultsController.object(at: indexPath)
         if searchController.isActive {
             self.searchController.dismiss(animated: true) { [weak self] in

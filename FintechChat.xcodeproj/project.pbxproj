@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA01FA08225C6973009F23F7 /* OnDisconnectedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA01FA07225C6973009F23F7 /* OnDisconnectedService.swift */; };
+		AA01FA0B225C79BB009F23F7 /* AppearanceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA01FA0A225C79BB009F23F7 /* AppearanceService.swift */; };
+		AA01FA0D225C8341009F23F7 /* AccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA01FA0C225C8341009F23F7 /* AccessoryView.swift */; };
+		AA01FA10225CCB05009F23F7 /* SavingProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA01FA0F225CCB05009F23F7 /* SavingProcessView.swift */; };
 		AA10D82A2256562A004BC482 /* MessageStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D8292256562A004BC482 /* MessageStoreManager.swift */; };
 		AA10D82C225657D7004BC482 /* ConversationStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D82B225657D7004BC482 /* ConversationStorageManager.swift */; };
 		AA10D82E22565880004BC482 /* UserStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D82D22565880004BC482 /* UserStorageManager.swift */; };
@@ -83,6 +87,10 @@
 /* Begin PBXFileReference section */
 		13883D2A11B981076B8E3E94 /* Pods-FintechChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FintechChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FintechChat/Pods-FintechChat.debug.xcconfig"; sourceTree = "<group>"; };
 		7A9B12E557956DFDFEEB59D0 /* Pods_FintechChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FintechChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA01FA07225C6973009F23F7 /* OnDisconnectedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDisconnectedService.swift; sourceTree = "<group>"; };
+		AA01FA0A225C79BB009F23F7 /* AppearanceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceService.swift; sourceTree = "<group>"; };
+		AA01FA0C225C8341009F23F7 /* AccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoryView.swift; sourceTree = "<group>"; };
+		AA01FA0F225CCB05009F23F7 /* SavingProcessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingProcessView.swift; sourceTree = "<group>"; };
 		AA10D8292256562A004BC482 /* MessageStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageStoreManager.swift; sourceTree = "<group>"; };
 		AA10D82B225657D7004BC482 /* ConversationStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStorageManager.swift; sourceTree = "<group>"; };
 		AA10D82D22565880004BC482 /* UserStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStorageManager.swift; sourceTree = "<group>"; };
@@ -250,8 +258,33 @@
 			isa = PBXGroup;
 			children = (
 				AAD73B7A221F2E180085512B /* MessageTableViewCell.swift */,
+				AA01FA0C225C8341009F23F7 /* AccessoryView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		AA01FA06225C6924009F23F7 /* ConversationServices */ = {
+			isa = PBXGroup;
+			children = (
+				AA01FA07225C6973009F23F7 /* OnDisconnectedService.swift */,
+			);
+			path = ConversationServices;
+			sourceTree = "<group>";
+		};
+		AA01FA09225C79A9009F23F7 /* AppearanceService */ = {
+			isa = PBXGroup;
+			children = (
+				AA01FA0A225C79BB009F23F7 /* AppearanceService.swift */,
+			);
+			path = AppearanceService;
+			sourceTree = "<group>";
+		};
+		AA01FA0E225CCADC009F23F7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA01FA0F225CCB05009F23F7 /* SavingProcessView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		AA10D8282256555D004BC482 /* StorageManagers */ = {
@@ -373,6 +406,7 @@
 		AAA23AAE221B0AB7001BC709 /* ProfileViewController */ = {
 			isa = PBXGroup;
 			children = (
+				AA01FA0E225CCADC009F23F7 /* Views */,
 				AA01FA01225BE1A1009F23F7 /* Model */,
 				AAF22771220BD16000AF5DFA /* ProfileViewController.swift */,
 				AAA23AAF221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift */,
@@ -384,6 +418,8 @@
 		AAB1EF6F225745E2000B1BC0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				AA01FA09225C79A9009F23F7 /* AppearanceService */,
+				AA01FA06225C6924009F23F7 /* ConversationServices */,
 				AAFB88172257B4AB00C1787B /* Assembly */,
 				AAB1EF7E225760E7000B1BC0 /* ThemeViewControllerService */,
 				AAB1EF7822574AEB000B1BC0 /* ProfileViewControllerServices */,
@@ -702,6 +738,7 @@
 				AA1E085F223B82FC00B56281 /* MessageIDGenerator.swift in Sources */,
 				AA77A8D8225BDB7F0053CF7F /* KeyboardObservers.swift in Sources */,
 				AAD462372232A7DD008BE8C0 /* UserDefaultsProfile.swift in Sources */,
+				AA01FA0D225C8341009F23F7 /* AccessoryView.swift in Sources */,
 				AAC53B54224554FC00151EA3 /* StorageManager.swift in Sources */,
 				AAFB88192257B4BA00C1787B /* ServiceAssembly.swift in Sources */,
 				AAD73B70221F072B0085512B /* ConversationCellModelHelper.swift in Sources */,
@@ -718,6 +755,8 @@
 				AAD73B7D221F3B880085512B /* ConversationMessageModelHelper.swift in Sources */,
 				AAA23AB0221B0AD8001BC709 /* ProfileVC+UIImagePickerDelegate.swift in Sources */,
 				AA1AB903222BE8170088E3D8 /* CustomNavigationController.swift in Sources */,
+				AA01FA10225CCB05009F23F7 /* SavingProcessView.swift in Sources */,
+				AA01FA08225C6973009F23F7 /* OnDisconnectedService.swift in Sources */,
 				AA10D839225691A2004BC482 /* MessagesDataProvider.swift in Sources */,
 				AAB1EF7A22575095000B1BC0 /* PhotoActionCoordinatorService.swift in Sources */,
 				AAF22778220BD16000AF5DFA /* FintechChat.xcdatamodeld in Sources */,
@@ -739,6 +778,7 @@
 				AA77A8D0225B82350053CF7F /* ThemeModel.swift in Sources */,
 				AAB1EF7722574A1F000B1BC0 /* SelectFromGalleryService.swift in Sources */,
 				AAC53B5022454F8900151EA3 /* CoreDataStack.swift in Sources */,
+				AA01FA0B225C79BB009F23F7 /* AppearanceService.swift in Sources */,
 				AA69B8B7222AF18A001B9694 /* ConversationList+ThemesViewControllerDelegate.swift in Sources */,
 				AA7E680D22395A900004ED94 /* TextViewWithDoneButton.swift in Sources */,
 				AA59A100224D083900FCE9A3 /* MessagesExtension.swift in Sources */,

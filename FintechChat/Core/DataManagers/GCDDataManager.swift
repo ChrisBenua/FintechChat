@@ -21,8 +21,7 @@ class DataManagersFilePaths {
 protocol UserProfileDataDriver: class {
     static var shared: UserProfileDataDriver { get set }
     
-    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> Void,
-                             onError: @escaping () -> Void)
+    func saveUserProfileInfo(state: UserProfileState, onComplete: @escaping () -> Void, onError: @escaping () -> Void)
     
     func getUserProfileInfo(onComplete: @escaping (UserProfileState) -> Void)
 }

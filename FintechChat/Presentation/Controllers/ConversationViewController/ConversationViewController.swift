@@ -17,7 +17,22 @@ protocol IScrollableViewController: class {
     var tableView: UITableView { get set }
 }
 
-class ConversationViewController: UIViewController, IScrollableViewController {
+protocol IDialogViewController {
+    var didLeaveDialog: Bool { get set }
+    
+    var connectedUserID: String { get set }
+}
+
+protocol ISubmittableViewController {
+    func toggleEditingButton(_ isEnabled: Bool)
+
+}
+
+class ConversationViewController: UIViewController, IScrollableViewController, ISubmittableViewController, IDialogViewController {
+    func toggleEditingButton(_ isEnabled: Bool) {
+        self.myAccessoryView.toggleEditingButton(isEnabled)
+    }
+    
     
     var conversation: Conversation
     
@@ -25,7 +40,7 @@ class ConversationViewController: UIViewController, IScrollableViewController {
     
     private var shouldScrollToLast: Bool! = true
     
-    private var didLeaveDialog: Bool = false
+    var didLeaveDialog: Bool = false
     
     private let accessoryViewHeight: CGFloat = 65
     
@@ -40,6 +55,7 @@ class ConversationViewController: UIViewController, IScrollableViewController {
     
     func scrollToBottom(animated: Bool = false) {
         DispatchQueue.main.async {
+            //self.tableView.numberOfRows(inSection: 0)
             let indexPath = IndexPath(row: (self.messagesDataSource.fetchedResultsController.fetchedObjects?.count ?? 0) - 1, section: 0)
             if indexPath.row >= 0 {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
@@ -48,13 +64,13 @@ class ConversationViewController: UIViewController, IScrollableViewController {
         }
     }
     
-    var dialogTitle: String! {
+    var dialogTitle: String {
         didSet {
             self.navigationItem.title = dialogTitle
         }
     }
     
-    var connectedUserID: String! {
+    var connectedUserID: String {
         didSet {
             self.model.communicator.communicator.connectWithUser(username: connectedUserID)
         //CommunicationManager.shared.communicator.connectWithUser(username: connectedUserID)
@@ -84,11 +100,15 @@ class ConversationViewController: UIViewController, IScrollableViewController {
         self.conversation = model.fetchConversation(withId: conversation.conversationId!)!//force unwrap for debug
         self.conversationListDataProvider = conversationListDataProvider
         self.assembly = assembly
+        self.dialogTitle = model.dialogTitle
+        self.connectedUserID = model.connectedUserID
 
         super.init(nibName: nil, bundle: nil)
         self.messagesFRCDelegate = MessagesFRCDelegate(viewController: self)
         self.tableView.dataSource = self.messagesDataSource
         self.messagesDataSource.fetchedResultsController.delegate = self.messagesFRCDelegate
+        self.navigationItem.title = self.dialogTitle
+        self.model.communicator.communicator.connectWithUser(username: connectedUserID)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -108,7 +128,8 @@ class ConversationViewController: UIViewController, IScrollableViewController {
         self.view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         self.messagesDataSource.performFetch()
-
+        self.myAccessoryView.setTextFieldDelegate(delegate: self)
+        self.myAccessoryView.setup(communicator: self.model.communicator, connectedUserID: self.connectedUserID, target: self, selector: #selector(submitButtonOnClick), event: .touchUpInside)
         //fillData()
     }
     
@@ -125,7 +146,7 @@ class ConversationViewController: UIViewController, IScrollableViewController {
         super.viewDidAppear(animated)
     }
     
-    lazy var messageTextField: UITextField = {
+    /*lazy var messageTextField: UITextField = {
         let tfield = UITextField()
         tfield.placeholder = "   Enter comment"
         
@@ -175,12 +196,13 @@ class ConversationViewController: UIViewController, IScrollableViewController {
         messageTextField.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: container.bottomAnchor, right: submitButton.leftAnchor, paddingTop: 1, paddingLeft: 12, paddingBottom: 10, paddingRight: 4, width: 0, height: 0)
         return container
         
-    }()
+    }()*/
     
+    lazy var myAccessoryView: IConversationAccessoryView = ConversationAccessoryView()
     
     override var inputAccessoryView: UIView? {
         get {
-            return containerView
+            return self.myAccessoryView
         }
     }
     
@@ -189,7 +211,7 @@ class ConversationViewController: UIViewController, IScrollableViewController {
     }
     
     @objc func submitButtonOnClick() {
-        let text = messageTextField.text!
+        let text = self.myAccessoryView.currentText() ?? ""
         if text.count != 0 {
             model.communicator.communicator.sendMessage(message: text, to: connectedUserID) { [weak self] (suc, err) in
                 
@@ -203,7 +225,7 @@ class ConversationViewController: UIViewController, IScrollableViewController {
                 }
             }
             
-            messageTextField.text = ""
+            self.myAccessoryView.afterSend()
         }
     }
     
@@ -220,21 +242,6 @@ extension ConversationViewController: UpdateConversationControllerDelegate {
         
         self.present(alertController, animated: true, completion: nil)
     }
-    
-    func updateConversation() {
-        //self.messages = self.conversationListDataProvider.getConversationCellData(name: connectedUserID)
-        /*DispatchQueue.main.async {
-            let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
-            if (indexPath.row >= 0) {
-                self.tableView.insertRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-            }
-            //self.toggleTableView()
-            self.markMessagesAsRead()
-            self.scrollToBottom()
-        }
-       */
-    }
-    
     
 }
 
@@ -253,29 +260,7 @@ protocol OnUserDisconnectedDelegate: class {
 
 extension ConversationViewController: OnUserDisconnectedDelegate {
     func userDidDisconnected(stateDict: [String: MCSessionState]) {
-        let state = stateDict[self.connectedUserID]
-        if let state = state {
-            DispatchQueue.main.async { [weak self] in
-                
-                if state == .connected {
-                    self?.submitButton.isEnabled = true
-                } else if self != nil && !self!.didLeaveDialog {
-                    
-                    if state == .notConnected {
-                        self!.submitButton.isEnabled = false
-                        let alertController = UIAlertController(title: "Alert", message: "This peer disconnected from you", preferredStyle: .alert)
-                        alertController.addAction(UIAlertAction.okAction)
-                        alertController.addAction(UIAlertAction(title: "Leave dialog", style: .destructive, handler: { [weak self] (_) in
-                            self!.navigationController?.popViewController(animated: true)
-                        }))
-                        self!.present(alertController, animated: true, completion: nil)
-                    } else if state == .connected {
-                        self!.submitButton.isEnabled = true
-                    }
-                }
-            }
-            
-        }
+        self.model.userDidDisconnected(stateDict: stateDict)
     }
 }
 

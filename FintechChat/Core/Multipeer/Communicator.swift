@@ -131,11 +131,6 @@ class MultipeerCommunicator: NSObject, Communicator {
         
     }
     
-    /*deinit {
-        self.advertiser.stopAdvertisingPeer()
-        self.browser.stopBrowsingForPeers()
-    }*/
-    
     init(username: String) {
         online = true
         

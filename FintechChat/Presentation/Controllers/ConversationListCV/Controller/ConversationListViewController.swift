@@ -57,7 +57,6 @@ class ConversationListViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.updateConversation()
         self.tableView.reloadData()
     }
     
@@ -76,8 +75,6 @@ class ConversationListViewController: UIViewController {
         
         (self.navigationController as? CustomNavigationController)?.themeDelegate = self
         
-        self.changeAppearance()
-        
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Theme", style: .plain, target: self, action: #selector(themesButtonOnClick))
         
         self.view.addSubview(tableView)
@@ -87,6 +84,7 @@ class ConversationListViewController: UIViewController {
         setUpSearchBar()
         self.conversationsDataSource.performFetch()
         self.tableView.reloadData()
+        self.model.changeAppearance(navigationController: self.navigationController)
     }
     
     @objc func themesButtonOnClick(_ sender: Any) {
@@ -94,11 +92,6 @@ class ConversationListViewController: UIViewController {
         let thVC = self.assembly.themesViewController { (color) in
             self.logThemeChanging(selectedTheme: color)
         }
-        //let themesVC = ThemesViewController(themesService: ThemeViewControllerService()) { (color) in
-        //self.logThemeChanging(selectedTheme: color)
-        //}
-        //themesVC.setDelegate(self)
-                
         self.present(thVC, animated: true, completion: nil)
     }
     
@@ -111,13 +104,6 @@ class ConversationListViewController: UIViewController {
 }
 
 extension ConversationListViewController: UpdateConversationControllerDelegate {
-    func updateConversation() {
-        //searchedConversations = self.viewModel.allConversationListCellData()
-        DispatchQueue.main.async {
-            //self.tableView.reloadData()
-        }
-    }
-    
     func onError(error: Error) {
         let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alertController.addAction(UIAlertAction.okAction)

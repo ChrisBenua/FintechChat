@@ -11,7 +11,6 @@ import CoreData
 
 
 protocol UpdateConversationControllerDelegate: class {
-    func updateConversation()
     func onError(error: Error)
 }
 

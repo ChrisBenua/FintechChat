@@ -11,7 +11,7 @@ import Foundation
 protocol IPresentationAssembly {
     func themesViewController(completionHandler: @escaping (UIColor) -> Void) -> ThemesViewController
     
-    func conversationController(with conversation: Conversation) -> ConversationViewController
+    func conversationController(with conversation: Conversation, dialogTitle: String, connectedUserID: String) -> ConversationViewController
     
     func conversationListViewController() -> ConversationListViewController
     
@@ -44,13 +44,17 @@ class PresentationAssembly: IPresentationAssembly {
         return ThemesViewController(themesService: ThemeModel(service: ThemeViewControllerService()), completionHandler: completionHandler)
     }
     
-    func conversationController(with conversation: Conversation) -> ConversationViewController {
-        let convViewControllerModel = ConversationViewControllerModel(storage: self.serviceAssembly.storageCoordinator, communicator: self.serviceAssembly.communicator)
-        return ConversationViewController(conversationListDataProvider: self.conversationDataProvider, conversation: conversation, model: convViewControllerModel, assembly: self)
+    func conversationController(with conversation: Conversation, dialogTitle: String, connectedUserID: String) -> ConversationViewController {
+        let discService = OnDisconnectedService()
+        let convViewControllerModel = ConversationViewControllerModel(storage: self.serviceAssembly.storageCoordinator, communicator: self.serviceAssembly.communicator, disconnectService: discService, dialogTitle: dialogTitle, connectedUserID: connectedUserID)
+        let vc = ConversationViewController(conversationListDataProvider: self.conversationDataProvider, conversation: conversation, model: convViewControllerModel, assembly: self)
+        discService.viewController = vc
+        
+        return vc
     }
     
     func conversationListViewController() -> ConversationListViewController {
-        self.conversationListModel = ConversationListModel(storage: self.serviceAssembly.storageCoordinator, communicator: self.serviceAssembly.communicator)
+        self.conversationListModel = ConversationListModel(storage: self.serviceAssembly.storageCoordinator, communicator: self.serviceAssembly.communicator, appearanceService: AppearanceService())
         self.conversationDataProvider = ConversationListDataProvider(model: ConversationListDataProviderModel(storageManager: self.serviceAssembly.storageCoordinator, communicator: self.serviceAssembly.communicator))
         self.conversationDataSource = ConversationDataSource(viewModel: self.conversationDataProvider)
         return ConversationListViewController(viewModel: self.conversationDataProvider, model: self.conversationListModel, assembly: self, conversationDataSource: self.conversationDataSource)

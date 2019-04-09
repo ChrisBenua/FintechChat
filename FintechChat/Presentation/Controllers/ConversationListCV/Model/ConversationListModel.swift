@@ -9,11 +9,15 @@
 import Foundation
 import CoreData
 
-protocol IConversationListModel: IUserProfileStorageManager {
+protocol IConversationListModel: IUserProfileStorageManager, IAppearanceChanging {
     var communicator: CommunicatorDelegate { get }
 }
 
 class ConversationListModel: IConversationListModel {
+    func changeAppearance(navigationController: UINavigationController?) {
+        self.appearanceService.changeAppearance(navigationController: navigationController)
+    }
+    
     
     func getUserProfileStateSync() -> UserProfileState {
         return self.storageCoordinator.getUserProfileStateSync()
@@ -29,11 +33,14 @@ class ConversationListModel: IConversationListModel {
     
     private var storageCoordinator: IStorageCoordinator
     
+    private var appearanceService: IAppearanceService
+    
     var communicator: CommunicatorDelegate
         
-    init(storage: IStorageCoordinator, communicator: CommunicatorDelegate) {
+    init(storage: IStorageCoordinator, communicator: CommunicatorDelegate, appearanceService: IAppearanceService) {
         self.storageCoordinator = storage
         self.communicator = communicator
+        self.appearanceService = appearanceService
     }
     
 }

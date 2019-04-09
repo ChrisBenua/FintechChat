@@ -29,16 +29,7 @@ class ProfileViewController: UIViewController {
     private var profileModel: IProfileModel!
     
     var assembly: IPresentationAssembly!
-    
-    let savingLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Saving..."
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
 
-    
     private func styleButton(button: UIButton, cornerRadius: CGFloat = 10, borderColor: CGColor = UIColor.black.cgColor, borderWidth: CGFloat = 0.8) {
         
         button.layer.cornerRadius = cornerRadius
@@ -61,30 +52,8 @@ class ProfileViewController: UIViewController {
         return button
     }()
     
-    lazy var activityIndicator = UIActivityIndicatorView(style: .gray)
     
-    lazy var savingProcessView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.lightGray
-        view.alpha = 0.7
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 10
-        view.addSubview(activityIndicator)
-        view.addSubview(savingLabel)
-
-        
-        savingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        savingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 4).isActive = true
-        
-        //label.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        view.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        
-        return view
-    }()
+    lazy var savingProcessView: ISavingProcessView = SavingProcessView()
     
     required init?(coder aDecoder: NSCoder) {
         //fatalError("Not implemented init from coder")
@@ -174,7 +143,6 @@ class ProfileViewController: UIViewController {
     
     @objc func editButtonOnClick(_ sender: Any) {
         self.changeEditingMode(true)
-        
     }
     
     @objc func saveButtonOnClick(_ sender: Any?) {
@@ -240,14 +208,12 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    
     private func constructUserProfileInfo() -> UserProfileState {
         return UserProfileState(username: nameTextField.text, profileImage: profilePhotoImageView.image, detailInfo: detailInfoTextField.text)
     }
     
     func toggleEditingButtons(_ enable: Bool) {
         self.tapGestureRecognizer.isEnabled = enable
-        
         self.saveButton.isEnabled = enable
     }
     
@@ -280,7 +246,6 @@ extension ProfileViewController {
     class func `init`(profileModel: IProfileModel, assembly: IPresentationAssembly) -> ProfileViewController {
         let profileVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ProfileVC") as? ProfileViewController
         profileVC?.profileModel = profileModel
-        
         profileVC?.assembly = assembly
         return profileVC!
     }
@@ -289,18 +254,11 @@ extension ProfileViewController {
 // MARK: ActivityIndicator
 extension ProfileViewController {
     func showSavingProccessView() {
-        self.view.addSubview(self.savingProcessView)
-        self.activityIndicator.startAnimating()
-        savingProcessView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        savingProcessView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        savingProcessView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.13).isActive = true
-        savingProcessView.widthAnchor.constraint(equalTo: self.savingProcessView.heightAnchor, multiplier: 1).isActive = true
-
+        self.savingProcessView.showSavingProcessView(sourceView: self)
     }
     
     func dismissSavingProcessView() {
-        self.activityIndicator.stopAnimating()
-        self.savingProcessView.removeFromSuperview()
+        self.savingProcessView.dismissSavingProcessView()
     }
 }
 
@@ -321,9 +279,6 @@ extension ProfileViewController {
                     self?.saveButton.alpha = 1
                     }, completion: nil)
             })
-            
-            
-            
         } else {
             UIView.animate(withDuration: 0.5, animations: { [weak self] in
                 self?.saveButton.alpha = 0
