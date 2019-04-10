@@ -25,6 +25,7 @@ class ProfileViewController: UIViewController {
     var lastFirstResponderFrame: CGRect?
     public static let maxNameLen = 33
     
+    var editingAdapter: EditingAdapter = EditingAdapter()
     
     private var profileModel: IProfileModel!
     
@@ -83,9 +84,7 @@ class ProfileViewController: UIViewController {
         styleButton(button: editProfileButton)
         editProfileButton.addTarget(self, action: #selector(editButtonOnClick), for: .touchUpInside)
         
-        //detailInfoTextField.text = "Люблю программировать под iOS\nИзучать новые технологии\nЛюблю математику"
         nameTextField.isUserInteractionEnabled = false
-        
     }
     
     fileprivate func placeEditingButtons() {
@@ -117,6 +116,10 @@ class ProfileViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         Logger.log(editProfileButton.frame.debugDescription)
         self.setupUI()
+        
+        self.editingAdapter.addButtons(defaultButtons: [editProfileButton], invertedButtons: [saveButton])
+        self.editingAdapter.addGestures(defaultGestures: [self.tapGestureRecognizer], invertedGestures: [])
+        self.editingAdapter.addTextFields(defaultsTextFields: [self.nameTextField, self.detailInfoTextField], invertedTextFields: [])
         //self.FetchProfileInfo(shared: GCDDataManager.shared)
         self.fetchProfileInfoCoreData()
         self.setupTextChangedHandlers()
@@ -138,7 +141,6 @@ class ProfileViewController: UIViewController {
     @objc func handleTapOnLogo(_ sender: UITapGestureRecognizer) {
         Logger.log("Выбери изображение профиля")
         self.present(self.profileModel.logoAlertController(sourceView: self), animated: true)
-        
     }
     
     @objc func editButtonOnClick(_ sender: Any) {
@@ -147,39 +149,17 @@ class ProfileViewController: UIViewController {
     
     @objc func saveButtonOnClick(_ sender: Any?) {
         showSavingProccessView()
-        self.toggleEditingButtons(false)
+        //self.toggleEditingButtons(false)
+        self.editingAdapter.toggleEditing(isEditing: false)
         
         self.profileModel.saveUserProfileState(profileState: self.constructUserProfileInfo(), completion: { [weak self] in
             self?.profileModel.getUserProfileState(from: nil, completion: { profileState in
                 DispatchQueue.main.async {
                     self?.updateUIAfterFetch(state: profileState, showAlert: true)
                     self?.profileModel.communicator.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
-                    //CommunicationManager.shared.communicator.reinitAdvertiser(newUserName: self!.nameTextField.text!)
                 }
-                
             })
-            
-            //self?.toggleEditingInputFields(false)
-            }, in: nil)
-        
-    }
-    
-    private func profileStateWithoutSameFieldsInProfile() -> UserProfileState {
-        var currentUserProfileInfo = constructUserProfileInfo()
-        
-        if currentUserProfileInfo.detailInfo == lastState.detailInfo {
-            currentUserProfileInfo.detailInfo = nil
-        }
-        
-        if currentUserProfileInfo.username == lastState.username {
-            currentUserProfileInfo.username = nil
-        }
-        
-        if currentUserProfileInfo.profileImage == lastState.profileImage {
-            currentUserProfileInfo.profileImage = nil
-        }
-        
-        return currentUserProfileInfo
+        }, in: nil)
     }
     
     private func fetchProfileInfo(showAlert: Bool = false, shared: UserProfileDataDriver) {
@@ -210,17 +190,6 @@ class ProfileViewController: UIViewController {
     
     private func constructUserProfileInfo() -> UserProfileState {
         return UserProfileState(username: nameTextField.text, profileImage: profilePhotoImageView.image, detailInfo: detailInfoTextField.text)
-    }
-    
-    func toggleEditingButtons(_ enable: Bool) {
-        self.tapGestureRecognizer.isEnabled = enable
-        self.saveButton.isEnabled = enable
-    }
-    
-    private func toggleEditingInputFields(_ enable: Bool) {
-        self.nameTextField.isUserInteractionEnabled = enable
-        self.detailInfoTextField.isUserInteractionEnabled = enable
-        self.detailInfoTextField.isEditable = enable
     }
     
     override func viewWillLayoutSubviews() {
@@ -263,17 +232,20 @@ extension ProfileViewController {
 }
 
 // MARK: EditingButtons
+/*
+ invButtons: saveButton
+ defaultButton: editButton
+ defClosures: toggleEditing
+ defGesture: tapGestureREcongzer
+ */
 extension ProfileViewController {
     func changeEditingMode(_ isEditing: Bool) {
         if isEditing {
             UIView.animate(withDuration: 0.5, animations: { [weak self] in
                 self?.editProfileButton.alpha = 0
             }, completion: { [weak self] (_) in
-                self?.saveButton.isHidden = false
-                self?.editProfileButton.isHidden = true
-                self?.toggleEditingInputFields(true)
-                self?.tapGestureRecognizer.isEnabled = true
-
+                
+                self?.editingAdapter.toggleEditing(isEditing: true)
                 
                 UIView.animate(withDuration: 0.5, animations: { [weak self] in
                     self?.saveButton.alpha = 1
@@ -283,14 +255,14 @@ extension ProfileViewController {
             UIView.animate(withDuration: 0.5, animations: { [weak self] in
                 self?.saveButton.alpha = 0
             }, completion: { [weak self] (_) in
-                self?.saveButton.isHidden = true
-                self?.editProfileButton.isHidden = false
-                self?.tapGestureRecognizer.isEnabled = false
+                
+                self?.editingAdapter.toggleEditing(isEditing: false)
                 
                 UIView.animate(withDuration: 0.5) { [weak self] in
                     self?.editProfileButton.alpha = 1
                 }
-                self?.toggleEditingInputFields(false)
+                self?.saveButton.isEnabled = false
+                //self?.editingAdapter.toggleEditingInputFields(isEditing: false)
             })
             
         }
@@ -336,7 +308,8 @@ extension ProfileViewController {
         if textField.text!.count > ProfileViewController.maxNameLen {
             textField.text = String(textField.text!.prefix(ProfileViewController.maxNameLen))
         }
-        self.toggleEditingButtons(true)
+        self.editingAdapter.toggleEditingButtons(isEditing: true)
+        //self.toggleEditingButtons(true)
     }
 }
 

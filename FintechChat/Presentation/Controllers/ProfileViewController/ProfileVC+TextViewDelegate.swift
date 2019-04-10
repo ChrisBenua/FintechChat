@@ -17,7 +17,8 @@ extension ProfileViewController: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        self.toggleEditingButtons(true)
+        self.editingAdapter.toggleEditingButtons(isEditing: true)
+        //self.toggleEditingButtons(true)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

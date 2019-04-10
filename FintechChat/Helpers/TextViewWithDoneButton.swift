@@ -17,6 +17,7 @@ class TextViewWithDoneButton: UITextView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         addDoneButtonToKeyboard()
+        self.isEditable = true
     }
     
     fileprivate func addDoneButtonToKeyboard() {

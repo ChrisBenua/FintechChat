@@ -17,6 +17,7 @@ protocol ISavingProcessView: UIView {
 
 class SavingProcessView: UIView, ISavingProcessView {
     func dismissSavingProcessView() {
+        self.activityIndicator.stopAnimating()
         self.removeFromSuperview()
     }
     

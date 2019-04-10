@@ -19,6 +19,7 @@
 		AA10D83622568BDD004BC482 /* ConversationFRCDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D83522568BDD004BC482 /* ConversationFRCDelegate.swift */; };
 		AA10D839225691A2004BC482 /* MessagesDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D838225691A2004BC482 /* MessagesDataProvider.swift */; };
 		AA10D83C225697A3004BC482 /* MessagesFRCDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA10D83B225697A3004BC482 /* MessagesFRCDelegate.swift */; };
+		AA177666225DC216008BC5DE /* EditingAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA177665225DC216008BC5DE /* EditingAdapter.swift */; };
 		AA1AB901222BDF530088E3D8 /* UserDefaultsTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1AB900222BDF530088E3D8 /* UserDefaultsTheme.swift */; };
 		AA1AB903222BE8170088E3D8 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1AB902222BE8170088E3D8 /* CustomNavigationController.swift */; };
 		AA1E085A223B80B200B56281 /* Communicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1E0859223B80B200B56281 /* Communicator.swift */; };
@@ -99,6 +100,7 @@
 		AA10D83522568BDD004BC482 /* ConversationFRCDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationFRCDelegate.swift; sourceTree = "<group>"; };
 		AA10D838225691A2004BC482 /* MessagesDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesDataProvider.swift; sourceTree = "<group>"; };
 		AA10D83B225697A3004BC482 /* MessagesFRCDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesFRCDelegate.swift; sourceTree = "<group>"; };
+		AA177665225DC216008BC5DE /* EditingAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingAdapter.swift; sourceTree = "<group>"; };
 		AA1AB900222BDF530088E3D8 /* UserDefaultsTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsTheme.swift; sourceTree = "<group>"; };
 		AA1AB902222BE8170088E3D8 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
 		AA1AB904222BF6490088E3D8 /* ThemesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemesViewController.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				AA77A8CD225B7F760053CF7F /* ProfileModel.swift */,
+				AA177665225DC216008BC5DE /* EditingAdapter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -763,6 +766,7 @@
 				AAE5D603223EA00A0057421E /* ConversationListDataProvider.swift in Sources */,
 				AA912040222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift in Sources */,
 				AAD73B7B221F2E180085512B /* MessageTableViewCell.swift in Sources */,
+				AA177666225DC216008BC5DE /* EditingAdapter.swift in Sources */,
 				AAD73B67221EF6870085512B /* ConversationListViewController.swift in Sources */,
 				AA10D83622568BDD004BC482 /* ConversationFRCDelegate.swift in Sources */,
 				AA10D8302256599A004BC482 /* UserProfileStorageManager.swift in Sources */,

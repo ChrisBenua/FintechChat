@@ -58,7 +58,6 @@ class ConversationDataSource: NSObject, IConversationTableViewDataSource {
     init(viewModel: IConversationDataProvider) {
         self.viewModel = viewModel
         self.fetchedResultsController = self.viewModel.generateConversationListFRC()
-        
     }
     
     func performFetch() {
