@@ -11,6 +11,9 @@ import AVFoundation
 
 protocol IPhotoActionCoordinatorSerice {
     func logoAlertController(sourceView: (UIViewController & UIImagePickerControllerDelegate & UINavigationControllerDelegate)) -> UIAlertController
+    
+    var presentationAssembly: IPresentationAssembly! { get set }
+
 }
 
 class PhotoActionCoordinatorService: IPhotoActionCoordinatorSerice {
@@ -28,6 +31,19 @@ class PhotoActionCoordinatorService: IPhotoActionCoordinatorSerice {
         
         pickImageAlertController.addAction(selectFromGalleryAction)
         pickImageAlertController.addAction(takePhotoAction)
+        
+        if let sView = sourceView as? IPassSelectedItemDelegate {
+            let selectFromWebAction = UIAlertAction(title: "Загрузить", style: .default) { (_) in
+                let rootVC = self.presentationAssembly.selectImageFromWebController()
+                rootVC.delegate = sView
+                let viewController = CustomNavigationController(rootViewController: rootVC)
+                
+                sourceView.present(viewController, animated: true)
+            }
+            
+            pickImageAlertController.addAction(selectFromWebAction)
+        }
+
         pickImageAlertController.addAction(cancelAction)
         
         return pickImageAlertController
@@ -41,11 +57,14 @@ class PhotoActionCoordinatorService: IPhotoActionCoordinatorSerice {
     
     private var photoActionService: IPhotoActionService
     
+    var presentationAssembly: IPresentationAssembly!
+    
     init(imageService: IImagePickerService, cameraService: ICameraAccessService, galleryService: ISelectFromGalleryService, photoActionService: IPhotoActionService) {
         self.imagePickerService = imageService
         self.cameraAccessService = cameraService
         self.selectFromGalleryService = galleryService
         self.photoActionService = photoActionService
+        //self.presentationAssembly = presentationAssembly
     }
     
 }

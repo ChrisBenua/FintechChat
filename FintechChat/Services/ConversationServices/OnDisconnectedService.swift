@@ -44,8 +44,8 @@ class OnDisconnectedService: IOnDisconnectedService {
     
     var viewController: (UIViewController & ISubmittableViewController & IDialogViewController)!
     
-    init(vc: (UIViewController & ISubmittableViewController & IDialogViewController)) {
-        self.viewController = vc
+    init(viewController: (UIViewController & ISubmittableViewController & IDialogViewController)) {
+        self.viewController = viewController
     }
     
     init() {

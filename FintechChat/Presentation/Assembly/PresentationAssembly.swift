@@ -20,9 +20,25 @@ protocol IPresentationAssembly {
     func setCommunicatorDelegate(delegate: CommunicatorDelegate)
 
     func setOnDisconnectDelegate(delegate: OnUserDisconnectedDelegate)
+    
+    func selectImageFromWebController() -> SelectImageFromWebViewController
 }
 
 class PresentationAssembly: IPresentationAssembly {
+    
+    func selectImageFromWebController() -> SelectImageFromWebViewController {
+        let itemsLoader = self.serviceAssembly.generateNewItemsLoader()
+        let dataSource = WebImageDataSource<WebItemCollectionViewCell>()
+        itemsLoader.delegate = dataSource
+        let layout = SelectImageFromWebFlowLayout(spacing: 5)
+        layout.dataSource = dataSource
+        let model = SelectImageFromWebModel(imageService: self.serviceAssembly.imageLoaderService, itemsService: itemsLoader, dataSource: dataSource, layout: layout)
+        let viewController = SelectImageFromWebViewController(model: model, cellClass: WebItemCollectionViewCell.self)
+        dataSource.onDequeudCellDelegate = model
+        model.hasSelectedItemDelegate = viewController
+        itemsLoader.loadingDelegate = viewController
+        return viewController
+    }
     
     var conversationListModel: IConversationListModel!
     
@@ -47,10 +63,10 @@ class PresentationAssembly: IPresentationAssembly {
     func conversationController(with conversation: Conversation, dialogTitle: String, connectedUserID: String) -> ConversationViewController {
         let discService = OnDisconnectedService()
         let convViewControllerModel = ConversationViewControllerModel(storage: self.serviceAssembly.storageCoordinator, communicator: self.serviceAssembly.communicator, disconnectService: discService, dialogTitle: dialogTitle, connectedUserID: connectedUserID)
-        let vc = ConversationViewController(conversationListDataProvider: self.conversationDataProvider, conversation: conversation, model: convViewControllerModel, assembly: self)
-        discService.viewController = vc
+        let viewController = ConversationViewController(conversationListDataProvider: self.conversationDataProvider, conversation: conversation, model: convViewControllerModel, assembly: self)
+        discService.viewController = viewController
         
-        return vc
+        return viewController
     }
     
     func conversationListViewController() -> ConversationListViewController {
@@ -61,7 +77,9 @@ class PresentationAssembly: IPresentationAssembly {
     }
     
     func profileViewController() -> ProfileViewController {
-        return ProfileViewController.init(profileModel: ProfileModel(imagePicker: self.serviceAssembly.imagePickerService, cameraService: self.serviceAssembly.cameraAccessService, photoService: self.serviceAssembly.photoActionService, galleryService: self.serviceAssembly.selectFromGalleryService, retryService: self.serviceAssembly.retryAlertService, storage: self.serviceAssembly.storageCoordinator, photoActionCoordinator: self.serviceAssembly.photoActionCoordinator, communicator: self.serviceAssembly.communicator), assembly: self)
+        var coordinator = self.serviceAssembly.photoActionCoordinator
+        coordinator.presentationAssembly = self
+        return ProfileViewController.init(profileModel: ProfileModel(imagePicker: self.serviceAssembly.imagePickerService, cameraService: self.serviceAssembly.cameraAccessService, photoService: self.serviceAssembly.photoActionService, galleryService: self.serviceAssembly.selectFromGalleryService, retryService: self.serviceAssembly.retryAlertService, storage: self.serviceAssembly.storageCoordinator, photoActionCoordinator: coordinator, communicator: self.serviceAssembly.communicator, imageDownloadingService: ImageDownloadingService()), assembly: self)
     }
     
     init(serviceAssembly: IServiceAssembly) {

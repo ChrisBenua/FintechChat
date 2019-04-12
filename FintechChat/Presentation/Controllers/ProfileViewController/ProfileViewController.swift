@@ -220,6 +220,24 @@ extension ProfileViewController {
     }
 }
 
+
+// MARK: - IPassSelectedItemDelegate
+extension ProfileViewController: IPassSelectedItemDelegate {
+    func userDidSelect(item: IPixabyImageInfo?) {
+        self.profileModel.downloadImageFor(item: item) { (image) in
+            DispatchQueue.main.async {
+                self.profilePhotoImageView.image = image
+                self.editingAdapter.toggleEditingButtons(isEditing: true)
+            }
+        }
+    }
+    
+    func passLowResolutionImage(image: UIImage?) {
+        self.profilePhotoImageView.image = image
+    }
+}
+
+
 // MARK: ActivityIndicator
 extension ProfileViewController {
     func showSavingProccessView() {

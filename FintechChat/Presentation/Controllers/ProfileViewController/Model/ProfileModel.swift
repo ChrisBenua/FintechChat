@@ -22,9 +22,23 @@ protocol IProfileModel: IImagePickerService, ICameraAccessService, IPhotoActionS
     var retryAlertService: IRetryAlertControllerService { get set }
     
     var communicator: ICommunicationManager { get }
+    
+    var imageDownloadingService: IImageDownloadingService { get }
+    
+    func downloadImageFor(item: IPixabyImageInfo?, completion: @escaping (UIImage?) -> Void)
 }
 
 class ProfileModel: IProfileModel {
+    var imageDownloadingService: IImageDownloadingService
+    
+    var presentationAssembly: IPresentationAssembly!
+    
+    func downloadImageFor(item: IPixabyImageInfo?, completion: @escaping (UIImage?) -> Void) {
+        if let url = item?.fullImageUrl {
+            self.imageDownloadingService.downloadImage(forUrl: url, completion: completion)
+        }
+    }
+    
     func getDefaultImagePicker(delegate: (UIImagePickerControllerDelegate & UINavigationControllerDelegate)) -> UIImagePickerController {
         return self.imagePickerService.getDefaultImagePicker(delegate: delegate)
     }
@@ -65,7 +79,7 @@ class ProfileModel: IProfileModel {
     
     private var storage: IUserProfileStorageManager
     
-    init(imagePicker: IImagePickerService, cameraService: ICameraAccessService, photoService: IPhotoActionService, galleryService: ISelectFromGalleryService, retryService: IRetryAlertControllerService, storage: IUserProfileStorageManager, photoActionCoordinator: IPhotoActionCoordinatorSerice, communicator: ICommunicationManager) {
+    init(imagePicker: IImagePickerService, cameraService: ICameraAccessService, photoService: IPhotoActionService, galleryService: ISelectFromGalleryService, retryService: IRetryAlertControllerService, storage: IUserProfileStorageManager, photoActionCoordinator: IPhotoActionCoordinatorSerice, communicator: ICommunicationManager, imageDownloadingService: IImageDownloadingService) {
         self.imagePickerService = imagePicker
         self.cameraAccessService = cameraService
         self.photoActionService = photoService
@@ -74,6 +88,7 @@ class ProfileModel: IProfileModel {
         self.storage = storage
         self.photoActionCoordinator = photoActionCoordinator
         self.communicator = communicator
+        self.imageDownloadingService = imageDownloadingService
     }
     
     func saveUserProfileState(profileState: UserProfileState, completion: (() -> Void)?, in context: NSManagedObjectContext?) {

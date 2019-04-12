@@ -28,9 +28,20 @@ protocol IServiceAssembly: IMessageStorageManager, IConversationStorageManager, 
     var storageCoordinator: IStorageCoordinator { get }
     
     var communicator: ICommunicationManager { get set }
+    
+    var imageLoaderService: IImageDownloadingService { get set }
+    
+    func generateNewItemsLoader() -> ISelectWebImageService
 }
 
 class ServiceAssembly: IServiceAssembly {
+    func generateNewItemsLoader() -> ISelectWebImageService {
+        return SelectWebImageService(state: PaginatingState())
+    }
+    
+    
+    lazy var imageLoaderService: IImageDownloadingService = ImageDownloadingService()
+    
     
     var communicator: ICommunicationManager
     
