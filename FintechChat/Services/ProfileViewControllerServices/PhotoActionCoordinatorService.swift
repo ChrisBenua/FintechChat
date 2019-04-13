@@ -32,10 +32,10 @@ class PhotoActionCoordinatorService: IPhotoActionCoordinatorSerice {
         pickImageAlertController.addAction(selectFromGalleryAction)
         pickImageAlertController.addAction(takePhotoAction)
         
-        if let sView = sourceView as? IPassSelectedItemDelegate {
+        if let sViewModel = (sourceView as? IProfileViewController)?.profileModel {
             let selectFromWebAction = UIAlertAction(title: "Загрузить", style: .default) { (_) in
                 let rootVC = self.presentationAssembly.selectImageFromWebController()
-                rootVC.delegate = sView
+                rootVC.model.onPassItemDelegate = sViewModel
                 let viewController = CustomNavigationController(rootViewController: rootVC)
                 
                 sourceView.present(viewController, animated: true)

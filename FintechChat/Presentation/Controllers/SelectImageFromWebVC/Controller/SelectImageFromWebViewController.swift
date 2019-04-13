@@ -10,9 +10,6 @@ import Foundation
 import UIKit
 
 class SelectImageFromWebViewController: UIViewController {
-    
-    weak var delegate: IPassSelectedItemDelegate?
-    
     var model: ISelectImageFromWebModel
     var cellClass: IWebItemCollectionViewCell.Type
     
@@ -54,10 +51,7 @@ class SelectImageFromWebViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.delegate?.userDidSelect(item: self.model.selectedItem)
-        if let selectedIndexPath = self.collectionView.indexPathsForSelectedItems?.first {
-            self.delegate?.passLowResolutionImage(image: (self.collectionView.cellForItem(at: selectedIndexPath) as? IWebItemCollectionViewCell)?.cellImageView.image)
-        }
+        self.model.onViewWillDissappear()
     }
     
     override func viewDidLoad() {
@@ -68,6 +62,7 @@ class SelectImageFromWebViewController: UIViewController {
         self.model.dataSource.collection = self.collectionView
         self.view.addSubview(collectionView)
         collectionView.anchor(top: self.view.topAnchor, left: self.view.leftAnchor, bottom: self.view.bottomAnchor, right: self.view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        //fetch initial data
         self.model.didDequeuedCellAt(row: 0)
     }
     

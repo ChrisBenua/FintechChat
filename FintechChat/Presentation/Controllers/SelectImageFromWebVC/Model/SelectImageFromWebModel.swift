@@ -21,9 +21,21 @@ protocol ISelectImageFromWebModel: IDequeuedItemInCollection, IDidSelectItemDele
     var layout: ISelectImageFromWebFlowLayout { get }
     var selectedItem: IPixabyImageInfo? { get set }
     var hasSelectedItemDelegate: IHasSelectedItemDelegate? { get set }
+    var onPassItemDelegate: IPassSelectedItemDelegate? { get set }
+    
+    func onViewWillDissappear()
 }
 
 class SelectImageFromWebModel: ISelectImageFromWebModel {
+    
+    func onViewWillDissappear() {
+        self.onPassItemDelegate?.userDidSelect(item: self.selectedItem)
+        if let selectedIndexPath = self.dataSource.collection.indexPathsForSelectedItems?.first {
+            self.onPassItemDelegate?.passLowResolutionImage(image: (self.dataSource.collection.cellForItem(at: selectedIndexPath) as? IWebItemCollectionViewCell)?.cellImageView.image)
+        }
+    }
+    
+    weak var onPassItemDelegate: IPassSelectedItemDelegate?
     
     weak var hasSelectedItemDelegate: IHasSelectedItemDelegate?
     

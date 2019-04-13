@@ -18,7 +18,6 @@ class ConversationListModel: IConversationListModel {
         self.appearanceService.changeAppearance(navigationController: navigationController)
     }
     
-    
     func getUserProfileStateSync() -> UserProfileState {
         return self.storageCoordinator.getUserProfileStateSync()
     }

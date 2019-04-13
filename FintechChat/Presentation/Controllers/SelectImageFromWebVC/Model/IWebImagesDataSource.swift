@@ -42,7 +42,6 @@ class WebImageDataSource<T: IWebItemCollectionViewCell>: NSObject, IWebImagesDat
                 }
             }
         }
-        
     }
 
     var items: [PixabayImageInfo] = []

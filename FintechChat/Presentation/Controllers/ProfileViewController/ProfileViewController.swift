@@ -9,7 +9,13 @@
 import UIKit
 import AVFoundation
 
-class ProfileViewController: UIViewController {
+protocol IProfileViewController: UIViewController, IProfileViewControllerSetImageDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    var editingAdapter: IEditingAdapter { get set }
+    var profileModel: IProfileModel! { get set }
+}
+    
+
+class ProfileViewController: UIViewController, IProfileViewController {
     
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var imageContainerView: UIView!
@@ -25,9 +31,9 @@ class ProfileViewController: UIViewController {
     var lastFirstResponderFrame: CGRect?
     public static let maxNameLen = 33
     
-    var editingAdapter: EditingAdapter = EditingAdapter()
+    var editingAdapter: IEditingAdapter = EditingAdapter()
     
-    private var profileModel: IProfileModel!
+    var profileModel: IProfileModel!
     
     var assembly: IPresentationAssembly!
 
@@ -220,23 +226,18 @@ extension ProfileViewController {
     }
 }
 
-
-// MARK: - IPassSelectedItemDelegate
-extension ProfileViewController: IPassSelectedItemDelegate {
-    func userDidSelect(item: IPixabyImageInfo?) {
-        self.profileModel.downloadImageFor(item: item) { (image) in
-            DispatchQueue.main.async {
-                self.profilePhotoImageView.image = image
-                self.editingAdapter.toggleEditingButtons(isEditing: true)
-            }
-        }
-    }
-    
-    func passLowResolutionImage(image: UIImage?) {
+extension ProfileViewController: IProfileViewControllerSetImageDelegate {
+    func onShowPreviewImage(image: UIImage?) {
         self.profilePhotoImageView.image = image
     }
+    
+    func onShowFullImage(image: UIImage?) {
+        self.profilePhotoImageView.image = image
+        self.editingAdapter.toggleEditingButtons(isEditing: true)
+    }
+    
+    
 }
-
 
 // MARK: ActivityIndicator
 extension ProfileViewController {

@@ -48,6 +48,7 @@ class ConversationListViewController: UIViewController {
         self.frcDelegate = ConversationFRCDelegate(tableView: self.tableView)
         self.conversationsDataSource.fetchedResultsController.delegate = self.frcDelegate
         self.tableView.dataSource = self.conversationsDataSource
+        //self.tableView.delegate = self.conversationsDataSource
     }
     
     required init?(coder aDecoder: NSCoder) {

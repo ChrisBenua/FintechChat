@@ -8,7 +8,13 @@
 import CoreData
 import Foundation
 
-protocol IProfileModel: IImagePickerService, ICameraAccessService, IPhotoActionService, IPhotoActionCoordinatorSerice, ISelectFromGalleryService, IRetryAlertControllerService, IUserProfileStorageManager {
+protocol IProfileViewControllerSetImageDelegate: class {
+    func onShowPreviewImage(image: UIImage?)
+    
+    func onShowFullImage(image: UIImage?)
+}
+
+protocol IProfileModel: IImagePickerService, ICameraAccessService, IPhotoActionService, IPhotoActionCoordinatorSerice, ISelectFromGalleryService, IRetryAlertControllerService, IUserProfileStorageManager, IPassSelectedItemDelegate {
     var imagePickerService: IImagePickerService { get set }
     
     var cameraAccessService: ICameraAccessService { get set }
@@ -25,10 +31,29 @@ protocol IProfileModel: IImagePickerService, ICameraAccessService, IPhotoActionS
     
     var imageDownloadingService: IImageDownloadingService { get }
     
+    var passImagesDelegate: IProfileViewControllerSetImageDelegate? { get set }
+    
     func downloadImageFor(item: IPixabyImageInfo?, completion: @escaping (UIImage?) -> Void)
 }
 
 class ProfileModel: IProfileModel {
+    
+    weak var passImagesDelegate: IProfileViewControllerSetImageDelegate?
+    
+    func userDidSelect(item: IPixabyImageInfo?) {
+        self.downloadImageFor(item: item) { (image) in
+            DispatchQueue.main.async {
+                self.passImagesDelegate?.onShowFullImage(image: image)
+            }
+        }
+    }
+    
+    func passLowResolutionImage(image: UIImage?) {
+        DispatchQueue.main.async {
+            self.passImagesDelegate?.onShowPreviewImage(image: image)
+        }
+    }
+    
     var imageDownloadingService: IImageDownloadingService
     
     var presentationAssembly: IPresentationAssembly!

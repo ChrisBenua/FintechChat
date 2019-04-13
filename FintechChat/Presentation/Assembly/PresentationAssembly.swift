@@ -79,7 +79,10 @@ class PresentationAssembly: IPresentationAssembly {
     func profileViewController() -> ProfileViewController {
         var coordinator = self.serviceAssembly.photoActionCoordinator
         coordinator.presentationAssembly = self
-        return ProfileViewController.init(profileModel: ProfileModel(imagePicker: self.serviceAssembly.imagePickerService, cameraService: self.serviceAssembly.cameraAccessService, photoService: self.serviceAssembly.photoActionService, galleryService: self.serviceAssembly.selectFromGalleryService, retryService: self.serviceAssembly.retryAlertService, storage: self.serviceAssembly.storageCoordinator, photoActionCoordinator: coordinator, communicator: self.serviceAssembly.communicator, imageDownloadingService: ImageDownloadingService()), assembly: self)
+        let model = ProfileModel(imagePicker: self.serviceAssembly.imagePickerService, cameraService: self.serviceAssembly.cameraAccessService, photoService: self.serviceAssembly.photoActionService, galleryService: self.serviceAssembly.selectFromGalleryService, retryService: self.serviceAssembly.retryAlertService, storage: self.serviceAssembly.storageCoordinator, photoActionCoordinator: coordinator, communicator: self.serviceAssembly.communicator, imageDownloadingService: ImageDownloadingService())
+        let viewController = ProfileViewController.init(profileModel: model, assembly: self)
+        model.passImagesDelegate = viewController
+        return viewController
     }
     
     init(serviceAssembly: IServiceAssembly) {
