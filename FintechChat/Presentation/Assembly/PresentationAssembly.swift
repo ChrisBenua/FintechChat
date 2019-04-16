@@ -28,11 +28,12 @@ class PresentationAssembly: IPresentationAssembly {
     
     func selectImageFromWebController() -> SelectImageFromWebViewController {
         let itemsLoader = self.serviceAssembly.generateNewItemsLoader()
-        let dataSource = WebImageDataSource<WebItemCollectionViewCell>()
+        let imageDownloadingService = self.serviceAssembly.imageLoaderService
+        let dataSource = WebImageDataSource<WebItemCollectionViewCell>(imageDownloadingService: imageDownloadingService)
         itemsLoader.delegate = dataSource
         let layout = SelectImageFromWebFlowLayout(spacing: 5)
         layout.dataSource = dataSource
-        let model = SelectImageFromWebModel(imageService: self.serviceAssembly.imageLoaderService, itemsService: itemsLoader, dataSource: dataSource, layout: layout)
+        let model = SelectImageFromWebModel(imageService: imageDownloadingService, itemsService: itemsLoader, dataSource: dataSource, layout: layout)
         let viewController = SelectImageFromWebViewController(model: model, cellClass: WebItemCollectionViewCell.self)
         dataSource.onDequeudCellDelegate = model
         model.hasSelectedItemDelegate = viewController
@@ -79,7 +80,7 @@ class PresentationAssembly: IPresentationAssembly {
     func profileViewController() -> ProfileViewController {
         var coordinator = self.serviceAssembly.photoActionCoordinator
         coordinator.presentationAssembly = self
-        let model = ProfileModel(imagePicker: self.serviceAssembly.imagePickerService, cameraService: self.serviceAssembly.cameraAccessService, photoService: self.serviceAssembly.photoActionService, galleryService: self.serviceAssembly.selectFromGalleryService, retryService: self.serviceAssembly.retryAlertService, storage: self.serviceAssembly.storageCoordinator, photoActionCoordinator: coordinator, communicator: self.serviceAssembly.communicator, imageDownloadingService: ImageDownloadingService())
+        let model = ProfileModel(imagePicker: self.serviceAssembly.imagePickerService, cameraService: self.serviceAssembly.cameraAccessService, photoService: self.serviceAssembly.photoActionService, galleryService: self.serviceAssembly.selectFromGalleryService, retryService: self.serviceAssembly.retryAlertService, storage: self.serviceAssembly.storageCoordinator, photoActionCoordinator: coordinator, communicator: self.serviceAssembly.communicator, imageDownloadingService: self.serviceAssembly.imageLoaderService)
         let viewController = ProfileViewController.init(profileModel: model, assembly: self)
         model.passImagesDelegate = viewController
         return viewController

@@ -56,6 +56,7 @@ class SelectImageFromWebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "Pixabay"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(backButtonOnClick(_:)))
         self.navigationItem.rightBarButtonItem = self.doneBarButton
         

@@ -60,7 +60,7 @@ class ProfileModel: IProfileModel {
     
     func downloadImageFor(item: IPixabyImageInfo?, completion: @escaping (UIImage?) -> Void) {
         if let url = item?.fullImageUrl {
-            self.imageDownloadingService.downloadImage(forUrl: url, completion: completion)
+            self.imageDownloadingService.downloadImage(type: .full, forUrl: url, completion: completion)
         }
     }
     

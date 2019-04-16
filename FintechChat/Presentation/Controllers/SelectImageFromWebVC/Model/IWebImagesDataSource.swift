@@ -25,7 +25,7 @@ class WebImageDataSource<T: IWebItemCollectionViewCell>: NSObject, IWebImagesDat
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
             fatalError("OBAMA, KAK TAK?, WRONG CELL TYPE")
         }
-        cell.configure(with: self.items[indexPath.row], model: ImageDownloadingService())
+        cell.configure(with: self.items[indexPath.row], model: self.imageDownloadingService)
         self.onDequeudCellDelegate?.didDequeuedCellAt(row: indexPath.row)
         return cell
     }
@@ -46,5 +46,9 @@ class WebImageDataSource<T: IWebItemCollectionViewCell>: NSObject, IWebImagesDat
 
     var items: [PixabayImageInfo] = []
     var collection: UICollectionView!
+    var imageDownloadingService: IImageDownloadingService
     
+    init(imageDownloadingService: IImageDownloadingService) {
+        self.imageDownloadingService = imageDownloadingService
+    }
 }

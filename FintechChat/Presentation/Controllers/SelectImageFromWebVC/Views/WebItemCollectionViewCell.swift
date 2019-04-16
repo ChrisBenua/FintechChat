@@ -63,7 +63,7 @@ class WebItemCollectionViewCell: UICollectionViewCell, IWebItemCollectionViewCel
     }
 
     func configure(with: IPixabyImageInfo, model: IImageDownloadingService?) {
-        model?.downloadImage(forUrl: with.previewUrl, completion: { (image) in
+        model?.downloadImage(type: .preview, forUrl: with.previewUrl, completion: { (image) in
             DispatchQueue.main.async {
                 self.cellImageView.image = image
             }

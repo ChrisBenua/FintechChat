@@ -35,6 +35,8 @@
 		AA1E0861223B869900B56281 /* CommunicationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1E0860223B869900B56281 /* CommunicationManager.swift */; };
 		AA3D28E822243BA60001D79F /* ControllerList+SearchBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D28E722243BA60001D79F /* ControllerList+SearchBarDelegate.swift */; };
 		AA3D28EA22243C0E0001D79F /* ConversationList+TableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3D28E922243C0E0001D79F /* ConversationList+TableViewDelegate.swift */; };
+		AA5130B6226657BB008E9CC3 /* ImageCachingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5130B5226657BB008E9CC3 /* ImageCachingService.swift */; };
+		AA5130B822665AB6008E9CC3 /* Deque.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5130B722665AB6008E9CC3 /* Deque.swift */; };
 		AA59A0FE224D046000FCE9A3 /* ConversationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA59A0FD224D046000FCE9A3 /* ConversationExtension.swift */; };
 		AA59A100224D083900FCE9A3 /* MessagesExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA59A0FF224D083900FCE9A3 /* MessagesExtension.swift */; };
 		AA69B8B5222AEFB5001B9694 /* Themes.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69B8B2222AEC24001B9694 /* Themes.m */; };
@@ -133,6 +135,8 @@
 		AA1E0860223B869900B56281 /* CommunicationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicationManager.swift; sourceTree = "<group>"; };
 		AA3D28E722243BA60001D79F /* ControllerList+SearchBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControllerList+SearchBarDelegate.swift"; sourceTree = "<group>"; };
 		AA3D28E922243C0E0001D79F /* ConversationList+TableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationList+TableViewDelegate.swift"; sourceTree = "<group>"; };
+		AA5130B5226657BB008E9CC3 /* ImageCachingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCachingService.swift; sourceTree = "<group>"; };
+		AA5130B722665AB6008E9CC3 /* Deque.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deque.swift; sourceTree = "<group>"; };
 		AA59A0FD224D046000FCE9A3 /* ConversationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationExtension.swift; sourceTree = "<group>"; };
 		AA59A0FF224D083900FCE9A3 /* MessagesExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesExtension.swift; sourceTree = "<group>"; };
 		AA5B6804222AE900007E838B /* ThemesViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemesViewControllerDelegate.h; sourceTree = "<group>"; };
@@ -266,6 +270,7 @@
 			children = (
 				49A16B4DBFC618C5825973E7 /* SelectWebImageService.swift */,
 				49A160FB6F23B6BDA3EA2AB0 /* ImageDownloadingService.swift */,
+				AA5130B5226657BB008E9CC3 /* ImageCachingService.swift */,
 			);
 			path = SelectImageFromWebService;
 			sourceTree = "<group>";
@@ -561,6 +566,7 @@
 				AA8E111122338648007BF480 /* FetchSaveManager.swift */,
 				AA7E680C22395A900004ED94 /* TextViewWithDoneButton.swift */,
 				AA77A8D7225BDB7F0053CF7F /* KeyboardObservers.swift */,
+				AA5130B722665AB6008E9CC3 /* Deque.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -875,6 +881,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA1E085A223B80B200B56281 /* Communicator.swift in Sources */,
+				AA5130B6226657BB008E9CC3 /* ImageCachingService.swift in Sources */,
 				AA10D833225685F5004BC482 /* ConversationsDataSource.swift in Sources */,
 				AA3D28E822243BA60001D79F /* ControllerList+SearchBarDelegate.swift in Sources */,
 				AA8E1114223386CA007BF480 /* SaveOperations.swift in Sources */,
@@ -911,6 +918,7 @@
 				AAB1EF7A22575095000B1BC0 /* PhotoActionCoordinatorService.swift in Sources */,
 				AAF22778220BD16000AF5DFA /* FintechChat.xcdatamodeld in Sources */,
 				AAEAA952225F9DE9002981BD /* DefaultRequestSender.swift in Sources */,
+				AA5130B822665AB6008E9CC3 /* Deque.swift in Sources */,
 				AAE5D603223EA00A0057421E /* ConversationListDataProvider.swift in Sources */,
 				AA912040222F96BC00CD470C /* ConversationListCV+CustomNavigationControllerDelegate.swift in Sources */,
 				AAD73B7B221F2E180085512B /* MessageTableViewCell.swift in Sources */,
