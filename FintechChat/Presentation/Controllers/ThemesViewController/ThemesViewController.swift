@@ -11,6 +11,8 @@ import UIKit
 
 class ThemesViewController: UIViewController {
     
+    var logoService: ITinkoffLogosService = TinkoffLogosService()
+    
     var externalClosure: ((UIColor) -> Void)!
     
     var themesModel: IThemeModel
@@ -91,6 +93,8 @@ class ThemesViewController: UIViewController {
         
         stackView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.5).isActive = true
         
+        
+        self.addTinkoffTapListener()
     }
     
     required init(themesService: IThemeModel, completionHandler: @escaping (UIColor) -> Void) {
@@ -103,5 +107,13 @@ class ThemesViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+}
+
+extension ThemesViewController: ITinkoffLogosController {
+    func addTinkoffTapListener() {
+        self.logoService.setup(view: self.view, time: 0.2)
+    }
+    
     
 }

@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //printState(currState: "Inactive", methodName: #function)
         stateLogger.moveToNewState(newState: "Inactive")
         
-        UINavigationBar.appearance().prefersLargeTitles = true
+        //UINavigationBar.appearance().prefersLargeTitles = true
         UINavigationBar.appearance().isTranslucent = false
 
         

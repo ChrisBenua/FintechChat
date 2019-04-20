@@ -24,6 +24,7 @@ class ProfileViewController: UIViewController, IProfileViewController {
     @IBOutlet weak var editProfileButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet var nameTextField: UITextField!
+    var logoService: ITinkoffLogosService = TinkoffLogosService()
     lazy var helperView = UIView()
     var stackViewConstraints: [NSLayoutConstraint] = []
     var tapGestureRecognizer: UITapGestureRecognizer!
@@ -133,6 +134,7 @@ class ProfileViewController: UIViewController, IProfileViewController {
         self.addObservers(showSelector: #selector(onShowKeyboard(notification:)), hideSelector: #selector(onHideKeyboards(notification:)))
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(mainViewOnTap)))
+        self.addTinkoffTapListener()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -330,6 +332,14 @@ extension ProfileViewController {
         self.editingAdapter.toggleEditingButtons(isEditing: true)
         //self.toggleEditingButtons(true)
     }
+}
+
+extension ProfileViewController: ITinkoffLogosController {
+    func addTinkoffTapListener() {
+        logoService.setup(view: self.view, time: 0.2)
+    }
+    
+    
 }
 
 // MARK: - UINavigationControllerDelegate

@@ -8,6 +8,24 @@
 
 import Foundation
 
+extension UIGestureRecognizer.State {
+    func debug() -> String {
+        switch self {
+        case .ended:
+            return ".ended"
+        case .possible:
+            return ".possible"
+        case .began:
+            return ".began"
+        case .changed:
+            return ".changed"
+        case .failed:
+            return ".failed"
+        case .cancelled:
+            return ".cancelled"
+        }
+    }
+}
 
 class State {
     var previousState: String = ""

@@ -25,14 +25,28 @@ protocol IDialogViewController {
 
 protocol ISubmittableViewController {
     func toggleEditingButton(_ isEnabled: Bool)
+}
 
+protocol ITinkoffLogosController {
+    func addTinkoffTapListener()
 }
 
 class ConversationViewController: UIViewController, IScrollableViewController, ISubmittableViewController, IDialogViewController {
+    
+    private let logoService: ITinkoffLogosService = TinkoffLogosService()
+    
     func toggleEditingButton(_ isEnabled: Bool) {
         self.myAccessoryView.toggleEditingButton(isEnabled)
+        if isEnabled {
+            self.titleView.opponentDidBecomeOnline()
+        } else {
+            self.titleView.opponentDidBecomeOffline()
+        }
     }
+    //TODO delete it
+    var counter: Int = 0
     
+    var timer: Timer?
     
     var conversation: Conversation
     
@@ -66,7 +80,7 @@ class ConversationViewController: UIViewController, IScrollableViewController, I
     
     var dialogTitle: String {
         didSet {
-            self.navigationItem.title = dialogTitle
+            self.titleView.titleLabel.text = self.dialogTitle
         }
     }
     
@@ -94,6 +108,8 @@ class ConversationViewController: UIViewController, IScrollableViewController, I
     
     var assembly: IPresentationAssembly
     
+    private var titleView: NavigationItemTitleView = NavigationItemTitleView()
+    
     init(conversationListDataProvider: IConversationDataProvider, conversation: Conversation, model: IConversationViewControllerModel, assembly: IPresentationAssembly) {
         self.model = model
         self.messagesDataSource = MessagesTableViewDataSource(viewModel: conversationListDataProvider, conversation: conversation)
@@ -107,8 +123,15 @@ class ConversationViewController: UIViewController, IScrollableViewController, I
         self.messagesFRCDelegate = MessagesFRCDelegate(viewController: self)
         self.tableView.dataSource = self.messagesDataSource
         self.messagesDataSource.fetchedResultsController.delegate = self.messagesFRCDelegate
-        self.navigationItem.title = self.dialogTitle
+        //self.navigationItem.title = self.dialogTitle
+        
+        self.navigationItem.titleView = self.titleView
+        self.titleView.titleLabel.text = self.dialogTitle
         self.model.communicator.communicator.connectWithUser(username: connectedUserID)
+        
+        if self.model.communicator.communicator.lastState[connectedUserID] == .connected {
+            self.toggleEditingButton(true)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -130,6 +153,7 @@ class ConversationViewController: UIViewController, IScrollableViewController, I
         self.messagesDataSource.performFetch()
         self.myAccessoryView.setTextFieldDelegate(delegate: self)
         self.myAccessoryView.setup(communicator: self.model.communicator, connectedUserID: self.connectedUserID, target: self, selector: #selector(submitButtonOnClick), event: .touchUpInside)
+        self.addTinkoffTapListener()
         //fillData()
     }
     
@@ -296,3 +320,11 @@ extension ConversationViewController {
 
     }
 }
+
+
+extension ConversationViewController: ITinkoffLogosController {
+    func addTinkoffTapListener() {
+        self.logoService.setup(view: self.view, time: 0.2)
+    }
+}
+

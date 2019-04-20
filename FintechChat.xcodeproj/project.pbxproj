@@ -47,6 +47,8 @@
 		AA77A8D4225B8E100053CF7F /* ConversationListDataProviderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA77A8D3225B8E100053CF7F /* ConversationListDataProviderModel.swift */; };
 		AA77A8D6225BA3860053CF7F /* ConversationViewControllerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA77A8D5225BA3860053CF7F /* ConversationViewControllerModel.swift */; };
 		AA77A8D8225BDB7F0053CF7F /* KeyboardObservers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA77A8D7225BDB7F0053CF7F /* KeyboardObservers.swift */; };
+		AA7A2E8F226B88C9006E4711 /* NavigationItemTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A2E8E226B88C9006E4711 /* NavigationItemTitleView.swift */; };
+		AA7A2E91226B9FBA006E4711 /* TinkoffLogosService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7A2E90226B9FBA006E4711 /* TinkoffLogosService.swift */; };
 		AA7E680D22395A900004ED94 /* TextViewWithDoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7E680C22395A900004ED94 /* TextViewWithDoneButton.swift */; };
 		AA8E111222338648007BF480 /* FetchSaveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8E111122338648007BF480 /* FetchSaveManager.swift */; };
 		AA8E1114223386CA007BF480 /* SaveOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8E1113223386CA007BF480 /* SaveOperations.swift */; };
@@ -152,6 +154,8 @@
 		AA77A8D3225B8E100053CF7F /* ConversationListDataProviderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListDataProviderModel.swift; sourceTree = "<group>"; };
 		AA77A8D5225BA3860053CF7F /* ConversationViewControllerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewControllerModel.swift; sourceTree = "<group>"; };
 		AA77A8D7225BDB7F0053CF7F /* KeyboardObservers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardObservers.swift; sourceTree = "<group>"; };
+		AA7A2E8E226B88C9006E4711 /* NavigationItemTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItemTitleView.swift; sourceTree = "<group>"; };
+		AA7A2E90226B9FBA006E4711 /* TinkoffLogosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinkoffLogosService.swift; sourceTree = "<group>"; };
 		AA7E680C22395A900004ED94 /* TextViewWithDoneButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewWithDoneButton.swift; sourceTree = "<group>"; };
 		AA8E111122338648007BF480 /* FetchSaveManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchSaveManager.swift; sourceTree = "<group>"; };
 		AA8E1113223386CA007BF480 /* SaveOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveOperations.swift; sourceTree = "<group>"; };
@@ -351,6 +355,7 @@
 			children = (
 				AAD73B7A221F2E180085512B /* MessageTableViewCell.swift */,
 				AA01FA0C225C8341009F23F7 /* AccessoryView.swift */,
+				AA7A2E8E226B88C9006E4711 /* NavigationItemTitleView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -367,6 +372,7 @@
 			isa = PBXGroup;
 			children = (
 				AA01FA0A225C79BB009F23F7 /* AppearanceService.swift */,
+				AA7A2E90226B9FBA006E4711 /* TinkoffLogosService.swift */,
 			);
 			path = AppearanceService;
 			sourceTree = "<group>";
@@ -890,6 +896,7 @@
 				AAB1EF7C22575571000B1BC0 /* RetryAlertControllerService.swift in Sources */,
 				AAD73B6C221EF8680085512B /* ConversationTableViewCell.swift in Sources */,
 				AA1E085F223B82FC00B56281 /* MessageIDGenerator.swift in Sources */,
+				AA7A2E91226B9FBA006E4711 /* TinkoffLogosService.swift in Sources */,
 				AA77A8D8225BDB7F0053CF7F /* KeyboardObservers.swift in Sources */,
 				AAEAA945225F9564002981BD /* IParser.swift in Sources */,
 				AAD462372232A7DD008BE8C0 /* UserDefaultsProfile.swift in Sources */,
@@ -904,6 +911,7 @@
 				AA1E0861223B869900B56281 /* CommunicationManager.swift in Sources */,
 				AA8E111222338648007BF480 /* FetchSaveManager.swift in Sources */,
 				AAB1EF71225745F6000B1BC0 /* ImagePickerService.swift in Sources */,
+				AA7A2E8F226B88C9006E4711 /* NavigationItemTitleView.swift in Sources */,
 				AAFB881B2257B62E00C1787B /* CoreAssembly.swift in Sources */,
 				AAB1EF73225746BB000B1BC0 /* CameraAccessService.swift in Sources */,
 				AAA23AAC221B0A11001BC709 /* Actions.swift in Sources */,

@@ -12,6 +12,8 @@ import CoreData
 
 class ConversationListViewController: UIViewController {
     
+    lazy var logoService: ITinkoffLogosService = TinkoffLogosService(forbiddenView: self.tableView)
+    
     var viewModel: IConversationDataProvider
     
     let rowHeight: CGFloat = 80
@@ -86,6 +88,7 @@ class ConversationListViewController: UIViewController {
         self.conversationsDataSource.performFetch()
         self.tableView.reloadData()
         self.model.changeAppearance(navigationController: self.navigationController)
+        self.addTinkoffTapListener()
     }
     
     @objc func themesButtonOnClick(_ sender: Any) {
@@ -111,4 +114,12 @@ extension ConversationListViewController: UpdateConversationControllerDelegate {
         
         self.present(alertController, animated: true, completion: nil)
     }
+}
+
+extension ConversationListViewController: ITinkoffLogosController {
+    func addTinkoffTapListener() {
+        self.logoService.setup(view: self.tableView, time: 0.2)
+    }
+    
+    
 }

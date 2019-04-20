@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class SelectImageFromWebViewController: UIViewController {
+    var logoService: ITinkoffLogosService = TinkoffLogosService()
     var model: ISelectImageFromWebModel
     var cellClass: IWebItemCollectionViewCell.Type
     
@@ -65,6 +66,7 @@ class SelectImageFromWebViewController: UIViewController {
         collectionView.anchor(top: self.view.topAnchor, left: self.view.leftAnchor, bottom: self.view.bottomAnchor, right: self.view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         //fetch initial data
         self.model.didDequeuedCellAt(row: 0)
+        self.addTinkoffTapListener()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -104,4 +106,12 @@ extension SelectImageFromWebViewController {
             self.activityIndicator.removeFromSuperview()
         }
     }
+}
+
+extension SelectImageFromWebViewController: ITinkoffLogosController {
+    func addTinkoffTapListener() {
+        logoService.setup(view: self.view, time: 0.2)
+    }
+    
+    
 }
