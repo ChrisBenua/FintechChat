@@ -43,8 +43,6 @@ class ConversationViewController: UIViewController, IScrollableViewController, I
             self.titleView.opponentDidBecomeOffline()
         }
     }
-    //TODO delete it
-    var counter: Int = 0
     
     var timer: Timer?
     
@@ -327,4 +325,3 @@ extension ConversationViewController: ITinkoffLogosController {
         self.logoService.setup(view: self.view, time: 0.2)
     }
 }
-
