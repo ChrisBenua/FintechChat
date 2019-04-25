@@ -24,7 +24,7 @@ class ProfileViewController: UIViewController, IProfileViewController {
     @IBOutlet weak var editProfileButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet var nameTextField: UITextField!
-    var logoService: ITinkoffLogosService = TinkoffLogosService()
+    var logoService: ITinkoffLogosService
     lazy var helperView = UIView()
     var stackViewConstraints: [NSLayoutConstraint] = []
     var tapGestureRecognizer: UITapGestureRecognizer!
@@ -65,6 +65,7 @@ class ProfileViewController: UIViewController, IProfileViewController {
     
     required init?(coder aDecoder: NSCoder) {
         //fatalError("Not implemented init from coder")
+        self.logoService = TinkoffLogosService()
         super.init(coder: aDecoder)
         //Unexpectedly found nil while unwrapping an Optional value
         //Это потому, что в init() еще не вызвался loadView(), который
@@ -220,7 +221,7 @@ class ProfileViewController: UIViewController, IProfileViewController {
 
 // MARK: - Factory
 extension ProfileViewController {
-    class func `init`(profileModel: IProfileModel, assembly: IPresentationAssembly) -> ProfileViewController {
+    class func `init`(profileModel: IProfileModel, assembly: IPresentationAssembly, logoService: ITinkoffLogosService = TinkoffLogosService()) -> ProfileViewController {
         let profileVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ProfileVC") as? ProfileViewController
         profileVC?.profileModel = profileModel
         profileVC?.assembly = assembly

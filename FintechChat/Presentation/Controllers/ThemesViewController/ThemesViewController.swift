@@ -11,7 +11,7 @@ import UIKit
 
 class ThemesViewController: UIViewController {
     
-    var logoService: ITinkoffLogosService = TinkoffLogosService()
+    var logoService: ITinkoffLogosService
     
     var externalClosure: ((UIColor) -> Void)!
     
@@ -97,9 +97,9 @@ class ThemesViewController: UIViewController {
         self.addTinkoffTapListener()
     }
     
-    required init(themesService: IThemeModel, completionHandler: @escaping (UIColor) -> Void) {
+    required init(themesService: IThemeModel, logoService: ITinkoffLogosService = TinkoffLogosService(), completionHandler: @escaping (UIColor) -> Void) {
         self.themesModel = themesService
-
+        self.logoService = logoService
         super.init(nibName: nil, bundle: nil)
         self.externalClosure = completionHandler
     }

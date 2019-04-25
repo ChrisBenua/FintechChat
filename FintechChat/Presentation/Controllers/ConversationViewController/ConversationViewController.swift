@@ -33,7 +33,7 @@ protocol ITinkoffLogosController {
 
 class ConversationViewController: UIViewController, IScrollableViewController, ISubmittableViewController, IDialogViewController {
     
-    private let logoService: ITinkoffLogosService = TinkoffLogosService()
+    private let logoService: ITinkoffLogosService
     
     func toggleEditingButton(_ isEnabled: Bool) {
         self.myAccessoryView.toggleEditingButton(isEnabled)
@@ -108,8 +108,9 @@ class ConversationViewController: UIViewController, IScrollableViewController, I
     
     private var titleView: NavigationItemTitleView = NavigationItemTitleView()
     
-    init(conversationListDataProvider: IConversationDataProvider, conversation: Conversation, model: IConversationViewControllerModel, assembly: IPresentationAssembly) {
+    init(conversationListDataProvider: IConversationDataProvider, conversation: Conversation, model: IConversationViewControllerModel, assembly: IPresentationAssembly, logoService: ITinkoffLogosService = TinkoffLogosService()) {
         self.model = model
+        self.logoService = logoService
         self.messagesDataSource = MessagesTableViewDataSource(viewModel: conversationListDataProvider, conversation: conversation)
         self.conversation = model.fetchConversation(withId: conversation.conversationId!)!//force unwrap for debug
         self.conversationListDataProvider = conversationListDataProvider

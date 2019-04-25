@@ -39,13 +39,6 @@ class TinkoffLogosService: NSObject, ITinkoffLogosService, UIGestureRecognizerDe
     
     private var durationDispersion: CGFloat = 1
     
-    private var forbiddenView: UIView?
-    
-    init(forbiddenView: UIView) {
-        self.forbiddenView = forbiddenView
-        super.init()
-    }
-    
     override init() {
         super.init()
     }
@@ -58,9 +51,9 @@ class TinkoffLogosService: NSObject, ITinkoffLogosService, UIGestureRecognizerDe
         self.longPressGestureRecognizer = gestureRecognizer
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTap(gesture:)))
         gestureRecognizer.minimumPressDuration = 0.2
-        gestureRecognizer.cancelsTouchesInView = true
-        gestureRecognizer.delegate = self
-        tapGesture.delegate = self
+        gestureRecognizer.cancelsTouchesInView = false
+        tapGesture.cancelsTouchesInView = false
+        
         view.addGestureRecognizer(gestureRecognizer)
         view.addGestureRecognizer(tapGesture)
         timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { (_) in
@@ -70,21 +63,6 @@ class TinkoffLogosService: NSObject, ITinkoffLogosService, UIGestureRecognizerDe
                 self.showTinkoffLogos(gesture: gestureRecognizer)
             }
         })
-    }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if gestureRecognizer is UILongPressGestureRecognizer {
-            return true
-        } else {
-        //self.showTinkoffLogos(gesture: gestureRecognizer)
-            
-            guard let forbiddenView = self.forbiddenView else { return true }
-            let res = !((touch.view?.isDescendant(of: forbiddenView) ?? false) || touch.view is UIButton)
-            if !res {
-               self.showTinkoffLogos(gesture: gestureRecognizer, touchLocation: touch.location(in: self.view))
-            }
-            return res
-        }
     }
     
     private func generate(baseValue: CGFloat, dispersion: CGFloat) -> CGFloat {
@@ -137,10 +115,6 @@ class TinkoffLogosService: NSObject, ITinkoffLogosService, UIGestureRecognizerDe
         imageView.layer.add(animation, forKey: "movingAnimation")
         
         CATransaction.commit()
-    }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
     }
     
     func dispose() {

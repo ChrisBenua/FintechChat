@@ -58,6 +58,7 @@ class ConversationAccessoryView: UIView, IConversationAccessoryView {
     
     func afterSend() {
         self.messageTextField.text = ""
+        self.animateButton()
     }
     
     func currentText() -> String? {

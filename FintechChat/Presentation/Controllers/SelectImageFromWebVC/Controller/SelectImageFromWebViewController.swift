@@ -10,7 +10,8 @@ import Foundation
 import UIKit
 
 class SelectImageFromWebViewController: UIViewController {
-    var logoService: ITinkoffLogosService = TinkoffLogosService()
+    var logoService: ITinkoffLogosService
+    var barLogoService: ITinkoffLogosService
     var model: ISelectImageFromWebModel
     var cellClass: IWebItemCollectionViewCell.Type
     
@@ -35,9 +36,11 @@ class SelectImageFromWebViewController: UIViewController {
         return button
     }()
     
-    init(model: ISelectImageFromWebModel, cellClass: IWebItemCollectionViewCell.Type) {
+    init(model: ISelectImageFromWebModel, cellClass: IWebItemCollectionViewCell.Type, logoService: ITinkoffLogosService = TinkoffLogosService(), barService: ITinkoffLogosService = TinkoffLogosService()) {
         self.model = model
         self.cellClass = cellClass
+        self.logoService = logoService
+        self.barLogoService = barService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -111,6 +114,7 @@ extension SelectImageFromWebViewController {
 extension SelectImageFromWebViewController: ITinkoffLogosController {
     func addTinkoffTapListener() {
         logoService.setup(view: self.view, time: 0.2)
+        barLogoService.setup(view: self.navigationController!.navigationBar, time: 0.2)
     }
     
     

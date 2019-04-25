@@ -12,7 +12,9 @@ import CoreData
 
 class ConversationListViewController: UIViewController {
     
-    lazy var logoService: ITinkoffLogosService = TinkoffLogosService(forbiddenView: self.tableView)
+    var logoService: ITinkoffLogosService
+    
+    var logoBarService: ITinkoffLogosService
     
     var viewModel: IConversationDataProvider
     
@@ -40,16 +42,19 @@ class ConversationListViewController: UIViewController {
     
     var assembly: IPresentationAssembly
     
-    init(viewModel: IConversationDataProvider, model: IConversationListModel, assembly: IPresentationAssembly, conversationDataSource: IConversationTableViewDataSource) {
+    init(viewModel: IConversationDataProvider, model: IConversationListModel, assembly: IPresentationAssembly, conversationDataSource: IConversationTableViewDataSource, logoService: ITinkoffLogosService = TinkoffLogosService(), barService: ITinkoffLogosService = TinkoffLogosService()) {
         self.viewModel = viewModel
         self.assembly = assembly
         self.assembly.setCommunicatorDelegate(delegate: viewModel)
         self.model = model
         self.conversationsDataSource = ConversationDataSource(viewModel: self.viewModel)
+        self.logoBarService = barService
+        self.logoService = logoService
         super.init(nibName: nil, bundle: nil)
         self.frcDelegate = ConversationFRCDelegate(tableView: self.tableView)
         self.conversationsDataSource.fetchedResultsController.delegate = self.frcDelegate
         self.tableView.dataSource = self.conversationsDataSource
+        
         //self.tableView.delegate = self.conversationsDataSource
     }
     
@@ -119,6 +124,7 @@ extension ConversationListViewController: UpdateConversationControllerDelegate {
 extension ConversationListViewController: ITinkoffLogosController {
     func addTinkoffTapListener() {
         self.logoService.setup(view: self.tableView, time: 0.2)
+        self.logoBarService.setup(view: self.navigationController!.navigationBar, time: 0.2)
     }
     
     
