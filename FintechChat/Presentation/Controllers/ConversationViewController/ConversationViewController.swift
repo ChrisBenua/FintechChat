@@ -34,6 +34,7 @@ protocol ITinkoffLogosController {
 class ConversationViewController: UIViewController, IScrollableViewController, ISubmittableViewController, IDialogViewController {
     
     private let logoService: ITinkoffLogosService
+    private let accessoryLogoService: ITinkoffLogosService
     
     func toggleEditingButton(_ isEnabled: Bool) {
         self.myAccessoryView.toggleEditingButton(isEnabled)
@@ -108,7 +109,7 @@ class ConversationViewController: UIViewController, IScrollableViewController, I
     
     private var titleView: NavigationItemTitleView = NavigationItemTitleView()
     
-    init(conversationListDataProvider: IConversationDataProvider, conversation: Conversation, model: IConversationViewControllerModel, assembly: IPresentationAssembly, logoService: ITinkoffLogosService = TinkoffLogosService()) {
+    init(conversationListDataProvider: IConversationDataProvider, conversation: Conversation, model: IConversationViewControllerModel, assembly: IPresentationAssembly, logoService: ITinkoffLogosService = TinkoffLogosService(), accessoryViewLogosService: ITinkoffLogosService = TinkoffLogosService()) {
         self.model = model
         self.logoService = logoService
         self.messagesDataSource = MessagesTableViewDataSource(viewModel: conversationListDataProvider, conversation: conversation)
@@ -117,7 +118,7 @@ class ConversationViewController: UIViewController, IScrollableViewController, I
         self.assembly = assembly
         self.dialogTitle = model.dialogTitle
         self.connectedUserID = model.connectedUserID
-
+        self.accessoryLogoService = accessoryViewLogosService
         super.init(nibName: nil, bundle: nil)
         self.messagesFRCDelegate = MessagesFRCDelegate(viewController: self)
         self.tableView.dataSource = self.messagesDataSource
@@ -324,5 +325,6 @@ extension ConversationViewController {
 extension ConversationViewController: ITinkoffLogosController {
     func addTinkoffTapListener() {
         self.logoService.setup(view: self.view, time: 0.2)
+        self.accessoryLogoService.setup(view: self.myAccessoryView, time: 0.2)
     }
 }
